@@ -666,3 +666,9 @@ body {
     color: $state-danger-text;
   }
 }
+
+.user_name_header {
+  color: white;
+  font-weight: bold;
+  margin-top: 16px;
+}
