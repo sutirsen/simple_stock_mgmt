@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  get '/', to: 'sessions#home'
+  resources :companies
+  root :to => 'sessions#home'
   resources :users
   get    '/signup',  to: 'users#new'
   get    '/login',   to: 'sessions#new'

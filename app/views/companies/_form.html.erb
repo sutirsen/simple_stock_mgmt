@@ -1,0 +1,93 @@
+<%= form_with(model: company, local: true, class: "form-horizontal", role: "form") do |form| %>
+  <%= render 'shared/error_messages', object: company %>
+
+  <div class="form-group">
+    <%= form.label :company_name, class: "col-sm-2 control-label", class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :company_name, id: :company_company_name, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :branch_name, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :branch_name, id: :company_branch_name, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :ph_number, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :ph_number, id: :company_ph_number, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :email, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :email, id: :company_email, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :web_site, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :web_site, id: :company_web_site, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :vat_number, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :vat_number, id: :company_vat_number, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :cst_number, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :cst_number, id: :company_cst_number, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :trade_license_number, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :trade_license_number, id: :company_trade_license_number, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :drug_license_number, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :drug_license_number, id: :company_drug_license_number, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :registration_number, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :registration_number, id: :company_registration_number, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :authorized_sign_img, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :authorized_sign_img, id: :company_authorized_sign_img, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :company_logo_img, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :company_logo_img, id: :company_company_logo_img, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <%= form.submit 'Save Company', class: 'btn btn-primary' %>
+    </div>
+  </div>
+<% end %>

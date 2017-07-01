@@ -10,7 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170701052006) do
+ActiveRecord::Schema.define(version: 20170701143342) do
+
+  create_table "companies", force: :cascade do |t|
+    t.string "company_name"
+    t.string "branch_name"
+    t.decimal "ph_number"
+    t.string "email"
+    t.string "web_site"
+    t.string "vat_number"
+    t.string "cst_number"
+    t.string "trade_license_number"
+    t.string "drug_license_number"
+    t.string "registration_number"
+    t.string "authorized_sign_img"
+    t.string "company_logo_img"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "name"

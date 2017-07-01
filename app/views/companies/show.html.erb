@@ -1,0 +1,77 @@
+<% provide(:title, @company.company_name) %>
+<div class="col-md-10">
+	<div class="content-box-large">
+		<div class="panel-heading">
+      <div class="panel-title"><%= @company.company_name %></div>
+      <div class="panel-options">
+        <%= link_to edit_company_path(@company) do %>
+          <i class="glyphicon glyphicon-edit"></i>
+        <% end %>
+        <%= link_to companies_path do %>
+          <i class="glyphicon glyphicon-list"></i>
+        <% end %>
+      </div>
+    </div>
+    <div class="panel-body">
+      <p>
+        <strong>Company name:</strong>
+        <%= @company.company_name %>
+      </p>
+
+      <p>
+        <strong>Branch name:</strong>
+        <%= @company.branch_name %>
+      </p>
+
+      <p>
+        <strong>Ph number:</strong>
+        <%= @company.ph_number %>
+      </p>
+
+      <p>
+        <strong>Email:</strong>
+        <%= @company.email %>
+      </p>
+
+      <p>
+        <strong>Web site:</strong>
+        <%= @company.web_site %>
+      </p>
+
+      <p>
+        <strong>Vat number:</strong>
+        <%= @company.vat_number %>
+      </p>
+
+      <p>
+        <strong>Cst number:</strong>
+        <%= @company.cst_number %>
+      </p>
+
+      <p>
+        <strong>Trade license number:</strong>
+        <%= @company.trade_license_number %>
+      </p>
+
+      <p>
+        <strong>Drug license number:</strong>
+        <%= @company.drug_license_number %>
+      </p>
+
+      <p>
+        <strong>Registration number:</strong>
+        <%= @company.registration_number %>
+      </p>
+
+      <p>
+        <strong>Authorized sign img:</strong>
+        <%= @company.authorized_sign_img %>
+      </p>
+
+      <p>
+        <strong>Company logo img:</strong>
+        <%= @company.company_logo_img %>
+      </p>
+    </div>
+  </div>
+</div>

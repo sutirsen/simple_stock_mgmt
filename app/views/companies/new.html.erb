@@ -1,0 +1,17 @@
+<% provide(:title, "Add Company") %>
+<div class="col-md-10">
+	<div class="content-box-large">
+		<div class="panel-heading">
+          <div class="panel-title">Add New Company</div>
+
+          <div class="panel-options">
+            <%= link_to companies_path do %>
+              <i class="glyphicon glyphicon-list"></i>
+            <% end %>
+          </div>
+      </div>
+		<div class="panel-body">
+			<%= render 'form', company: @company %>
+		</div>
+	</div>
+</div>

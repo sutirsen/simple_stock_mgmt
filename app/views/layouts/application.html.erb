@@ -4,10 +4,17 @@
     <title><%= full_title(yield(:title)) %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%= csrf_meta_tags %>
+    <link href="https://code.jquery.com/ui/1.10.3/themes/redmond/jquery-ui.css" rel="stylesheet" media="screen">
     <!-- Bootstrap -->
     <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- styles -->
     <link href="/assets/styles.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="/assets/form-helpers/css/bootstrap-formhelpers.min.css" rel="stylesheet">
+    <link href="/assets/select/bootstrap-select.min.css" rel="stylesheet">
+    <link href="/assets/tags/css/bootstrap-tags.css" rel="stylesheet">
+
+    <link href="/assets/forms.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -39,8 +46,10 @@
     <div class="page-content">
     	<div class="row">
         <% flash.each do |message_type, message| %>
-          <div class="alert alert-<%= message_type %>"><%= message %></div>
+          <% message_type = "success" if message_type == "notice" %>
+          <div class="alert alert-<%= message_type %>" style="width: 98%; margin-left: 10px;"><%= message %></div>
         <% end %>
+
       <% if logged_in? %>
 		    <%= render 'layouts/sidebar' %>
       <% end %>
@@ -53,8 +62,28 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="/assets/jquery.js"></script>
     <script src="/assets/rails.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="/assets/custom.js"></script>
+    <script src="/assets/form-helpers/js/bootstrap-formhelpers.min.js"></script>
+
+    <script src="/assets/select/bootstrap-select.min.js"></script>
+
+    <script src="/assets/tags/js/bootstrap-tags.min.js"></script>
+
+    <script src="/assets/mask/jquery.maskedinput.min.js"></script>
+
+    <script src="/assets/moment/moment.min.js"></script>
+
+    <script src="/assets/wizard/jquery.bootstrap.wizard.min.js"></script>
+
+     <!-- bootstrap-datetimepicker -->
+     <link href="/assets/bootstrap-datetimepicker/datetimepicker.css" rel="stylesheet">
+     <script src="/assets/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+
+
+    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+	  <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
   </body>
 </html>
