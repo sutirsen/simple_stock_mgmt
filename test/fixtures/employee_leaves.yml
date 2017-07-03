@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  employee: one
+  leave_amount: 1
+  type_of_leave: MyString
+  financial_year: 1
+
+two:
+  employee: two
+  leave_amount: 1
+  type_of_leave: MyString
+  financial_year: 1

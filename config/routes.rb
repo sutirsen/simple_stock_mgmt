@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :employees
   resources :companies
   root :to => 'sessions#home'
   resources :users

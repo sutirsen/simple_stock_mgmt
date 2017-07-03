@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170701143342) do
+ActiveRecord::Schema.define(version: 20170702085902) do
 
   create_table "companies", force: :cascade do |t|
     t.string "company_name"
@@ -27,6 +27,44 @@ ActiveRecord::Schema.define(version: 20170701143342) do
     t.string "company_logo_img"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "employee_leaves", force: :cascade do |t|
+    t.integer "employee_id"
+    t.integer "leave_amount"
+    t.string "type_of_leave"
+    t.integer "financial_year"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["employee_id"], name: "index_employee_leaves_on_employee_id"
+  end
+
+  create_table "employee_salary_details", force: :cascade do |t|
+    t.integer "employee_id"
+    t.decimal "salary_amount"
+    t.string "bank_acc_no"
+    t.string "bank_name"
+    t.string "ifsc_code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["employee_id"], name: "index_employee_salary_details_on_employee_id"
+  end
+
+  create_table "employees", force: :cascade do |t|
+    t.string "name"
+    t.integer "company_id"
+    t.text "address"
+    t.string "voter_card_no"
+    t.string "aadhar_card_no"
+    t.string "pan_no"
+    t.date "date_of_joining"
+    t.string "designation"
+    t.string "type_of_work"
+    t.text "job_desc"
+    t.text "terms"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_employees_on_company_id"
   end
 
   create_table "users", force: :cascade do |t|

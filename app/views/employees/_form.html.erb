@@ -1,0 +1,73 @@
+<%= form_with(model: employee, local: true) do |form| %>
+  <% if employee.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(employee.errors.count, "error") %> prohibited this employee from being saved:</h2>
+
+      <ul>
+      <% employee.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :employee_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_id %>
+    <%= form.select(:company_id, @companies) %>
+    <%= form.text_field :company_id, id: :employee_company_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address %>
+    <%= form.text_area :address, id: :employee_address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :voter_card_no %>
+    <%= form.text_field :voter_card_no, id: :employee_voter_card_no %>
+  </div>
+
+  <div class="field">
+    <%= form.label :aadhar_card_no %>
+    <%= form.text_field :aadhar_card_no, id: :employee_aadhar_card_no %>
+  </div>
+
+  <div class="field">
+    <%= form.label :pan_no %>
+    <%= form.text_field :pan_no, id: :employee_pan_no %>
+  </div>
+
+  <div class="field">
+    <%= form.label :date_of_joining %>
+    <%= form.date_select :date_of_joining, id: :employee_date_of_joining %>
+  </div>
+
+  <div class="field">
+    <%= form.label :designation %>
+    <%= form.text_field :designation, id: :employee_designation %>
+  </div>
+
+  <div class="field">
+    <%= form.label :type_of_work %>
+    <%= form.text_field :type_of_work, id: :employee_type_of_work %>
+  </div>
+
+  <div class="field">
+    <%= form.label :job_desc %>
+    <%= form.text_area :job_desc, id: :employee_job_desc %>
+  </div>
+
+  <div class="field">
+    <%= form.label :terms %>
+    <%= form.text_area :terms, id: :employee_terms %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
