@@ -1,6 +1,20 @@
-<h1>Editing Employee</h1>
+<% provide(:title, "Edit Employee") %>
+<div class="col-md-10">
+	<div class="content-box-large">
+		<div class="panel-heading">
+          <div class="panel-title">Edit Employee</div>
+          <div class="panel-options">
+            <%= link_to @employee do %>
+              <i class="glyphicon glyphicon-list-alt"></i>
+            <% end %>
+            <%= link_to employees_path do %>
+              <i class="glyphicon glyphicon-list"></i>
+            <% end %>
 
-<%= render 'form', employee: @employee %>
-
-<%= link_to 'Show', @employee %> |
-<%= link_to 'Back', employees_path %>
+          </div>
+      </div>
+		<div class="panel-body">
+			<%= render 'form', employee: @employee %>
+		</div>
+	</div>
+</div>

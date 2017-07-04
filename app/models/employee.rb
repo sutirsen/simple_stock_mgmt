@@ -1,5 +1,5 @@
 class Employee < ApplicationRecord
   belongs_to :company
   has_many :employee_leave
-  has_one :employee_salary_detail
+  validates_presence_of :name, :company_id, :aadhar_card_no, :date_of_joining, :salary
 end

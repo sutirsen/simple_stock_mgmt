@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170702085902) do
+ActiveRecord::Schema.define(version: 20170704175024) do
 
   create_table "companies", force: :cascade do |t|
     t.string "company_name"
@@ -39,17 +39,6 @@ ActiveRecord::Schema.define(version: 20170702085902) do
     t.index ["employee_id"], name: "index_employee_leaves_on_employee_id"
   end
 
-  create_table "employee_salary_details", force: :cascade do |t|
-    t.integer "employee_id"
-    t.decimal "salary_amount"
-    t.string "bank_acc_no"
-    t.string "bank_name"
-    t.string "ifsc_code"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["employee_id"], name: "index_employee_salary_details_on_employee_id"
-  end
-
   create_table "employees", force: :cascade do |t|
     t.string "name"
     t.integer "company_id"
@@ -64,6 +53,12 @@ ActiveRecord::Schema.define(version: 20170702085902) do
     t.text "terms"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "salary"
+    t.string "bank_name"
+    t.string "bank_acc_no"
+    t.string "ifsc_code"
+    t.string "phone_no"
+    t.string "email"
     t.index ["company_id"], name: "index_employees_on_company_id"
   end
 

@@ -1,59 +1,103 @@
-<p id="notice"><%= notice %></p>
+<% provide(:title, @employee.name) %>
+<div class="col-md-10">
+	<div class="content-box-large">
+		<div class="panel-heading">
+      <div class="panel-title"><%= @employee.name %></div>
+      <div class="panel-options">
+        <%= link_to edit_employee_path(@employee) do %>
+          <i class="glyphicon glyphicon-edit"></i>
+        <% end %>
+        <%= link_to employees_path do %>
+          <i class="glyphicon glyphicon-list"></i>
+        <% end %>
+      </div>
+    </div>
+    <div class="panel-body">
+      <p>
+        <strong>Name:</strong>
+        <%= @employee.name %>
+      </p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @employee.name %>
-</p>
+      <p>
+        <strong>Company:</strong>
+        <%= @employee.company.company_name %>
+      </p>
 
-<p>
-  <strong>Company:</strong>
-  <%= @employee.company %>
-</p>
+      <p>
+        <strong>Phone:</strong>
+        <%= @employee.phone_no %>
+      </p>
 
-<p>
-  <strong>Address:</strong>
-  <%= @employee.address %>
-</p>
+      <p>
+        <strong>Email:</strong>
+        <%= @employee.email %>
+      </p>
 
-<p>
-  <strong>Voter card no:</strong>
-  <%= @employee.voter_card_no %>
-</p>
+      <p>
+        <strong>Address:</strong>
+        <%= @employee.address %>
+      </p>
 
-<p>
-  <strong>Aadhar card no:</strong>
-  <%= @employee.aadhar_card_no %>
-</p>
+      <p>
+        <strong>Voter card no:</strong>
+        <%= @employee.voter_card_no %>
+      </p>
 
-<p>
-  <strong>Pan no:</strong>
-  <%= @employee.pan_no %>
-</p>
+      <p>
+        <strong>Aadhar card no:</strong>
+        <%= @employee.aadhar_card_no %>
+      </p>
 
-<p>
-  <strong>Date of joining:</strong>
-  <%= @employee.date_of_joining %>
-</p>
+      <p>
+        <strong>Pan no:</strong>
+        <%= @employee.pan_no %>
+      </p>
 
-<p>
-  <strong>Designation:</strong>
-  <%= @employee.designation %>
-</p>
+      <p>
+        <strong>Date of joining:</strong>
+        <%= @employee.date_of_joining %>
+      </p>
 
-<p>
-  <strong>Type of work:</strong>
-  <%= @employee.type_of_work %>
-</p>
+      <p>
+        <strong>Designation:</strong>
+        <%= @employee.designation %>
+      </p>
 
-<p>
-  <strong>Job desc:</strong>
-  <%= @employee.job_desc %>
-</p>
+      <p>
+        <strong>Type of work:</strong>
+        <%= @employee.type_of_work %>
+      </p>
 
-<p>
-  <strong>Terms:</strong>
-  <%= @employee.terms %>
-</p>
+      <p>
+        <strong>Job desc:</strong>
+        <%= @employee.job_desc %>
+      </p>
 
-<%= link_to 'Edit', edit_employee_path(@employee) %> |
-<%= link_to 'Back', employees_path %>
+      <p>
+        <strong>Terms:</strong>
+        <%= @employee.terms %>
+      </p>
+      <h5> Salary Details </h5>
+      <p>
+        <strong>Salary:</strong>
+        <%= @employee.salary %>
+      </p>
+
+      <p>
+        <strong>Bank Name:</strong>
+        <%= @employee.bank_name %>
+      </p>
+
+      <p>
+        <strong>Bank acc no:</strong>
+        <%= @employee.bank_acc_no %>
+      </p>
+
+      <p>
+        <strong>IFSC Code:</strong>
+        <%= @employee.ifsc_code %>
+      </p>
+
+    </div>
+  </div>
+</div>

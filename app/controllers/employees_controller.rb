@@ -16,11 +16,6 @@ class EmployeesController < ApplicationController
   # GET /employees/new
   def new
     @employee = Employee.new
-    @companies = Array.new
-    fetchedCompanies = Company.all
-    fetchedCompanies.each do |company|
-      @companies << [company.company_name, company.id]
-    end
   end
 
   # GET /employees/1/edit
@@ -32,17 +27,14 @@ class EmployeesController < ApplicationController
   def create
     @employee = Employee.new(employee_params)
     respond_to do |format|
-      format.html { render :new }
+      if @employee.save
+        format.html { redirect_to @employee, notice: 'Employee was successfully created.' }
+        format.json { render :show, status: :created, location: @employee }
+      else
+        format.html { render :new }
+        format.json { render json: @employee.errors, status: :unprocessable_entity }
+      end
     end
-    # respond_to do |format|
-    #   if @employee.save
-    #     format.html { redirect_to @employee, notice: 'Employee was successfully created.' }
-    #     format.json { render :show, status: :created, location: @employee }
-    #   else
-    #     format.html { render :new }
-    #     format.json { render json: @employee.errors, status: :unprocessable_entity }
-    #   end
-    # end
   end
 
   # PATCH/PUT /employees/1
@@ -77,6 +69,6 @@ class EmployeesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def employee_params
-      params.require(:employee).permit(:name, :company_id, :address, :voter_card_no, :aadhar_card_no, :pan_no, :date_of_joining, :designation, :type_of_work, :job_desc, :terms)
+      params.require(:employee).permit(:name, :company_id, :phone_no, :email, :address, :voter_card_no, :aadhar_card_no, :pan_no, :date_of_joining, :designation, :type_of_work, :job_desc, :terms, :salary, :bank_name, :bank_acc_no, :ifsc_code)
     end
 end
