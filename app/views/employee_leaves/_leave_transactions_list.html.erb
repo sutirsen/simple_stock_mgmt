@@ -1,0 +1,36 @@
+<div class="content-box-large">
+	<div class="panel-heading">
+	   <div class="panel-title">Leaves taken</div>
+     <div class="panel-options">
+       <a role="button" data-toggle="collapse" href="#newLeave" aria-expanded="false" aria-controls="newLeave">
+         <i class="glyphicon glyphicon-plus" title="Add new type of leave"></i>
+       </a>
+     </div>
+  </div>
+  <div class="panel-body">
+    <div class="collapse <% if newLeaveTrans.errors.any? %>in<% end %>" id="newLeave">
+      <%= render 'new_leave_transaction', employee: employee, employee_leaves: employee_leaves, leaveTrans: newLeaveTrans %>
+    </div>
+		<div class="table-responsive">
+			<table class="table">
+        <thead>
+          <tr>
+            <th>Leave Type</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% leaveTaken.each do |lt| %>
+            <tr>
+              <td><%= lt.employee_leave.type_of_leave %></td>
+              <td><%= lt.start_date %></td>
+              <td><%= lt.end_date %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,46 @@
+<% provide(:title, "Type of Leaves") %>
+<div class="col-md-10">
+	<%= render 'leave_transactions_list', employee: @employee, employee_leaves: @leaves, newLeaveTrans: @newLeaveTrans, leaveTaken: @leavesTaken %>
+	<div class="content-box-large">
+		<div class="panel-heading">
+		   <div class="panel-title">Type of Leaves <small>for <%= @employee.name %> (Financial Year: <%= Time.current.year %>)</small></div>
+	     <div class="panel-options">
+	       <%= link_to new_employee_employee_leafe_path do %>
+	         <i class="glyphicon glyphicon-plus" title="Add new type of leave"></i>
+	       <% end %>
+	     </div>
+	  </div>
+    <div class="panel-body">
+			<div class="table-responsive">
+				<table class="table">
+	        <thead>
+	          <tr>
+	            <th>Leave Type</th>
+	            <th>Amount</th>
+	            <th colspan="2"></th>
+	          </tr>
+	        </thead>
+
+	        <tbody>
+	          <% @leaves.each do |leave| %>
+	            <tr>
+	              <td><%= leave.type_of_leave %></td>
+	              <td><%= leave.leave_amount %></td>
+	              <td>
+									<%= link_to edit_employee_employee_leafe_path(@employee, leave) do %>
+			              <i class="glyphicon glyphicon glyphicon-edit"></i>
+			            <% end %>
+								</td>
+	              <td>
+									<%= link_to employee_employee_leafe_path(@employee, leave), method: :delete, data: { confirm: 'Are you sure?' } do %>
+			              <i class="glyphicon glyphicon glyphicon-trash"></i>
+			            <% end %>
+								</td>
+	            </tr>
+	          <% end %>
+	        </tbody>
+	      </table>
+			</div>
+		</div>
+	</div>
+</div>

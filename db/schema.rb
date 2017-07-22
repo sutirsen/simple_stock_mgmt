@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170704175024) do
+ActiveRecord::Schema.define(version: 20170722074828) do
 
   create_table "companies", force: :cascade do |t|
     t.string "company_name"
@@ -60,6 +60,18 @@ ActiveRecord::Schema.define(version: 20170704175024) do
     t.string "phone_no"
     t.string "email"
     t.index ["company_id"], name: "index_employees_on_company_id"
+  end
+
+  create_table "leave_transactions", force: :cascade do |t|
+    t.integer "employee_id"
+    t.integer "employee_leave_id"
+    t.date "start_date"
+    t.date "end_date"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["employee_id"], name: "index_leave_transactions_on_employee_id"
+    t.index ["employee_leave_id"], name: "index_leave_transactions_on_employee_leave_id"
   end
 
   create_table "users", force: :cascade do |t|
