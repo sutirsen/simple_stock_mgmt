@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  resources :employees
+  get 'employee_leave/new'
+
+  resources :employees do
+    resources :employee_leaves
+  end
   resources :companies
   root :to => 'sessions#home'
   resources :users
@@ -7,4 +11,5 @@ Rails.application.routes.draw do
   get    '/login',   to: 'sessions#new'
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
+
 end

@@ -1,0 +1,24 @@
+<%= form_for [employee, leave], html: { class: "form-horizontal" } do |f| %>
+    <%= render 'shared/error_messages', object: f.object %>
+    
+    <div class="form-group">
+        <%= f.label :type_of_leave, class: "col-sm-2 control-label" %>
+        <div class="col-sm-10">
+          <%= f.text_field :type_of_leave, id: :leave_type_of_leave, class: "form-control" %>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <%= f.label :leave_amount, class: "col-sm-2 control-label" %>
+        <div class="col-sm-10">
+          <%= f.text_field :leave_amount, id: :leave_leave_amount, class: "form-control" %>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <%= f.submit 'Save Leave', class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>
+    
