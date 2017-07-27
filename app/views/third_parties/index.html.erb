@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Third Parties</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Phn number</th>
+      <th>Gst number</th>
+      <th>Due</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @third_parties.each do |third_party| %>
+      <tr>
+        <td><%= third_party.name %></td>
+        <td><%= third_party.address %></td>
+        <td><%= third_party.phn_number %></td>
+        <td><%= third_party.gst_number %></td>
+        <td><%= third_party.due %></td>
+        <td><%= link_to 'Show', third_party %></td>
+        <td><%= link_to 'Edit', edit_third_party_path(third_party) %></td>
+        <td><%= link_to 'Destroy', third_party, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Third Party', new_third_party_path %>

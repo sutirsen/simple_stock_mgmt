@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  amount: 
+  type_of_transaction: 1
+  payment_method: 1
+
+two:
+  amount: 
+  type_of_transaction: 1
+  payment_method: 1

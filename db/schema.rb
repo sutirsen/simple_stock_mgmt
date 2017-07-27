@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170722074828) do
+ActiveRecord::Schema.define(version: 20170724082038) do
 
   create_table "companies", force: :cascade do |t|
     t.string "company_name"
@@ -72,6 +72,50 @@ ActiveRecord::Schema.define(version: 20170722074828) do
     t.datetime "updated_at", null: false
     t.index ["employee_id"], name: "index_leave_transactions_on_employee_id"
     t.index ["employee_leave_id"], name: "index_leave_transactions_on_employee_leave_id"
+  end
+
+  create_table "purchases", force: :cascade do |t|
+    t.integer "raw_material_id"
+    t.integer "third_party_id"
+    t.decimal "rate_of_unit"
+    t.decimal "qty"
+    t.string "batch_no"
+    t.date "expiry_date"
+    t.text "remarks"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["raw_material_id"], name: "index_purchases_on_raw_material_id"
+    t.index ["third_party_id"], name: "index_purchases_on_third_party_id"
+  end
+
+  create_table "raw_materials", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.decimal "qty"
+    t.string "unit"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "third_parties", force: :cascade do |t|
+    t.string "name"
+    t.text "address"
+    t.string "phn_number"
+    t.string "gst_number"
+    t.decimal "due"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "transactions", force: :cascade do |t|
+    t.string "monitory_type"
+    t.integer "monitory_id"
+    t.decimal "amount"
+    t.integer "type_of_transaction"
+    t.integer "payment_method"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["monitory_type", "monitory_id"], name: "index_transactions_on_monitory_type_and_monitory_id"
   end
 
   create_table "users", force: :cascade do |t|
