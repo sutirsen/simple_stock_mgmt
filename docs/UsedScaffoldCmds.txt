@@ -1,0 +1,5 @@
+rails generate scaffold Employee name:string company:references address:text voter_card_no:string aadhar_card_no:string pan_no:string date_of_joining:date designation:string type_of_work:string job_desc:text terms:text
+
+rails generate model EmployeeSalaryDetail employee:references salary_amount:numeric bank_acc_no:string bank_name:string ifsc_code:string
+
+rails generate model EmployeeLeave employee:references leave_amount:integer type_of_leave:string financial_year:integer

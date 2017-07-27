@@ -1,0 +1,2136 @@
+ ______    _______  ___   ___      _______ 
+|    _ |  |   _   ||   | |   |    |       |
+|   | ||  |  |_|  ||   | |   |    |  _____|
+|   |_||_ |       ||   | |   |    | |_____ 
+|    __  ||       ||   | |   |___ |_____  |
+|   |  | ||   _   ||   | |       | _____| |
+|___|  |_||__| |__||___| |_______||_______|
+
+
+
+Rails routing :
+
+"rake routes" can be used to see all routes.
+Basic routing :
+  get 'products/:id' , to: 'products#show'
+                  or
+  get 'products/:id' => 'products#show'
+
+Multiple HTTP Verbs on a single route : 
+  match 'products/:id' => 'products#show' , via: [ :get, :post]
+  match 'products' => 'products#index' , via: :any <- This will match any verb
+
+Generating URL:
+link_to "Products" , controller: " products" , action: " show" , id: 1
+
+Inserting hard coded parameters like :controller, :action
+get 'products/special' => 'products#show' , special : 'true'
+
+Optional route parameters can be mentioned using bracket :
+match ':controller(/:action(/:id(.:format)))' , via: :any
+
+Redirecting using routes
+get " /foo" , to: redirect('/bar')
+get " /google" , to: redirect('https://google.com/')
+
+Redirect with status and propagating parameters
+match " /api/v1/:api ", to: redirect( status: 302) { | params| " /api/v2/#{ params[ :api ].pluralize} " }, via: :any
+
+Constraints :
+get ':controller/show/:id' => :show, constraints: { :id => /\d+/}
+get ':controller/show/:id' => :show_error
+
+The regular expression is similar to ^\d+$, rails implicitly adds the rest. If the first route fails then the second one will show errors.
+First route in short : get ':controller/show/:id' => :show, id: /\d+/
+
+get ':controller/:action/:id' => :show, constraints: { subdomain: 'admin' } (?)
+
+Custom constraint:
+get 'records/:id' => " records#protected" , constraints: proc { | req| req.params[ :id].to_i < 100 }
+
+Route Globbing :
+-> /items/list/base/books/fiction/dickens
+get 'items/list/*specs' , controller: 'items' , action: 'list'
+def list
+  specs = params[ :specs] # e.g, "base/books/fiction/dickens"
+end
+
+Hash[*params[ :specs].split("/")] # converts a one-dimensional array of key/value pairs into a hash
+
+You probably should always use the _url version of named route helpers when you use a named route as an argument to redirect_to in your controller code
+
+To generate URL of : get " auction/:auction_id/item/:id" => "items#show" , as: "item"
+link_to "Auction of #{ item. name}" , item_path(auction, item)
+
+By default it will take id but that can be overridden by defining to_param method in the model
+def to_param
+  description. parameterize # strips of punctuation and joined with hyphens
+end
+
+Grouping routes with scope:
+
+These routes can be grouped 
+1 get 'auctions/new' => 'auctions#new'
+2 get 'auctions/edit/:id' => 'auctions#edit'
+3 post 'auctions/pause/:id' => 'auctions#pause'
+
+using,
+
+scope path: '/auctions' , controller: :auctions do
+  get 'new' => :new
+  get 'edit/:id' => :edit
+  post 'pause/:id' => :pause
+end
+
+If we pass a symbol as the argument it will be treated as the controller, if we pass a string it will be treated as path 
+scope controller: :auctions do = scope :auctions do
+scope path: '/auctions' do = scope '/auctions' do
+
+"scope :auctions, :archived do" will scope all routes nested under it to the “/auctions/archived” path. (?)
+
+Named scope:
+scope :auctions, as: 'admin' do
+  get 'new' => :new, as: 'new_auction'
+end
+
+This will generate admin_new_auction_url
+
+Namespace : Name Prefix (Named scope) + Path Prefix
+namespace :auctions, :controller => :auctions do
+  get 'new' => :new
+  get 'edit/:id' => :edit
+  post 'pause/:id' => :pause
+end
+So this will be responding to /auctions/new and helpers will be created like auctions_new_url (?)
+
+Constraint can be specified at scope level,
+scope controller: :auctions, constraints: { :id => /\d+/} do
+  get 'edit/:id' => :edit
+  post 'pause/:id' => :pause
+end
+But routing will break if one of the route does not use the :id segment variable, so,
+
+ scope path: '/auctions' , controller: :auctions do
+  get 'new' => :new
+  constraints id: /\d+/ do
+    get 'edit/:id' => :edit
+    post 'pause/:id' => :pause
+  end
+end
+
+To enable modular reuse, you may supply the constraints method with an object that has a matches? method.
+class DateFormatConstraint
+  def self. matches?(request)
+    request. params[ :date] =~ /\A\d{4}- \d\d- \d\d\z/ # YYYY-MM-DD
+  end
+end
+
+in routes.rb
+
+constraints( DateFormatConstraint) do
+  get 'since/:date' => :since
+end
+
+Resources :
+Restful Resources in Rails can be declared like 
+resources :auctions
+
+This defines four routes
+GET     auctions_path                 -> /auctions/     -> AuctionsController::index
+POST    auctions_path                 -> /auctions/     -> AuctionsController::create
+
+GET     auction_path(auctionObject)   -> /auctions/1    -> AuctionsController::show
+PATCH   auction_path(auctionObject)   -> /auctions/1    -> AuctionsController::update
+DELETE  auction_path(auctionObject)   -> /auctions/1    -> AuctionsController::destroy
+
+[Only responsible for showing forms]
+GET     new_auction_path              -> /auctions/new  -> AuctionsController::new
+POST    edit_auction_path(auctionOb)  -> /auctions/edit -> AuctionsController::edit
+
+To create delete link  : link_to "Delete" , auction_path(auction), method: :delete
+To create patch        : form_for "auction" , url: auction_path(auction), html: { method: :patch } do | f|
+
+Limiting resource links generation :
+resources :clients, except: [ :index]
+resources :clients, only: [ :new, :create]
+
+If resource is used instead of resource(s) then every routes will be created without the index (for listing all)
+resource :profile
+$ rake routes
+profile       POST    /profile(.:format)      profiles#create
+new_profile   GET     /profile/new(.:format)  profiles#new
+edit_profile  GET     /profile/edit(.:format) profiles#edit
+              GET     /profile(.:format)      profiles#show
+              PATCH   /profile(.:format)      profiles#update
+              PUT     /profile(.:format)      profiles#update
+              DELETE  /profile(.:format)      profiles#destroy
+
+Nested resources
+ resources :auctions do
+  resources :bids
+ end
+ This will create new_auction_url, edit_auction_url, auction_url and auctions_url 
+ as well as new_auction_bid_url, edit_auction_bid_url, auction_bid_url and auction_bids_url
+
+ Using with link_to -> 
+  link_to " See all bids" , auction_bids_path(auction)
+  link_to " Delete this bid" , auction_bid_path(auction, bid), method: :delete
+  # This in short can be written like
+  link_to " Delete this bid" , [ auction, bid] , method: :delete # Rails will figure out that it is nested route
+
+Shallow routes :
+  This will shorten the url for nested component by removing parent resource reference when parent component is not required,
+  resources :auctions, shallow: true do
+    resources :bids
+  end
+
+  or 
+
+  resources :auctions, shallow: true do
+    shallow do
+      resources :bids
+    end
+  end
+
+  Result of above : -> (_path or _url should be appended with the names specified in left most side)
+  auction_bids          GET     /auctions/:auction_id/bids(.:format)
+                        POST    /auctions/:auction_id/bids(.:format)
+  new_auction_bid       GET     /auctions/:auction_id/bids/new(.:format)
+  edit_bid              GET     /bids/:id/edit(.:format) [Removed auction as editing a single bid should not require auction, it is having its own unique id]
+  bid                   GET     /bids/:id(.:format) [For showing a specific bid auction is not required]
+                        PATCH   /bids/:id(.:format)
+                        PUT     /bids/:id(.:format)
+                        DELETE  /bids/:id(.:format)
+  auctions              GET     /auctions(.:format)
+                        POST    /auctions(.:format)
+  new_auction           GET     /auctions/new(.:format)
+  edit_auction          GET     /auctions/:id/edit(.:format)
+  auction               GET     /auctions/:id(.:format)
+                        PATCH   /auctions/:id(.:format)
+                        PUT     /auctions/:id(.:format)
+                        DELETE  /auctions/:id(.:format)
+
+Routing concerns :
+  resources :auctions do
+    resources :bids
+    resources :comments
+    resources :image_attachments, only: :index
+  end
+  
+  resources :bids do
+    resources :comments
+  end
+
+  In the above case comment is required in both auction and bid, thus a concern can be created with that
+
+  concern :commentable do
+    resources :comments
+  end
+  
+  concern :image_attachable do
+    resources :image_attachments, only: :index
+  end
+
+  Then can be used like :
+  resources :auctions, concerns: [ :commentable, :image_attachable] do
+    resources :bids
+  end
+
+  resources :bids, concerns: :commentable
+
+Additional Routes with REST : 
+  If with bid we want to implement retraction of bid, then we will be needing two routes a "GET" which will give the form and a "POST" which will actually save the retraction status.
+
+  resources :auctions do
+    resources :bids do
+      member do
+        get :retract
+        post :retract
+      end
+    end
+  end
+
+  This will be generating something like
+    link_to " Retract" , retract_bid_path(auction, bid)
+    link_to " Retract" , retract_bid_path(auction,bid), method: :post
+
+  The upper route can be written in short as 
+  resources :auctions do
+    resources :bids do
+      member do
+        match :retract, via: [ :get, :post]
+      end
+    end
+  end
+
+  or even shorter way..
+
+  resources :auctions do
+    resources :bids do
+      match :retract, via: [ :get, :post] , on: :member
+    end
+  end
+
+Additional routes on complete collection :
+resources :auctions do
+  collection do
+    match :terminate, via: [ :get, :post]
+  end
+end
+
+Previous section was on member where the additional route will be created like bids/1/retract but extra routes on: :collection will be created like /bids/terminate.
+Can also be written as 
+resources :auctions do
+  match :terminate, via: [ :get, :post] , on: :collection
+end
+
+Changing usual action name for REST routes:
+resources :projects, path_names: { new: 'nuevo' , edit: 'cambiar' }
+
+To a different controller : resources :photos, controller: " images"
+
+The data delivered delivered or sent to server in REST is not resource, it is a representation of resource. The exchange currency in REST is representation. 
+A controller can respond to different representation request (html, xml, json) by using respond_to method
+respond_to do | format|
+  format. html
+  format. xml { render xml : @auctions }
+end
+
+Or in short using respond_with 
+respond_with( @auctions)
+respond_with will do the following in case of a json request like bids/1.json
+• Attempt to render the associated view with a .json extension.
+• If no view exists, call to_json on the object passed to responds_with.
+• If the object does not respond to to_json, call to_format on it.
+
+Controllers:
+Rack:
+  Rack is responsible for processing request and producing response, within this process Rails is invoked as a part. 
+  class HelloWorld
+    def call (env)
+      [200, {"Content-Type" => "text/plain" }, [ "Hello world!" ]]
+    end
+  end
+
+  Rails introduces different middle wares through which the request is passed before it ends up in some controller action. Each of these middle ware performs some action or collect some data, example checking if any migrations are pending, initiating ActiveRecord connection management, initiating logger etc. We can introduce the middle ware from config/application.rb
+
+  module Example
+    class Application < Rails:: Application
+      . . .
+      # Rack::ShowStatus catches all empty responses the app it wraps and
+      # replaces them with a site explaining the error.
+      config.middleware.use Rack::ShowStatus
+    end
+  end
+
+  All middleware cam be seen using the rake task
+  rake middleware
+
+  Middle ware can be initiated in a specific position using,
+  config.middleware.insert_after(existing_middleware, new_middleware, args)
+  config.middleware.insert_before(existing_middleware, new_middleware, args)
+  config.middleware.delete(middleware)
+  config.middleware.swap(existing_middleware, new_middleware, args)
+  config.middleware.use(new_middleware, args) # Takes a class reference as its parameter and just adds the desired middleware to the end of the middleware stack.
+
+  Rendering template:
+  render template: '/products/index.html.haml'
+  render '/products/index.html.haml'
+  render 'products/index.html.haml'
+  render 'products/index.html'
+  render 'products/index'
+  render 'index' # Works only if rendering index template of same controller :P
+  render :index  # Works only if rendering index template of same controller :P
+
+
+Rendering Partials:
+  render partial: 'product' # renders app/views/products/_product.html.haml
+  render partial: 'shared/product'
+  # renders app/views/shared/_product.html.haml
+
+  render partial : @product
+  render @product
+  render 'product'
+  # All three lines render the app/views/products/_product.html.haml template.
+
+Rendering inline template : 
+  render inline: " %span.foo #{ @foo. name}", type: "haml"
+
+Rendering text :
+  render text: 'Submission accepted' , content_type: 'text/plain'
+
+Rendering JSON/JSONP :
+  render json: @record
+  render json: @record, callback: 'updateRecordsDisplay'
+
+Rendering nothing (a single space):
+head :unauthorized
+ or 
+render nothing: true, status: 401
+
+Rendering options:
+  :layout -> To change default layout or disable layout
+  :content_type -> eg: text/html etc
+  :status -> HTTP Status Code 
+      200 -> OK
+      201 -> New resource created, Location of new resource given in HTTP Header's Location field
+      301 -> Permanent redirect 
+      302 -> Temporary redirect 
+      303 -> Temporary redirect with GET request irrespective of actual verb
+      307 -> Temporary redirect (with the requesting verb), eg: If an account expired 
+              def paid_resource
+                if current_user.account_expired?
+                  response.headers['Location'] = account_url(current_user)
+                  render text: "Account expired", status: 307
+                end
+              end
+      401 -> Unauthorized (can be used with API)
+      403 -> Forbidden (some service may be hiding behind login and if accessed with out a logged in user then server denies to serve the request)
+              Can be used with google bots
+              def index
+                return render nothing: true, status: 403 unless logged_in?
+                @favorites = current_user.favorites.all
+              end
+      404 -> Not found 
+      410 -> Gone : Previously existed but currently gone
+      500 -> Error in server internal code 
+      503 -> Site taken down for maintenance 
+
+Specifying layouts :
+layout " events" , only: [ :index, :new]
+layout " global " , except: [ :index, :new]
+
+Redirecting :
+ As HTTP 1.0 301, 302 was used for permanent and temporary redirect respectively. 301 can be used to redirect after a resource creation (a POST request for creation and a GET request after that for index) but when using 302 it could mean that the original POST request is being processed by a different action that is doing the same POST request to another action or a GET request to index. To remove this ambiguity 303 and 307 was introduced, where 303 will always mean a GET request during redirect what ever the source request verb was, thus can be used for redirecting after resource creation. The 307 will always use the same method as the original one, can be used like 
+  response.headers['Location'] = account_url(current_user)
+  render text: "Account expired", status: 307
+
+** url_for can be used to generate URL 
+  redirect_to(target, response_status = {})
+
+  redirect_to action: "show" , id: 5 # url_for helper is used to generate url
+  redirect_to post # where post is an active record object 
+  redirect_to "http://www.rubyonrails.org"
+  redirect_to articles_url
+  redirect_to "/"
+  redirect_to articles_path
+
+  redirect_to(request.env["HTTP_REFERER"]) --
+                                            | --> These two are same 
+  redirect_to :back   -----------------------
+
+  Status can be specified during redirection by status code or symbols 
+    redirect_to post_url( @post), status: :found
+    redirect_to :atom, status: :moved_permanently
+    redirect_to post_url( @post), status: 301
+    redirect_to :atom, status: 302
+
+  Adding flash information with redirection (?)
+    redirect_to post_url(@post), alert: "Watch it, mister!"
+    redirect_to post_url(@post), status: :found, notice: " Pay attention to the road"
+    redirect_to post_url(@post), status: 301, flash: { updated_post_id: @post. id } # Flash bucket (?)
+    redirect_to :atom, alert: " Something serious happened"
+
+  Adding new flash type and using with redirection :
+    class ApplicationController
+      . . .
+      add_flash_types :error
+    end
+
+    redirect_to post_url(@post), error: "Something went really wrong!"
+
+    Redirect and render statements don’t magically halt execution of your controller action method. To prevent DoubleRenderError, consider explicitly calling return after redirect_to
+    or render like this
+
+    def show
+      @user = User. find(params[ :id] )
+      if @user. activated?
+        render :activated and return
+      end
+      # whatever
+    end
+
+How rails use instance variable to communicate between controller and view ?
+  When your controller action is executed, everything is happening in the context of a controller object an instance of, say, DemoController or EventController. Context includes the fact that every instance variable in the code belongs to the controller instance. When the view template is rendered, the context is that of a different object, an instance of ActionView::Base. That instance has its own instance variables, and does not have access to those of the controller object. What Rails does is to loop through the controller object's variables and, for each one, create an instance variable for the view object, with the same name and containing the same data.
+  ** Decent Exposure library can be used alternatively (?)
+
+Action Callbacks :
+  before_action :security_scan, :audit, :compress
+  after_action :compress
+
+  Any callbacks declared on parent class will be executed prior to the child class callbacks. 
+
+  Passing a class to action callback :
+    class OutputCompressionActionCallback
+      def self.after(controller)
+        controller.response.body = compress(controller.response.body)
+      end
+    end
+
+    class NewspaperController < ActionController:: Base
+      after_action OutputCompressionActionCallback
+    end
+
+    after, before or around class method need to be declared, and they also receives a controller object to play with. 
+
+  Inline callback:
+    before_action do
+      redirect_to new_user_session_path unless authenticated?
+    end
+
+  prepend_before_action, prepend_after_action can be used to push callback at the beginning of before or after callback chain respectively. 
+
+  A nice use of around exception 
+    around_action :catch_exceptions
+
+    private
+      def catch_exceptions
+        # do stuff before action
+        yield
+        # do stuff after action
+      rescue => exception
+        logger. debug " Caught exception! #{ exception} "
+        raise
+    end
+
+  Inline around_action : 
+    around_action do | controller, action|
+      logger.debug " before #{ controller. action_name} "
+      action.call
+      logger. debug " after #{ controller. action_name} "
+    end
+
+  Benchmarking actions:
+    around_action BenchmarkingActionCallback
+
+    class BenchmarkingActionCallback
+      def self.around(controller)
+        Benchmark.measure { yield }
+      end
+    end
+
+Skipping a callback from child class:
+  skip_before_action :authenticate
+  skip_action_callback :catch_exceptions # for around exeception or general (?)
+
+Limiting action callback:
+  before_action :authorize, only: [ :edit, :delete]
+  around_action except: :index do | controller, action_block|
+    results = Profiler.run( &action_block)
+    controller.response.sub! " </body> " , " #{ results} </body> "
+  end
+
+
+Live streaming using Rails : (There is a detailed article at tenderlove -> Bookmarks)
+  class StreamingController < ApplicationController
+    include ActionController::Live # This is the main mixin
+    
+    # Streams about 180 MB of generated data to the browser.
+    def stream
+      10_000_000.times do | i |
+        response.stream.write " This is line #{ i } \n"
+      end
+    ensure
+      response.stream.close
+    end
+  end
+
+View Streaming :
+  render stream: true
+
+  This will make sure that the layout is rendered first (before active record queries) then the individual sections of the page will be populated using streaming. For view streaming this method should be used for any other streaming the previous method should be used.
+
+There are two methods present in ActionController::Streaming module
+These are send_data and send_file 
+send_data(data, options = {})
+  Can be used to send textual or binary data to client. 
+  Options:
+    :filename
+      Suggests a filename for the browser to use.
+    :type
+      Specifies an HTTP content type. Defaults to 'application/octet-stream'.
+    :disposition
+      Specifies whether the file will be shown inline or downloaded. Valid values are inline and attachment (default).
+    :status
+      Specifies the status code to send with the response. Defaults to '200 OK'.
+
+Example : send_data my_generate_tarball_method( 'dir' ), filename: 'dir.tgz'
+
+Captcha (?)
+  require 'RMagick'
+  
+  class CaptchaController < ApplicationController
+    def image
+      # create an RMagic canvas and render difficult to read text on it (?)
+      img = canvas.flatten_images
+      img.format = " JPG" 
+      # send it to the browser
+      send_data img.to_blob, disposition: 'inline', type: 'image/jpg'
+    end
+  end
+
+send_file(path, options = {}) 
+  Almost same as send_data but uses Rack middleware Rack::Sendfile which intercepts the request and replaces it with a webserver specific X-Sendfile header. The web server then becomes responsible for writing the file contents to the client instead of Rails. This can dramatically reduce the amount of work accomplished in Ruby and takes advantage of the web servers optimized file delivery code.
+
+  All options are same with an additional 
+    :url_based_filename
+      Should be set to true if you want the browser to guess the filename from the URL, which is necessary for i18n filenames on certain browsers (setting :filename overrides this option).
+
+It is good if we can copy the file to public directory after it is requested once then the web server will not involve rails at all to serve that file (a caching mechanism). 
+  public_dir = File.join( Rails.root, 'public', controller_path) #/public/auctions/show/
+  FileUtils.mkdir_p(public_dir)
+  FileUtils.cp(filename, File.join(public_dir, filename)) #/public/auctions/show/1.json (?) or may be my_generate_tarball_method( 'dir' ) this stuff
+
+  send_file '/path/to.jpg',  type: 'image/jpeg',  disposition: 'inline'
+  # Streaming a video :) 
+  send_file @video_file.path, filename: video_file.title + '.flv', type: 'video/x-flv', disposition: 'inline'
+
+Using Action Pack Variant :
+    class ApplicationController < ActionController:: Base
+      before_action :set_variant
+      
+      def index
+        respond_to do | format|
+          format.html do | html |
+            html.mobile do # renders app/views/posts/index.html+mobile.haml
+              @mobile_only_variable = true
+            end
+          end
+        end
+      end
+
+      protected
+        def set_variant
+          request.variant = :mobile if request.user_agent =~ /iPhone/i
+        end
+    end
+
+Active Record:
+---------------
+
+  Some configurations:
+    self.table_name = "xxx" # Can be used to set table for that model
+    self.primary_key = "mno" # Can be used to set the primary key other than 'id'
+
+    In config/application.rb -->
+      # To stop pluralizing the name of model to get the table name
+      config.active_record.pluralize_table_names = false
+
+      config.active_record.primary_key_prefix_type 
+      If the value is 
+         :table_name -> Active Record will look for <table>id instead of id as the primary column
+         :table_name_with_underscore -> Active Record will look for <table>_id instead of id as the primary column
+
+      config.active_record.table_name_prefix
+      # Prefixes each table name with some string 
+
+      config.active_record.table_name_suffix
+
+  Reading and writing attribute values on a model:
+    In model, the attributes are not declared explicitly. Rails will read database schema during read or write to dynamically create or use them.
+    read_attribute(:category) can be used for reading an attribute value and write_attribute(:message, txt + ' in bed') can be used to write a value of attribute. 
+    Same can also be done using self[:category], by either assigning a value to it or reading directly from it. 
+
+  Storing Hash or Object in Database (Serialize)
+    Rails uses YML to serialize and store hash or data in database (in text/binary fields). 
+    class User < ActiveRecord:: Base
+      serialize :preferences, Hash
+    end
+
+    This means that in preference field one can store a hash and after reading of data if it does not match a proper Hash definition (optional) then it will raise an exception SerializationTypeMismatch.
+
+    Here "preference" attribute won't be initialized as hash directly so one can not just do,
+    user = User.new
+    user.preferences[:inline_help] = false
+    # the following line will raise NoMethodError unless preferences has a default
+
+    In migration we can directly write
+    add_column :users, :preferences, :text, default: " --- {}"
+    and try to have a default value but for text or binary field in some cases this default value is ignored (in MySQL 5.x)
+
+    So we can do something like 
+    def preferences
+      # if we don't have a value for preference write a blank hash and return that
+      read_attribute(:preferences) || write_attribute(:preferences, {})
+    end
+
+    We can also use store which will by default start with an empty hash
+    class User < ActiveRecord::Base
+      store :preferences
+    end
+
+    We can also define specific accessor for keys,
+    store :preferences, accessors: [:inline_help]
+
+    Which will enable us to do following,
+    >> user = User.new
+    => #<User id: nil, preferences: {}, ...>
+    >> user.inline_help = false
+    => false
+    >> user.preferences
+    => {"inline_help"=>false}
+
+    Alternatively, store_accessor :inline_help
+
+  CRUD :
+    Creation:
+      Records can be created by calling new on model, and values can be passed either using a block, or the argument hash or by directly assigning the value in the newly created object.
+      c = Client.new 
+      new_record? and persisted? can be used to check if it was saved in the db, the first one will return true and second one will return false in such cases. 
+
+      c = Client. new do |client|
+            client.name = " Nile River Co. "
+            client.code = " NRC"
+          end
+
+      or 
+
+      c = Client. create( name: " Nile River, Co. " , code: " NRC" )
+
+  Reading:
+    first_project = Project.find(1)
+
+    # Works as select *
+    all_clients = Client.all
+
+    first_client = Client.first
+    last_client = Client.last
+
+    Product.find([1, 2]) # tries to match all records with specified primary keys
+
+    Reading and writing members:
+      Object fashion : first_client.name
+      Hash fashion : first_client[:name] or first_client['name']
+
+      read_attribute and write_attribute can be used to read or write properties as well. 
+
+    -> first_client.attributes
+    attributes method can be used to return a hash of all attributes for that model, it is a shallow copy and won't contain the associations.
+
+    -> Attribute values are type casted as per the database field, the value before type casting can be retrieved using the accessor <fieldname>_before_type_cast
+    example : rate_before_type_cast.tr( '$,', '' )
+
+  Reload function can be used to fire the SQL queries again and reload the data from database for a specific object.
+  record.reload(lock: true) # reload the same record with an exclusive row lock
+
+  Clone : This can be used to shallow copy an active record row object. 
+
+  Firing raw SQL Queries : Client.find_by_sql( "select * from clients" )
+
+  Making the query parameterized : Client. where( "code like ?" , "#{ param} %" ) # This will properly quote the value and provide protection from SQL Injection and other stuff
+
+  Client.count_by_sql( "select count(*) from clients" ) 
+
+  Query Cache: 
+    Rails query cache is simple it saves the result as the value where the query is the key. It will treat same queries but written differently as two different queries (limitation).
+    The cache can be manually invoked as well,
+      User.cache do
+        puts User.first
+        puts User.first
+        puts User.first
+      end
+
+    Second and third request will be processed from the cache. 
+
+  clear_query_cache can be used to clear cache manually. 
+  Update :
+    A record can be updated by calling update method on model where first argument is and id or a list of ids, the second argument expects a single hash or a set of hashesh. 
+    Can be directly used with "if",
+    if project.update(params[ :project])
+      redirect_to project
+    else
+      render 'edit'
+    end
+
+    or valid method can be called on object to check if the validations passed or not but this will rerun the validations as well.
+
+    Mass updating using update_all : 
+      Project.update_all({ manager: 'Ron Campbell' }, technology: 'Rails' )
+      Project.update_all( "cost = cost * 3" , "lower(technology) LIKE '%microsoft%'" )
+    Here the first parameter is treated as update intent and second parameter as query string.
+
+    Another way to update: 
+      proj = Project.find(2)
+      proj.manager = "XYZ"
+      proj.save # or we can use proj.save!
+
+      proj.save will return true or false according to validation passed or not where banged save will raise exception
+
+    update_attribute is also a way to update an attribute which receives either a key value pair as arguments (proj.update_attribute(:manager, 'XYZ')) or a hash of key value pairs but this will skip all validations.
+    [this method allows you to persist an Active Record model to the database even if the full object isn't valid]
+
+    update_column is almost similar to update_attribute but along with validations it also skips updating the updated_at time stamp and do not run any callbacks.
+    update_columns (plural of update_column) accepts a hash of key value pair and acts similar to its singular version
+
+
+    Another way of mass assignment is by association, so if Project contains has_many :users then Rails will expose user_ids attribute writer, so in form if any checkbox selection of user is available we can just use the name proj[user_ids][] and rails will take care of rest (but can expose to security risk (?))
+
+    increment, decrement, and toggle can also be used with fields (?) , each has a bang variant which will persist the value in db by calling update_attributes
+
+    Touching the records:
+      >> user = User.first
+      >> user.touch # => sets updated_at to now.
+      >> user.touch(:viewed_at) # sets viewed_at and updated_at to now.
+
+    If a :touch option is provided to a belongs to relation, it will touch the parent record when the child is touched.
+      class User < ActiveRecord::Base
+        belongs_to :client, touch: true
+      end
+
+      >> user.touch # => also calls user.client.touch
+
+    Read-only Attributes:
+      class Customer < ActiveRecord::Base
+        attr_readonly :social_security_number
+      end
+
+      >> customer = Customer.new(social_security_number: "130803020" )
+      => #<Customer id: 1, social_security_number: "130803020", ...>
+      >> customer.social_security_number
+      => "130803020"
+      >> customer.save
+      >> customer.social_security_number = "000000000" # Note, no error raised!
+      >> customer.social_security_number
+      => "000000000"
+      >> customer.save
+      >> customer.reload
+      >> customer.social_security_number
+      => "130803020" # the original readonly value is preserved
+
+      Trying to write a read-only value will not raise any exception only that value won't be written again if already written once.
+
+      To get a list of read-only attributes : >> Customer.readonly_attributes
+
+  Destroying a record:
+    >> bad_timesheet = Timesheet.find(1)
+    >> bad_timesheet.destroy
+
+    >> bad_timesheet.user_id = 2 # Trying to modify again, will not work
+    RuntimeError: can't modify frozen Hash
+
+    destroy! will raise exception if record can not be destroyed
+
+    delete (along with a version of destroy) method exists at class level which accepts an id or an array of ids which will be deleted with out loading their instance in the memory. So this method is fast but it will get into trouble if any after delete callback or association deletion requirement is present. 
+
+Locking 
+  1. Optimistic Locking : Will find if the collision happened and try to resolve 
+      Adding column named lock_version in the table with a default value of zero is sufficient. 
+      Behavior:
+        describe Timesheet do
+          it "locks optimistically" do
+            t1 = Timesheet.create
+            t2 = Timesheet.find(t1.id)
+            
+            t1.rate = 250
+            t2.rate = 175
+          
+            expect(t1.save).to be_true
+            expect { t2.save }.to raise_error(ActiveRecord:: StaleObjectError)
+          end
+        end
+
+      Migration when adding lock_version 
+        def change
+          add_column :timesheets, :lock_version, :integer, default: 0
+        end
+      Locking column (lock_version) can be changed at application level by using 
+        config.active_record.locking_column = :alternate_l_c # at application.rb
+      At model level using 
+        self.locking_column = :alt_l_c
+
+      Handling code at controller could be 
+        def update
+          timesheet = Timesheet.find(params[:id])
+          timesheet.update(params[:timesheet] )
+          # redirect somewhere
+        rescue ActiveRecord::StaleObjectError
+          flash[:error] = " Timesheet was modified while you were editing it."
+          redirect_to [:edit, timesheet]
+        end
+  2. Pessimistic Locking : Will not load an instance of row if it is locked by any other 
+      Requires database support, can be used in transaction 
+        Timesheet.transaction do
+          t = Timesheet.lock.first
+          t.approved = true
+          t.save!
+        end
+
+      It's also possible to call lock! on an existing model instance, which simply calls reload(lock: true) under the covers. You wouldn't want to do that on an instance with attribute changes since it would cause them to be discarded by the reload. If you decide you don't want the lock anymore, you can pass false to the lock! method.
+
+      Pessimistic locking is a bit easier to implement, but can lead to situations where one Rails process is waiting on another to release a database lock, that is, waiting and not serving any other incoming requests. **Remember that Rails processes are typically single-threaded.**
+
+Where in Active Record:
+  Product.where( sku: params[:sku] )
+  Product.where( sku: [ 9400, 9500, 9900] ) # Uses IN when passed an array
+
+  Product.where('description like ? and color = ?', "%#{terms}%", color)
+  Product.where('sku in (?)', selected_skus)
+
+  Article.where.not( title: 'Rails 3' )
+  Article.where.not( title: ['Rails 3', 'Rails 5'] ) # Uses NOT IN internally 
+
+  Product.where( "name = :name AND sku = :sku AND created_at > :date" , name: "Space Toilet" , sku: 80800, date: '2009-01-01' )
+
+  Message.where( "subject LIKE :foo OR body LIKE :foo" , foo: '%woah%' ) # Nice!
+  User.where( login: login, password: password).first # Uses AND
+
+  Timesheet.where( 'submitted = ?' , true) # Different databases can treat boolean differently so better to use parameterized query 
+
+  >> User.where( 'email = ?' , nil ) # Here we should not use parameterized query, this won't work, how to handle this for unexpected behavior (?)
+  User Load (151.4ms) SELECT * FROM users WHERE (email = NULL)
+
+  >> User.where( :email => nil )
+  User Load (15.2ms) SELECT * FROM users WHERE (users.email IS NULL)
+
+order :
+  Timesheet.order( 'created_at desc' )
+  Timesheet.order(:created_at) # will order by ascending 
+  Timesheet.order(created_at: :desc)
+
+
+  For random order 
+    # MySQL
+    Timesheet.order('RAND()')
+
+    # Postgres
+    Timesheet.order('RANDOM()')
+    
+    # Microsoft SQL Server
+    Timesheet.order('NEWID()') # uses random uuids to sort
+    
+    # Oracle
+    Timesheet.order('dbms_random.value').first
+
+  This can be terrible for huge database one other way is 
+    Timsheet.limit(1).offset(rand(Timesheet.count)).first
+
+Limit and offset : Timesheet.limit(10).offset(10) # SELECT * FROM timesheets LIMIT 10, 10
+
+Select : 
+  >> b = BillableWeek.select("mon_hrs + tues_hrs as two_day_total").first
+  => #<BillableWeek ...>
+  >> b.two_day_total
+  => 16 
+
+  >> b = BillableWeek.select(:*, "mon_hrs + tues_hrs as two_day_total" ).first
+  # Need to use :* if all other columns need to be included
+
+from : Can be used to join other tables
+  def self.find_tagged_with(list)
+    select(" #{ table_name}.*").
+    from("#{ table_name} , tags, taggings").
+    where("#{ table_name}.#{ primary_key} = taggings.taggable_id
+            and taggings.tag_id = tags.id
+            and tags.name IN (?)",
+          Tag.parse(list))
+  end
+
+exists?
+  >> User. create( login: " mack" )
+  => #<User id: 1, login: "mack">
+  >> User. exists?( 1 )
+  => true
+  >> User. exists?( login: " mack" )
+  => true
+  >> User. exists?( id: [ 1 , 3, 5] )
+  => true
+  >> User. where( login: " mack" ) . exists?
+  => true
+
+extending
+  module Pagination
+    def page(number)
+      # pagination code
+    end
+  end
+  
+  scope = Model.all.extending(Pagination)
+  scope.page(params[:page])
+
+Group BY and Having
+  >> users = Account.select('name, SUM(cash) as money').group('name').to_a
+
+  >> User.group("created_at").having(["created_at > ?", 2.days.ago])
+
+includes, eager_load and preload :
+  >> users = User.where(login: "mack").includes(:billable_weeks)
+  To remove n+1 query issues we can load some association with the main model using includes, we can even load second or third degree of association
+
+  >> clients = Client.includes( users: [:avatar] ) # This loads association avatar with in users (?)
+  >> Client.includes(
+    users: [:avatar, { timesheets: :billable_weeks }]
+  )
+
+  eager_load and preload can be used interchangeably (?)
+
+Join : 
+  Buyer.select('buyers.id, count(carts.id) as cart_count')
+       .joins('left join carts on carts.buyer_id = buyers.id')
+       .group('buyers.id')
+
+Use of none :
+  def visible
+    case role
+    when :reviewer
+      Post.published
+    when :bad_user
+      Post.none
+    end
+  end
+  # If chained, the following code will not break for users
+  # with a :bad_user role
+  posts = current_user.visible.where( name: params[:name] )
+
+  So for bad user role it will post an object which will not query anthing in database but also it will not return nil so developer don't have to check before appending other chains, it won't simply query database
+
+Use of readonly :
+  If anything retrieved with readonly key word any changes on it will be discarded.
+
+  >> c = Comment.readonly.first
+  => #<Comment id: 1, body: "Hey beeyotch!">
+  >> c.body = " Keep it clean! "
+  => "Keep it clean!"
+  >> c.save
+  => ActiveRecord::ReadOnlyRecord: ActiveRecord::ReadOnlyRecord
+
+references :
+  When a column name is used in the query (a string query) from an association then along with "includes" (which will eager load the association), "references" method need to be used.
+  Team.includes(:members).where("members.name = ?", "Tyrion") -> This will raise an exception
+  but 
+  Team.includes(:members).where("members.name = ?", "Tyrion").references(:members) -> will work fine
+
+  but 
+  Team.includes(:members).where(members: {name: 'Tyrion'}) -> will work fine
+
+  and 
+  Team.includes(:members).order("members.name") -> will work fine
+
+reorder :
+  This will discard effect of any previous order method calls (?)
+  Member.order("name DESC").reorder(:id) # SELECT * FROM members ORDER BY members.id ASC
+
+  But any other order after reorder will be appended with the reordered value
+  Member.order("name DESC").reorder(:id).order(:name) # SELECT * FROM members ORDER BY members.name ASC, members.id ASC  
+  #### How ordering changed!! (?) It should come like ORDER BY id ASC, name ASC
+
+  Member.order(:name).reverse_order # SELECT * FROM members ORDER BY members.name DESC
+
+uniq/distinct :
+  User.select(:login).uniq # SELECT DISTINCT login FROM "users"
+
+Unscoping an constraint (removing):
+  Member.order('name DESC').unscope(:order) # SELECT "members".* FROM "members"
+
+  Member.where(name: "Tyrion" , active: true).unscope(where: :name) === Member.where( active: true)
+
+Using Arel :
+  https://github.com/rails/arel
+  >> users = User. arel_table
+  >> users. where(users[ :login] . eq( " mack" )) . to_sql
+
+Connecting to multiple databases:
+  The best method is to develop a base class which will inherit ActiveRecord::Base and call establish_connection (part of ActiveRecord::Base) inside it, and create models which will use that connection should be created by inheriting that base class.
+
+  class SomeOtherDB < ActiveRecord::Base
+    establish_connection :someother_db # someother_db is written in database.yml
+    self.abstract_class = true
+  end
+
+  establish_connection recieves an key from database yml as a symbol or the connection details hash directly (poor way of doing stuff)
+
+Using connection object from ActiveRecord:
+  ActiveRecord::Base.connection.execute("SELECT * FROM blah").values
+
+  ActiveRecord::ConnectionAdapters::DatabaseStatements is responsible for some useful functions :
+    conn = ActiveRecord::Base.connection
+
+    conn.begin_db_transaction()
+    conn.commit_db_transaction()
+    conn.delete(sql_statement) # Executes a SQL DELETE statement provided and returns the number of rows affected.
+    conn.execute(sql_statement) # This method is abstract in the DatabaseStatements module and is overridden by specific database adapter implementations.
+    conn.insert(sql_statement) # Executes an SQL INSERT statement and returns the last autogenerated ID from the affected table.
+    conn.reset_sequence!(table, column, sequence = nil) # Used in Oracle and Postgres; updates the named sequence to the maximum value of the specified table's column.
+    conn.rollback_db_transaction()
+    conn.select_all(sql_statement)
+    conn.select_one(sql_statement) # Selects the first tupple 
+    conn.select_value(sql_statement) # Selects the first column of first tupple
+    conn.select_values(sql_statement) # Selects the first column of all tupples
+    conn.update(sql_statement) # Executes the update statement provided and returns the number of rows affected. Works exactly like delete.
+
+    conn.active? # Checks if the connection is alive
+    conn.adapter_name
+    conn.disconnect!
+    conn.reconnect!
+    conn.raw_connection
+    conn.supports_count_distinct? # Indicates whether the adapter supports using DISTINCT within COUNT in SQL statements. This is true for all adapters except SQLite
+    conn.supports_migrations?
+    conn.tables # Produces a list of tables in the underlying database schema. It includes tables that aren’t usually exposed as Active Record models, such as schema_info and sessions.
+    conn.verify!(timeout) # Lazily verify this connection, calling active? only if it hasn’t been called for timeout seconds.
+
+    Configs
+      ActiveRecord::Base.default_timezone # Time.local (using :local ) or Time.utc (using :utc), Defaults to :local
+      ActiveRecord::Base.schema_format # :sql, :ruby
+      ActiveRecord::Base.store_full_sti_class
+
+Migrations:
+  Migration creates schema_migrations table in the database which will keep the version of the migration.
+  rake db:migrate will check this table and run all the migrations created after the version
+
+  change :
+    class CreateClients < ActiveRecorc::Migration
+      def change
+        create_table :clients do |t|
+          t.string :name
+          t.string :code
+          t.timestamps # adds the created_at and updated_at time stamp fields
+        end
+      end
+    end
+
+  To roll back to a specific version 
+    rake db:migrate VERSION=20130313005347
+
+  reversible :
+    To help migration reversing, 
+        class EnablingHStore < ActiveRecord::Migration
+          def change
+            reversible do |dir|
+              dir.up do 
+                execute("CREATE EXTENSION hstore")
+              end
+
+              dir.down do
+                execute("DROP EXTENSION hstore")
+              end
+            end
+            add_column :users, :preferences, :hstore
+          end
+        end
+    To make a migration irreversible, change down to raise exception
+      dir.down { raise ActiveRecord::IrreversibleMigration }
+
+  Create Table:
+  Stopping migration's create_table from adding auto increment id 
+    def change
+      create_table :clients, id: false do |t|
+        ...
+      end
+    end
+  If we send a symbol instead of false in id: then the auto increment key will be created with that name instead of conventional 'id'
+  Other options with create_table
+    :force -> It will drop the table if exists
+    :options -> Developer can provide database specific statements
+    :temporary -> if set to true table will exists for current session (during migration) - needed to migrate huge dataset (?)
+
+  Change Table : change_table similar to create table (need more info) (?)
+
+  Create join tables : 
+    create_join_table :ingredients, :recipes 
+    Accepts two table names and creates a table named ingredients_recipes with no primary key
+
+  The methods of t (available with in create_table and change_table :P)
+    t.change(:name, :string, limit: 80)
+    t.change(:description, :text)
+
+    t.change_default(:authorized, 1)
+
+    t.column(:name, :string)
+    Or in short 
+    t.string(:goat)
+    t.string(:goat, :sheep)
+
+    t.index(:name) # Creates an index in the database
+    t.index([:branch_id, :party_id], unique: true)
+    t.index([:branch_id, :party_id], unique: true, name: 'by_branch_party') # Named index
+
+    t.belongs_to(:person)
+    t.belongs_to(:person, index: true) # adds an index on foreign key
+    t.belongs_to(:person, polymorphic: true) # adds a _type column as well
+
+    ## belongs_to and references are same method
+
+    t.remove(:qualification)
+    t.remove(:qualification, :experience)
+
+    t.remove_index column: :branch_id
+    t.remove_index column: [:branch_id, :party_id] # remove the accounts_branch_id_party_id_index from the accounts table
+    t.remove_index name: :by_branch_party
+
+    t.remove_belongs_to(:person)
+    t.remove_references(:commentable, polymorphic: true)
+
+    t.remove_timestamps 
+
+    t.rename(:oldname, :newname)
+
+    t.timestamps #adds created_at, updated_at
+
+    Another way to add column 
+      add_column :clients, :code, :string
+      add_column :clients, :created_at, :datetime
+      # This should not be used inside create_table/change_table, should be just used inside change method
+
+    Floating-point numbers are by nature imprecise, so it is important to choose :decimal instead of :float for most business-related applications.
+
+  Using Migration for Data Migration :
+    Converting Phone number components to single entity 
+      class CombinePhoneNumber < ActiveRecord::Migration
+        def change 
+          add_column :phones, :number, :string
+          reversible do |dir|
+            dir.up do 
+              execute( "update phones set number = concat(area_code, prefix, suffix)" )
+            end
+
+            dir.down { ... }
+          end
+
+          remove_column :phones, :area_code
+          remove_column :phones, :prefix
+          remove_column :phones, :suffix
+        end
+      end
+
+    We can do the same thing using Phone model but that is slower 
+      Phone.find_each do |phn|
+        phn.number = phn.area_cdoe + phn.suffix + phn.prefix 
+        phn.save
+      end
+
+    And also we can do 
+      Phone.update_all("number = concat(area_code, prefix, suffix)")
+
+Models can be declared with in Migrations! 
+  class HashPasswordsOnUsers < ActiveRecord:: Migration
+    class User < ActiveRecord:: Base
+    end
+    
+    def change
+      reversible do |dir|
+        dir.up do
+          add_column :users, :hashed_password, :string
+          User.reset_column_information
+          User.find_each do |user|
+            user.hashed_password = Digest:: SHA1 .hexdigest(user.password)
+            user.save!
+          end
+          remove_column :users, :password
+        end
+        dir.down { raise ActiveRecord:: IrreversibleMigration }
+      end
+    end
+  end
+
+db/schema.rb contains the updated and final database state and can be used to re create the database (Running all migrations is not a good choice)
+  rake db:schema:load to create your database schema from scratch without having to run all migrations.
+
+db/seed.rb This can be used as a default location for creating seed data for your database.
+  rake db:seed
+
+  For dummy data that will be only used on development or staging, I prefer to create custom rake
+  tasks under the lib/tasks directory, for example lib/tasks/load_dev_data.rake. This helps keep
+  seed.rb clean and free from unnecessary conditionals, like unless Rails.env.production?
+
+Rake tasks for migration :
+  rake db:create # Create the database defined in config/database.yml for the current Rails.env
+  rake db:create:all #create all of the local databases defined in config/database.yml
+
+  rake db:drop # Drops the database for the current RAILS_ENV
+  rake db:drop:all # drops all of the local databases defined in config/database.yml
+
+  rake db:forward # forward the db version by one version after rollback
+  rake db:rollback # rollback to previous migration version 
+
+  rake db:migrate VERSION=20130313005347 # Does forward or rollback according to VERSION 
+
+  rake db:migrate:reset # Resets your database for the current environment using your migrations (as opposed to using schema.rb)
+
+  rake db:setup # creates the database for the current environment, loads the schema from db/schema.rb, then loads the seed data
+  rake db:reset # task does the same thing except that it drops and recreates the database first.
+
+  rake db:schema:dump # Create a db/schema.rb file that can be portably used against any DB supported by Active Record. Note that creation (or updating) of schema.rb happens automatically any time you migrate.
+
+  rake db:schema:load # Loads the schema.rb to database 
+  rake db:seed # seeds the database from seed.rb
+
+  rake db:structure:dump # Dumps the structure in SQL
+
+  rake db:test:prepare # Primarily used for preparing test db, takes a db:schema:dump and then does db:schema:load
+
+  rake db:version # gives the version of last ran migration
+
+Association :
+  class User < ActiveRecord::Base
+    has_many :timesheets
+    has_many :expense_reports
+  end
+
+  class Timesheet < ActiveRecord::Base
+    belongs_to :user
+  end
+
+  class ExpenseReport < ActiveRecord::Base
+    belongs_to :user
+  end
+
+  Both expense_reports and timesheets table will require to have user id 
+
+  def change
+    add_column :timesheets, :user_id, integer
+    add_column :expense_reports, :user_id. :integer
+    add_index :timesheets, :user_id
+    add_index :expense_reports, :user_id
+  end
+
+  user = User.find(1)
+
+  Association being accessed from an model works as an array (this is just a wrapper over standard array class of ruby). So we can do 
+  user.timesheets << Timesheet.new
+
+  This will persist the data directly into database as well (this will not happen if validation fails)
+  We can also use 
+  user.timesheet.create
+
+  create will return the created collection when called. << return association proxy (?)
+
+  On association we can use natural active record operations like where, order etc 
+  amy = User.find(1)
+  amy.timesheets.any? (if more then zero records exists for the association) amy.timesheets.any? -> returns true if at least one time sheet exists
+  amy.timesheets.many? -> returns true if more than one record exists
+  amy.timesheets.empty? -> returns true if zero record exists
+
+  amy.expense_reports.average(:expense_value).to_f # Gives average of expense_value field of expense_report
+
+  We can also create using 
+    user.timesheets.new(attributes)
+
+    2.3.0 :022 > amy.expense_reports.new # -------> Trying to create new
+     => #<ExpenseReport id: nil, desc: nil, user_id: 1, created_at: nil, updated_at: nil, expense_value: nil> 
+    2.3.0 :023 > amy.expense_reports # -------------> the new one is appended at the end
+     => #<ActiveRecord::Associations::CollectionProxy [#<ExpenseReport id: 1, desc: nil, user_id: 1, created_at: "2016-08-20 13:00:51", updated_at: "2016-08-20 13:05:51", expense_value: #<BigDecimal:21eac38,'0.525E1',18(36)>>, #<ExpenseReport id: 2, desc: "Another report", user_id: 1, created_at: "2016-08-20 13:08:20", updated_at: "2016-08-20 13:08:20", expense_value: #<BigDecimal:21e67f0,'0.5E1',9(27)>>, #<ExpenseReport id: nil, desc: nil, user_id: 1, created_at: nil, updated_at: nil, expense_value: nil>]> 
+    2.3.0 :024 > amy.expense_reports.last # -------------> Referring the new one using last
+     => #<ExpenseReport id: nil, desc: nil, user_id: 1, created_at: nil, updated_at: nil, expense_value: nil> 
+    2.3.0 :025 > amy.expense_reports.last.desc = "Well another one" -------> Setting stuff
+     => "Well another one" 
+    2.3.0 :026 > amy.expense_reports.last.expense_value = 2
+     => 2 
+    2.3.0 :027 > amy.expense_reports.last.save --> Saving 
+       (0.2ms)  begin transaction
+      SQL (0.5ms)  INSERT INTO "expense_reports" ("desc", "user_id", "created_at", "updated_at", "expense_value") VALUES (?, ?, ?, ?, ?)  [["desc", "Well another one"], ["user_id", 1], ["created_at", 2016-08-20 13:14:27 UTC], ["updated_at", 2016-08-20 13:14:27 UTC], ["expense_value", #<BigDecimal:4834d08,'0.2E1',9(27)>]]
+       (15.3ms)  commit transaction
+     => true 
+    2.3.0 :028 > amy.expense_reports.count
+       (0.4ms)  SELECT COUNT(*) FROM "expense_reports" WHERE "expense_reports"."user_id" = ?  [["user_id", 1]]
+     => 3 
+
+  amy.expense_reports.calculate(:sum, :expense_value).to_f
+     (0.3ms)  SELECT SUM("expense_reports"."expense_value") FROM "expense_reports" WHERE "expense_reports"."user_id" = ?  [["user_id", 1]]
+   => 12.25 
+   # Calculate can be used to aggregate data, first argument is the operation name which are :minimum, :maximum, :average, :sum and the second one is the column name
+
+  amy.expense_reports.count(:column_name)
+
+  >> User.new.timesheets.create # This will not work
+  ActiveRecord::RecordNotSaved: You cannot call create unless the parent is saved
+
+  amy.expense_reports.delete(3) # UPDATE "expense_reports" SET "user_id" = NULL WHERE "expense_reports"."user_id" = ? AND "expense_reports"."id" = 3
+  amy.expense_reports.delete_all # UPDATE "expense_reports" SET "user_id" = NULL WHERE "expense_reports"."user_id" = ?  [["user_id", 1]]
+
+  delete and delete_all nullifies the foreign key field instead of deleting them, this behavior is defined by :dependent option when configuring association, by default this is :nullify, if :delete or :destroy is specified then the fields will be deleted 
+
+  amy.expense_reports.clear # will invoke delete_all but chainable
+
+  destroy and destroy_all works similar to delete and delete_all but this will actually delete data from database. In case of delete_all it will load individual objects on memory and call destroy on it.
+
+  amy.expense_reports.first
+  amy.expense_reports.first(2) # gets first two expense reports
+  User.first
+
+  amy.expense_reports.ids # returns array of primary keys 
+  User.ids    
+
+  include?
+    tms = Timesheet.new
+     => #<Timesheet id: nil, desc: nil, user_id: nil, created_at: nil, updated_at: nil> 
+    amy.timesheets.include?(tms)
+     => false 
+
+  count vs length 
+    2.3.0 :002 > amy.expense_reports.count # Uses SQL's count
+       (0.2ms)  SELECT COUNT(*) FROM "expense_reports" WHERE "expense_reports"."user_id" = ?  [["user_id", 1]]
+     => 3 
+    2.3.0 :003 > amy.expense_reports.length # loads all object to memory and calls length 
+      ExpenseReport Load (0.4ms)  SELECT "expense_reports".* FROM "expense_reports" WHERE "expense_reports"."user_id" = ?  [["user_id", 1]]
+     => 3 
+
+  size is a hybrid of count and length 
+    If the owner object is in unsaved state then it counts associated objects from memory 
+    If persisted it will use SELECT COUNT(*) type things
+    If a counter is present at owner object, value of that counter will be used 
+      eg. timesheets_counter
+
+  It is efficient to use length then size when all association need to be loaded in memory anyway 
+
+  maximum(column_name, options = {}), minimum(column_name, options = {}) # similar to calculate(:maximum, :colname)
+
+  pluck(*column_names) # Returns an array of attribute values
+
+  Select
+    user.timesheets.select(:submitted).to_a
+    user. timesheets. select( [ :id, :submitted] ) . to_a
+
+  sum(column_name, options = {}) # Convenience wrapper for calculate(:sum, ...) 
+
+  uniq # equality of Active Record objects is determined by identity, meaning that the value of the id attribute is the same for both objects being compared
+
+  belongs_to association :
+    Timesheet.user will return the user associated with it but if need to be reloaded we can use Timesheet.user(true)
+
+    To create owner object from this side we can use build_<owner> or create_<owner>; build_<owner> (eg. build_user) won't save it in the database but create_owner will. 
+
+    Association configurations for belongs_to:
+      autosave: true # automatically save the owning record whenever this record is saved. Defaults to false.
+
+      class_name: # When a model class name is required as association name is not same as model name 
+      # In this case approvers are users only so we can add approver_id in timesheets table and configure the model like 
+      class Timesheet < ActiveRecord:: Base
+        belongs_to :approver, class_name: 'User'
+        belongs_to :user
+        ...
+      end
+
+    :counter_cache # Use this option to make Rails automatically update a counter field on the associated object with the number of belonging objects
+      counter_cache: true # will find field timesheets_count in users table and save the count of timesheets ; default value of this field should be zero
+
+    Timesheet.reset_counters(5, :weeks) # first argument is id and second one is column name
+
+    dependent: :destroy or :delete 
+    # Usage of this option might make sense in a has_one / belongs_to pairing. However, it is really unlikely that you want this behavior on has_many / belongs_to relationship; it just doesn't seem to make sense to code things that way. Additionally, if the owner record has its :dependent option set on the corresponding has_many association, then destroying one associated record will have the ripple effect of destroying all of its siblings.
+
+    foreign_key: column_name
+      belongs_to :administrator, foreign_key: 'admin_user_id'
+
+    inverse_of: name_of_has_association (?)
+
+    polymorphic: true # By making a belongs_to relationship polymorphic, you abstract out the association so that any other model in the system can fill it.
+
+    create_table :comments do | t|
+      t.text :body
+      t.references :subject, polymorphic: true
+    
+      # references can be used as a shortcut for following two statements
+      # t.integer :subject_id
+      # t.string :subject_type
+      
+      t.timestamps
+    end
+    
+    class Comment < ActiveRecord::Base
+      belongs_to :subject, polymorphic: true # Making it abstract 
+    end
+    
+    class ExpenseReport < ActiveRecord::Base
+      belongs_to :user
+      has_many :comments, as: :subject
+    end
+    
+    class Timesheet < ActiveRecord::Base
+      belongs_to :user
+      has_many :comments, as: :subject
+    end
+
+  belongs_to :user, touch: :timesheets_updated_at  # on touch will update the column mentioned of owner tupple
+
+  Using scopes with belongs_to -> 
+    belongs_to :approver, -> { where( approver: true) }, class_name: 'User'
+    # only those owner can be approvers whose approver property is set to true
+    # providing a scope on relationships never affect the assignment of associated objects, only how they’re read back from the database. To enforce the rule that a timesheet approver must be authorized, you’d need to add a before_save callback to the Timesheet class itself. 
+
+  belongs_to :post, -> { includes(:author) } # It wil egar load author when related post is referenced 
+
+has_many options :
+  after_add: callback 
+    Called after a record is added to the collection via the << method. Is not triggered by the collection's create method. Can pass a (or array) lamda or symbol of a function 
+
+  after_remove: callback
+    Called after a record has been removed from the collection with the delete method. 
+
+  as: association_name
+    For polymorphic association
+
+  autosave: true
+    Whether to automatically save all modified records in an association collection when the parent is saved
+
+  before_add: callback
+    Triggered when a record is added to the collection via the << method. Raising an exception in the callback will stop the object from getting added to the collection. 
+    (owner, record) arguments are passed, The owner parameter is the object with the association. The record parameter is the object being added.
+
+  before_remove: callback
+
+  :class_name # has_many :draft_timesheets, -> { where( submitted: false) }, class_name: 'Timesheet'
+
+  dependent: :delete_all # All associated objects are deleted in fell swoop using a single SQL command. Note: While this option is much faster than :destroy, it doesn't trigger any destroy callbacks on the associated objects
+
+  dependent: :destroy # iteratively calling their destroy methods
+
+  dependent: :nullify #nullify, or clear, the foreign key that joins them to the parent record
+
+  dependent: :restrict_with_exception # If associated objects are present when the parent object is destroyed, Rails raises an ActiveRecord::DeleteRestrictionError exception.
+
+  dependent: :restrict_with_error 
+
+  foreign_key: column_name # Normally it would be the owning record's class name with _id appended to it.
+
+  inverse_of: name_of_belongs_to_association
+    >> user = User. first
+    >> timesheet = user. timesheets. first
+    => <Timesheet id: 1, user_id: 1...>
+    >> timesheet. user. equal? user
+    => false  ------> Need to experiment more (?) May be with inverse it won't fire any query?
+    If we add :inverse_of to the association objection on User, like
+    has_many :timesheets, inverse_of: :user
+    then timesheet.user.equal? user will be true.
+
+  primary_key: column_name # Specifies a surrogate key to use instead of the owning record’s primary key, whose value should be used when querying to fill the association collection.
+
+  has_many scope using proc :
+    has_many :comments  # simple association
+    has_many :pending_comments, -> { where( approved: true) }, class_name: 'Comment' # Class name need to be provided as association name is not equals to class name
+
+    # Use any SQL helpers here
+
+has_and_belongs_to_many association :
+  class CreateBillingCodesTimesheets < ActiveRecord::Migration
+    def change
+      create_join_table :billing_codes, :timesheets
+    end
+  end
+
+  class BillingCode < ActiveRecord::Base
+    has_and_belongs_to_many :timesheets
+  end
+
+  class Timesheet < ActiveRecord::Base
+    has_and_belongs_to_many :billing_codes
+  end
+
+  Self Referential Relationship :
+  class CreateRelatedBillingCodes < ActiveRecord::Migration
+    def change
+      create_table :related_billing_codes, id: false do | t|
+        t. column :first_billing_code_id, :integer, null : false
+        t. column :second_billing_code_id, :integer, null : false
+      end
+    end
+  end
+  
+  class BillingCode < ActiveRecord:: Base
+    has_and_belongs_to_many :related,
+      join_table: 'related_billing_codes',
+      foreign_key: 'first_billing_code_id',
+      association_foreign_key: 'second_billing_code_id', # -------> Need to read more about this (?)
+      class_name: 'BillingCode'
+  end
+
+  Bi-directional access is not default so 
+    x = BillingCode.create(desc:"xyz");
+    y = BillingCode.create(desc:"mno");
+    x.related << y
+    x.reload.related # Will get y
+    y.reload.related # will not get x
+
+  Extra columns provided in the join table will come as properties of associated object in read only mode.
+
+has_many :through
+  class Client < ActiveRecord::Base
+    has_many :billable_weeks
+    has_many :timesheets, through: :billable_weeks
+  end
+
+  class BillableWeek < ActiveRecord::Base
+    belongs_to :client
+    belongs_to :timesheet
+  end
+
+  class Timesheet < ActiveRecord::Base
+    has_many :billable_weeks
+    has_many :clients, through: :billable_weeks
+  end
+
+  through: :billable_weeks is same for Client and Timesheet, BillableWeek is the join table
+  If we create a timesheet directly from client object billable week will be automatically added.
+
+  Another type of use of has_many :through
+    class GrandParent < ActiveRecord::Base
+      has_many :parent
+      has_many :grand_children, through: :parent, source: :children
+    end
+
+    class Parent < ActiveRecord::Base
+      belongs_to : grand_parent
+      has_many :children
+    end
+
+    class Child < ActiveRecord::Base
+      belongs_to :parent
+    end
+
+    # Here we are establishing one to many relation ship (?)
+    # Children can not be directly created from grand parent
+
+  Polymorphic association in join table (Usage of source_type:)
+    class Client < ActiveRecord::Base
+      has_many :client_contacts
+      has_many :contacts, through: :client_contacts 
+    end
+
+    class ClientContact < ActiveRecord::Base
+      belongs_to :client
+      belongs_to :contact, polymorphic: true
+    end
+
+    class Person < ActiveRecord::Base
+      has_many: :client_contacts, as: :contact
+    end
+
+    class Business < ActiveRecord::Base
+      has_many: :client_contacts, as: :contact
+    end
+
+    This is invalid as we can not do Client.first.contacts
+    Contact is not an model we need to consider this, the proper way of doing this is,
+
+    class Client < ActiveRecord::Base
+      has_many :client_contacts
+      has_many :people, through: :client_contacts, source: :contact, source_type: :person
+      has_many :businesses, through: :client_contacts, source: :contact, source_type: :business
+    end
+
+    Now if someone wants to get all contacts, one can write its own accessors
+      def contacts
+        people + business
+      end
+
+      Why it is written as people_contacts + business_contacts (?) :'(
+
+  Unique association objects
+    Two different BillableWeeks could reference the same Timesheet
+    Client.first.timesheets.reload.to_a
+    [#<Timesheet id: 1...>, #<Timesheet id: 1...>]
+    It's not extraordinary for two distinct model instances of the same database record to be in memory at the same time — it's just not usually desirable.
+
+    has_many :timesheets, -> { distinct }, through: :billable_weeks
+has_one association:
+  Owner foreign key is created at association end
+
+  class User < ActiveRecord::Base
+    has_one :avatar
+  end
+
+  class Avatar < ActiveRecord::Base
+    belongs_to :user
+  end
+  avatar table will contain the user_id field, creating two avatar on same user will make sure previously created avatar is de-associate from user, to delete then upon creation of new one should specify dependent: :destroy
+
+  Using has_one and has_many together
+    has_many :timesheets
+    has_one :latest_sheet, -> { order( 'created_at desc' ) }, class_name: 'Timesheet'
+
+Validations:
+  validates_absence_of :something_unwanted
+  # Should be nil or ""
+
+  validates_acceptance_of :privacy_policy, :terms_of_service
+  # No actual database column matching the attribute declared in the validation is required. When you call this method, it will create virtual attributes automatically for each named attribute you specify.
+
+  validates_acceptance_of :account_cancellation, accept: 'YES'
+  # :accept option makes it easy to change the value considered acceptance. The default value is "1" 
+
+  validates_associated
+  # ensure that all associated objects are valid on save
+  # has_many associations default to validate: true, so no need to use this
+  # setting validate: true carelessly on a belongs_to association can cause infinite loop problems
+
+  validates_confirmation_of
+  # This validation will create a virtual attribute for the confirmation value, The user interface need to include extra text fields named with a _confirmation suffix
+
+  validates_each :supplier_id, :purchase_order do |record, attr, value|
+    record.errors.add(attr) unless PurchasingSystem.validate(attr, value)
+  end
+  # validate_each accepts a block, and the block accepts three parameters, instance of the model, attribute name and value that need to be matched
+
+  validates_format_of :email, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/
+  # Pattern matching
+
+  validates_inclusion_of :gender, in: %w( m f ), message: 'O RLY?'
+  # gender should be with in m or f
+  validates_inclusion_of :protected, in: [ true, false]
+
+  validates_exclusion_of :username, in: %w( admin superuser ), message: 'Borat says "Naughty, naughty!"'
+
+  validates_length_of :login, minimum: 5
+
+  validates_length_of :username, within: 5..20 # should not use minimum and maximum instead use within
+
+  validates_length_of :account_number, is: 16 # exact length match
+
+  validates_length_of :account_number, is: 16, wrong_length: "should be %{count} characters long" 
+  # :too_long, :too_short, :wrong_length options are provided to provide several error messages, %{count} is used in message which will be replaced by expected length 
+
+  validates_numericality_of :account_number, only_integer: true
+  # Other comparison options!
+    • :equal_to
+    • :greater_than
+    • :greater_than_or_equal_to
+    • :less_than
+    • :less_than_or_equal_to
+    • :other_than
+    • :even
+    • :odd
+
+  validates_presence_of :username, :email , :account_number
+
+  validate :user_exists 
+  # Passes a symbol which is a name of the function 
+
+  validates_uniqueness_of :username
+  validates_uniqueness_of :line_two, scope: [ :line_one, :city, :zip]
+  # It's also possible to specify whether to make the uniqueness constraint case-sensitive or not, via the :case_sensitive option (ignored for non textual attributes).
+
+  For a has_many :through
+    class Student < ActiveRecord::Base
+      has_many :registrations
+      has_many :courses, through: :registrations
+    end
+
+    class Registration < ActiveRecord::Base
+      belongs_to :student
+      belongs_to :course
+      validates_uniqueness_of :student_id, scope: :course_id, message: "can only register once per course"
+    end
+
+    class Course < ActiveRecord::Base
+      has_many :registrations
+      has_many :students, through: :registrations
+    end
+
+  validates_uniqueness_of :title, conditions: - > { where. not(published_at: nil ) }
+
+  class EmailValidator < ActiveRecord::Validator # can use this class to create custom validator class
+    def validate()
+      email_field = options[ :attr]
+      record.errors[ email_field] << " is not valid" unless record.send(email_field) =~ /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/ # Here the field name is not known so "send"
+                                                                                                                                     # is used to call the accessor 
+    end
+  end
+  
+  class Account < ActiveRecord::Base
+    validates_with EmailValidator, attr: :email
+  end
+
+  :allow_blank and :allow_nil
+  # In some cases, you only want to trigger a validation if a value is present
+  # :allow_blank option skips validation if the value is blank 
+  # :allow_nil option skips the validation if the value of the attribute is nil 
+
+  :message
+  # Message can be provided using this, available variable for interpolation 
+    1. count 
+    2. value -> current value of the attribute
+    3. model 
+    4. attribute (?)
+
+  :on # validation can be restricted on creation (:create) or on updation only (:update)
+  validates_uniqueness_of :email , on: :create
+
+  validates :email , presence: { strict: true } (?)
+
+  validates_presence_of :approver, if: -> { approved? && ! legacy? }
+
+  validates_presence_of :password, if: :password_required?
+
+  with_options if: :password_required? do |user|
+    user.validates_presence_of :password
+    user.validates_presence_of :password_confirmation
+    user.validates_length_of :password, within: 4..40
+    user.validates_confirmation_of :password
+  end
+
+  Validation context can be used for conditional validation as well. We can 
+    validates_presence_of :name, on: :publish
+  Here :on argument contains the context name, now this rule will be applied only when 
+    report.valid? :publish 
+  is called, that means valid?(context_name) need to be called for this validation
+
+  Using multiple validators using validates 
+    validates :username, presence: true,
+      format: { with: /[A-Za-z0-9]+/ },
+      length: { minimum: 3 },
+      uniqueness: true
+
+    validates :unwanted, absence: { message: " You shouldn't have set that" } # Alias for validates_absence_of
+    validates :terms, acceptance: { message: 'You must accept terms.' }
+    validates :email , confirmation: { message: 'Try again.' }
+    validates :username, exclusion: %w( admin superuser)
+    validates :username, format: /[A-Za-z0-9]+/ # or format: /[A-Za-z0-9]+/ (?)
+    validates :gender, inclusion: %w( male female)
+    validates :username, length: 3..20 # length: { minimum: 0, maximum: 1000 }
+    validates :quantity, numericality: { message: 'Supply a number.' }
+    validates :username, presence: { message: 'How do you expect to login?' }
+    validates :username, uniqueness: { message: " You're SOL on that login choice, buddy! " }
+
+  Adding custom validation macros:
+    To create a custom validator that follows macro like style we need to inherit from ActiveModel::EachValidator
+    (There is also ActiveRecord::Validator)
+
+    class ReportLikeValidator < ActiveModel::EachValidator
+      def validate_each(record, attribute, value)
+        unless value["Report"]
+          record.errors.add(attribute, 'does not appear to be a Report' )
+        end
+      end
+    end
+
+    validates :report, report_like: true
+
+    #### initialize method can be used to specify additional arguments
+
+    class ReportLikeValidator < ActiveModel::EachValidator
+      def initialize(options)
+        @with = options[:with]
+        super
+      end
+
+      def validate_each(record, attribute, value)
+        unless value[@with]
+          record.errors.add(attribute, 'does not appear to be like #{@with}')
+        end
+      end
+    end
+
+    validates :name, like: { with: " Report" }
+
+
+  Modifying errors hash:
+    errors[:base] = msg
+    # Adds an error message related to the overall object state itself and not the value of any particular attribute
+
+    errors[:attribute] = msg
+    # Adds an error message related to a particular attribute.
+
+    errors.clear 
+    # As you might expect, the clear method clears the Errors collection
+
+    To access : # Always returns an array ***
+      user.errors.full_messages_for( :email )
+      user.errors[:login]
+
+Advanced Active Record 
+  Parameterized Scope 
+    scope :newer_than, -> (date) { where( 'start_date > ?' , date) }
+
+    Invocation : BillableWeek.newer_than( Date.today)
+
+  scopes are available automatically on has_many association
+
+  scope :tardy, -> {
+    joins(:timesheets).
+    where("timesheets.submitted_at <= ?", 7.days.ago).
+    group("users.id")
+  }
+
+  On Timesheet if we define scope :late, -> { where( " timesheet.submitted_at <= ?" , 7. days. ago) }
+  Tardy can be written as 
+    scope :tardy, -> {
+      joins(:timesheets).group("users.id").merge(Timesheet.late)
+    }
+
+  Default Scope :   default_scope { where( status: " open" ) }
+    Default scopes also get applied to your models when building or creating them
+    Timesheet.create # Result : #<Timesheet id: 1, status: "open">
+    But if we do, Timesheet.where(status:"new").create #<Timesheet id: 1, status: "new">
+
+  To remove default (may be any if used in later part) scope from query 
+    Timesheet.unscoped.order("submitted_at DESC").to_a
+    Timesheet.unscoped.new
+
+  Using scope in CRUD
+    u.timesheets.underutilized.update_all("total_hours = total_hours + 2")
+
+  A way to prepopulate stuff when calling create on a model is to use where clause, or disguise the where in scope
+    scope :perfect, - > { submitted. where(total_hours: 40) }
+    Timesheet.perfect.build
+    # Will create #<Timesheet id: nil, submitted: true, user_id: nil, total_hours: 40 ...>
+
+  Callbacks 
+    • before_validation
+    • after_validation
+    • before_save
+    • around_save
+    • before_create (for new records) and before_update (for existing records)
+    • around_create (for new records) and around_update (for existing records)
+    • after_create (for new records) and after_update (for existing records)
+    • after_save
+    • before_destroy
+    • around_destroy executes a DELETE database statement on yield
+    • after_destroy is called after record has been removed from the database and all attributes have been frozen (read-only)
+
+  :on option may accept a single lifecycle (like on: :create) or an array of life cycles on: [:create, :update]
+
+    • after_commit
+    • after_rollback
+    • after_touch
+
+  The following Active Record methods, when executed, do not run any callbacks:
+  • decrement
+  • decrement_counter
+  • delete
+  • delete_all
+  • increment
+  • increment_counter
+  • toggle
+  • touch
+  • update_column
+  • update_columns
+  • update_all
+  • update_counters
+
+  # If you return a boolean false (not nil) from a callback method, Active Record halts the execution chain. No further callbacks are executed. The save method will return false, and save! will raise a RecordNotSaved error.
+
+  # The after_find callback is invoked whenever Active Record loads a model object from the database, and is actually called before after_initialize, if both are implemented. Because after_find and after_initialize are called for each object found and instantiated by finders.
+
+  # if you want to run some code only the first time that a model is ever instantiated, and not after each database load?
+    after_initialize do
+      if new_record?
+        . . .
+      end
+    end
+
+  Callback Class 
+    class MarkDeleted
+      def self.before_destroy(model)
+        model.update_attribute( :deleted_at, Time. current)
+        false
+      end
+    end
+
+    before_destroy MarkDeleted # In any model
+
+  Single Table Inheritance (STI)
+    Single Table Inheritance is a method of depicting object oriented inheritance between models in database. The database table will contain all data of all child classes with a type field. 
+    For example 
+      class Timesheet < ActiveRecord::Base
+        def billable_hours_outstanding
+          if submitted? # should check if the submitted column is true
+            billable_weeks.map(&:total_hours).sum # for each week get total hours by calling total_hours method on each billable week object, then get the sum
+          else
+            0
+          end
+        end
+
+        def self.billable_hours_outstanding(user) # Adding a class method in case called like Timesheet.billable_hours_outstanding userObj (?)
+          user.timesheets.map(&:billable_hours_outstanding).sum 
+        end
+      end
+    Well in this case if we only want to get non paid timesheets then we have to modify billable_hours_outstanding instance method, which is violation of OCP
+    Will be converted like 
+      def billable_hours_outstanding
+        if submitted? && not paid? # This is not good 
+          billable_weeks.map(&:total_hours).sum
+        else
+          0
+        end
+      end
+
+    A good implementation would be 
+      class Timesheet < ActiveRecord::Base
+        # non-relevant code ommitted
+        
+        def self.billable_hours_outstanding_for(user)
+          user.timesheets.map(&:billable_hours_outstanding).sum
+        end
+      end
+
+      class DraftTimesheet < Timesheet
+        def billable_hours_outstanding
+          0 # Drafts are not submitted so by default zero, well it won't be bad to predict expense by calculating drafter time sheet hours!?
+        end
+      end
+
+      class SubmittedTimesheet < Timesheet
+        def billable_hours_outstanding
+          billable_weeks.map(&:total_hours).sum
+        end
+      end
+
+      class PaidTimesheet < Timesheet
+        def billable_hours_outstanding
+          billable_weeks.map(&:total_hours).sum - paid_hours
+        end
+      end
+
+    In database if we add a column named type then ActiveRecord automatically behaves to support STI (add_column :timesheets, :type, :string)
+
+    d = DraftTimesheet.create
+    d.type # DraftTimesheet
+    Inheritance column name can be overridden from type using 
+      self.inheritance_column = 'object_type'
+      or
+      config.activerecord.inheritance_column (?)
+
+  Making an attribute enumerable 
+    enum status: %i(draft published archived) # will go inside model
+
+    now one can do 
+    post.draft! -> Set the status to draft
+    post.draft? -> output true
+    post.status -> output draft
+    Post.draft -> will return all posts which are drafts
+    # Active Record creates a class method with a pluralized name of the defined enum on the model, that returns a hash with the key and value of each status. 
+    >> Post.statuses
+    => {"draft"=>0, "published"=>1, "archived"=>2}
+
+    Using state machine # https://github.com/pluginaweek/state_machine (Awesome)
+
+    Creating a commentable concern 
+      module Commentable
+        extend ActiveSupport:: Concern
+        included do
+          has_many :comments, as: :commentable
+        end
+      end
+
+      this is equivalent as writing 
+        module Commentable
+          def self.included
+            has_many :comments, as: :commentable
+          end
+        end
+    We want to execute code only when the module is mixed
+    # the directory app/models/concerns as place to keep all your application's model concerns. Any file found within this directory will automatically be part of the application load path.
+
+View 
+  Layout 
+    View files picked as the controller hierarchy, so layout belongs to application controller and have name application.html.haml
+
+    yield in layout will get the actual body content
+    yield :somthing can be used with 
+      content_for :something do 
+        ...
+      end
+  content_tag helper 
+    content_tag( 'h2' , article. subtitle) if show_subtitle?
+  Decent Expose Gem
+    expose(:timesheet) 
+    # Intuitively it will do 
+    # Timesheet.find(params[:timesheet_id] || params[:id])
+
+    expose(:timesheet) { client.timesheets.find(params[:id] ) }
+    # Explicitly specifying a value
+
+  # everything that comes across the controller-view boundary
+  = debug(assigns)
+  base_path # Local filesystem path pointing to the base directory of your application where templates are kept
+  controller # current controller instance is made available via controller
+  %body{ class: " #{ controller.controller_name} #{ controller.action_name} " }
+
+  cookies # hash containing the user's cookies 
+
+  flash
+    flash[:notice] = "Welcome, #{user.first_name} ! "
+    flash[:alert] = "Login invalid."
+
+    flash.notice = " Welcome, #{ user.first_name} ! "
+    flash.alert = " Login invalid. "
+
+    %html
+      ...
+      %body
+        - if flash. notice
+          .notice= flash. notice
+        - if flash. alert
+          .notice.alert= flash. alert
+
+        = yield
+
+  #  set a flash notice and not redirect, thereby incorrectly showing a flash message on the following request
+  flash.now.alert = " #{@post.title} could not be created. "
+
+  logger # same as Rails.logger
+
+  params # same params hash that is available in your controller, containing the key/value pairs of your request
+
+  request, response and session are also available in view
+
+  Partials
+    = render 'details'
+    # Partial template names must begin with an underscore, which serves to set them apart visually within a given view template directory
+    # However, you leave the underscore out when you refer to them.
+
+    = render 'details' , form: form 
+    # Partial with variables passed to it
+
+    # To check presence of a certain local variable in a partial, you need to do it by checking the local_assigns hash that is part of every template
+    - if local_assigns. has_key? :special
+      = special
+
+    = render entry # will render _entry.html.haml with "entry" object set a context (?)
+    Equivalent to 
+      = render partial : 'entry' , object: entry
+
+    render entries # rendering collection will expect a template named _entry.html.haml and will pass an object named "entry"
+    equivalent to 
+    partial : 'entry' , collection: @entries
+
+    # There is a counter for each partial, name of the variable is the name of the partial, plus _counter
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+

@@ -1,0 +1,162 @@
+Stock
+  Mother Stock Book
+    Date
+    Product
+    Packaging
+    Batch No
+    Opening Stock
+    Closing Stock
+    Quantity (sold/dispatched)
+    Receiving
+    Total
+    Bill No
+
+  Raw Material Stock
+    Date
+    Raw material name
+    Opening stock
+    Receiving
+    Usage
+    Unit
+    Closing Stock
+    Finished Product Name
+
+  Purchased Material Stock
+    Date
+    Product Name -> RawMaterial
+    Purchased On
+    From -> ThirdParty
+    Bill No -> Transaction
+    Value -> Rate
+    Batch No -> String
+    Expiry Date
+    Qty Purchased -> Units
+    Remarks
+
+  Finished Product Stock
+    Date
+    Product Name
+    Batch No
+    Manufacturing Date
+    Opening Stock
+    Receiving
+    Total
+    Closing Stock
+    Location
+    Remarks
+
+  ** Finished Product Stock -> Opening Stock = Mother Stock -> Opening Stock
+  ** Finished Product Stock -> Closing Stock = Mother Stock -> Closing Stock
+
+Administration
+---------------
+  Company Details
+    Company Name
+    Branch
+    Phone Number
+    Email Ids (** Multiple)
+    Web Site
+    VAT Number
+    CST Number
+    Trade License Number
+    Drug License Number
+    Registration Number
+    Authorized Sign
+    Company Logo
+
+  Party  (* Third Parties)
+    Name
+    Address
+    Contact Number
+    VAT Number
+    Transport
+    Opening Balance
+    Closing Balance
+
+  Employees
+    Name
+    Address
+    Voter Card No
+    Aadhar Card No
+    PAN No
+    Date of joining
+    Designation
+    Type
+    Job Description
+    Salary
+    Bank Account No
+    Terms & Conditions
+    Total leave
+    Leave left
+
+  Products
+    Name
+    Description
+    Type
+    Opening Stock
+    Closing Stock
+    Packing
+    Unit
+    Trading Price
+    MRP
+
+  Sales Tax Register
+    Date
+    Type
+    Amount
+    Paid To
+    Remarks
+
+Transactions
+-------------
+  Cash Book
+    Date
+    Opening Balance
+    Received
+    Total
+    Bill Number (** Auto generate)
+    Expenses
+    Purchase Bill No / Voucher No / Banking Transaction
+    Closing Balance
+    Remarks
+
+  Sales Register
+    Date
+    Invoice / Cash Bill No / Challan
+    Sold to Party Name (Map to third party)
+    Goods Name (Map to Product)
+    Goods quantity
+    Carriage (challan number)
+    Price Value (Dynamic MRP)
+    Goods description (Not required, should be auto fetched from product)
+    Rate Value (Dynamic -- Depending on this Price Value will be generated??)
+
+  Purchase Register
+    Date
+    Product Name
+    Purchased On
+    From
+    Bill No
+    Cost
+    Batch No
+    Expiry Date
+    Opening Stock
+    Uses
+    Closing Stock
+
+  Party Ledger
+    Type
+    Name
+    Date
+    Bill No
+    Opening Balance
+    Credit
+    Debit (in a particular day)
+    Paid By
+    Total Due (will shift to next day opening balance)
+    Remarks
+
+  ** Sales to Cash register connection (this should not be required)
+  ** Sales to Stock connection
+  Due = [Opening Balance + Credit] - Debit
+  Closing Balance = [Opening Balance + Total] - Expenses

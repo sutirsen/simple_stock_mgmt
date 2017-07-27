@@ -1,0 +1,17 @@
+Finish Product Stock can be maintained by only Sales
+ - What about addition of Finished Product when it is manufactured?
+Raw Material Stock can be maintained by only Purchase
+  - What about reduction of Raw Material, how to account for that during making of Finished Product?
+
+Purchased Material Stock <-> Raw Material Stock <-> Purchase Register (?)
+Finish Product Stock <-> Mother Stock <-> Sales Register (?)
+Why the above mentioned duplication, only product and raw material can be mapped to sales and purchase respectively?
+
+Why we need authorize sign for company? (It is own company we are maintaining right?)
+Parties can be both Customer and Supplier of Raw Material? or Sale is always made to third party (wholesale type)?
+Why opening stocks are require? Only "amount in hand" should be sufficient ?
+
+All parties can have dues noted in + or -, if dues are in + then they should pay to company other wise they have given advance to the company
+? This can be maintained through sales, if the sale is done based on "No Payment" it should be adjusted to dues (like if previous due is -50 and price is 25 then current due will be -25 and if price is 75 then current due will be +25)
+
+Any sale done through "Cash" can effect Cash in Hand, so cash in hand can be manipulated by any purchase made through "Cash" (deduction) or sales made where "Cash" were received

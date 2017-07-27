@@ -1,0 +1,54 @@
+Data Model
+Companies
+  company_name
+  branch_name
+  ph_number
+  email
+  web_site
+  vat_number
+  cst_number
+  trade_license_number
+  drug_license_number
+  registration_number
+  authorized_sign_img
+  company_logo_img
+
+Employees
+  name
+  address
+  voter_card_no
+  aadhar_card_no
+  pan_no
+  date_of_joining
+  company_id
+  designation
+  type
+  job_desc
+  terms
+
+Employee_salary_details
+  employee_id
+  salary_amount
+  bank_acc_no
+  bank_name
+  ifsc_code
+
+Employee_salary_payment
+  employee_id
+  total_deductions
+  paid_amount
+  month_of_payment
+  year_of_payment
+
+Employee_leave
+  employee_id
+  no_of_leaves
+  type_of_leaves
+
+Employee_leave_taken
+  employee_id
+  leave_taken_on
+  description
+  no_of_days
+
+  
