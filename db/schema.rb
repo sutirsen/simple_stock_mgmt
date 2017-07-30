@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170724082038) do
+ActiveRecord::Schema.define(version: 20170728112422) do
 
   create_table "companies", force: :cascade do |t|
     t.string "company_name"
@@ -62,6 +62,17 @@ ActiveRecord::Schema.define(version: 20170724082038) do
     t.index ["company_id"], name: "index_employees_on_company_id"
   end
 
+  create_table "financial_transactions", force: :cascade do |t|
+    t.string "monitory_type"
+    t.integer "monitory_id"
+    t.decimal "amount"
+    t.integer "type_of_transaction"
+    t.integer "payment_method"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["monitory_type", "monitory_id"], name: "index_financial_transactions_on_monitory_type_and_monitory_id"
+  end
+
   create_table "leave_transactions", force: :cascade do |t|
     t.integer "employee_id"
     t.integer "employee_leave_id"
@@ -105,17 +116,6 @@ ActiveRecord::Schema.define(version: 20170724082038) do
     t.decimal "due"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "transactions", force: :cascade do |t|
-    t.string "monitory_type"
-    t.integer "monitory_id"
-    t.decimal "amount"
-    t.integer "type_of_transaction"
-    t.integer "payment_method"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["monitory_type", "monitory_id"], name: "index_transactions_on_monitory_type_and_monitory_id"
   end
 
   create_table "users", force: :cascade do |t|

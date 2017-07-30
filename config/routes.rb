@@ -1,10 +1,5 @@
 Rails.application.routes.draw do
-  get 'purchases/index'
-
-  get 'purchases/new'
-
-  get 'purchases/create'
-
+  resources :purchases
   resources :raw_materials
   resources :third_parties
   resources :employees do
