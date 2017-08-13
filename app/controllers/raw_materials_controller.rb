@@ -25,6 +25,12 @@ class RawMaterialsController < ApplicationController
   # POST /raw_materials.json
   def create
     @raw_material = RawMaterial.new(raw_material_params)
+    if @raw_material.qty.blank?
+      @raw_material.qty = 0
+    end
+    if @raw_material.unit.blank?
+      @raw_material.unit = 0
+    end
 
     respond_to do |format|
       if @raw_material.save
