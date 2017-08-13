@@ -1,24 +1,37 @@
-<p id="notice"><%= notice %></p>
+<% provide(:title, @raw_material.name) %>
+<div class="col-md-10">
+	<div class="content-box-large">
+		<div class="panel-heading">
+      <div class="panel-title">Material : <%= @raw_material.name %></div>
+      <div class="panel-options">
+        <%= link_to edit_raw_material_path(@raw_material) do %>
+          <i class="glyphicon glyphicon-edit" title="Edit this raw material"></i>
+        <% end %>
+        <%= link_to raw_materials_path do %>
+          <i class="glyphicon glyphicon-list" title="List all raw material"></i>
+        <% end %>
+      </div>
+    </div>
+    <div class="panel-body">
+      <p>
+        <strong>Name:</strong>
+        <%= @raw_material.name %>
+      </p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @raw_material.name %>
-</p>
+      <p>
+        <strong>Description:</strong>
+        <%= @raw_material.description %>
+      </p>
 
-<p>
-  <strong>Description:</strong>
-  <%= @raw_material.description %>
-</p>
+      <p>
+        <strong>Qty:</strong>
+        <%= @raw_material.qty %>
+      </p>
 
-<p>
-  <strong>Qty:</strong>
-  <%= @raw_material.qty %>
-</p>
-
-<p>
-  <strong>Unit:</strong>
-  <%= @raw_material.unit %>
-</p>
-
-<%= link_to 'Edit', edit_raw_material_path(@raw_material) %> |
-<%= link_to 'Back', raw_materials_path %>
+      <p>
+        <strong>Unit:</strong>
+        <%= @raw_material.unit %>
+      </p>
+    </div>
+  </div>
+</div>

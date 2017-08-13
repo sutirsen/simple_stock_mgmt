@@ -1,29 +1,42 @@
-<p id="notice"><%= notice %></p>
+<% provide(:title, @third_party.name) %>
+<div class="col-md-10">
+	<div class="content-box-large">
+		<div class="panel-heading">
+      <div class="panel-title"><%= @third_party.name %></div>
+      <div class="panel-options">
+        <%= link_to edit_third_party_path(@third_party) do %>
+          <i class="glyphicon glyphicon-edit" title="Edit this third party"></i>
+        <% end %>
+        <%= link_to third_parties_path do %>
+          <i class="glyphicon glyphicon-list" title="List all third parties"></i>
+        <% end %>
+      </div>
+    </div>
+    <div class="panel-body">
+      <p>
+        <strong>Name:</strong>
+        <%= @third_party.name %>
+      </p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @third_party.name %>
-</p>
+      <p>
+        <strong>Address:</strong>
+        <%= @third_party.address %>
+      </p>
 
-<p>
-  <strong>Address:</strong>
-  <%= @third_party.address %>
-</p>
+      <p>
+        <strong>Phn number:</strong>
+        <%= @third_party.phn_number %>
+      </p>
 
-<p>
-  <strong>Phn number:</strong>
-  <%= @third_party.phn_number %>
-</p>
+      <p>
+        <strong>Gst number:</strong>
+        <%= @third_party.gst_number %>
+      </p>
 
-<p>
-  <strong>Gst number:</strong>
-  <%= @third_party.gst_number %>
-</p>
-
-<p>
-  <strong>Due:</strong>
-  <%= @third_party.due %>
-</p>
-
-<%= link_to 'Edit', edit_third_party_path(@third_party) %> |
-<%= link_to 'Back', third_parties_path %>
+      <p>
+        <strong>Due:</strong>
+        <%= @third_party.due %>
+      </p>
+    </div>
+  </div>
+</div>

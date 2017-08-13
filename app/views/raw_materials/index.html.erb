@@ -1,33 +1,57 @@
-<p id="notice"><%= notice %></p>
+<% provide(:title, "Raw Materials") %>
+<div class="col-md-10">
+	<div class="content-box-large">
+		<div class="panel-heading">
+		   <div class="panel-title">Raw Materials</div>
+	     <div class="panel-options">
+         <%= link_to new_purchase_path do %>
+          <i class="glyphicon glyphicon-shopping-cart" title="Purchase Raw Material"></i>
+         <% end %>
+	       <%= link_to new_raw_material_path do %>
+	         <i class="glyphicon glyphicon-plus" title="Add new raw material"></i>
+	       <% end %>
+	     </div>
+	  </div>
+    <div class="panel-body">
+			<div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Qty</th>
+              <th>Unit</th>
+              <th colspan="3"></th>
+            </tr>
+          </thead>
 
-<h1>Raw Materials</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Qty</th>
-      <th>Unit</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @raw_materials.each do |raw_material| %>
-      <tr>
-        <td><%= raw_material.name %></td>
-        <td><%= raw_material.description %></td>
-        <td><%= raw_material.qty %></td>
-        <td><%= raw_material.unit %></td>
-        <td><%= link_to 'Show', raw_material %></td>
-        <td><%= link_to 'Edit', edit_raw_material_path(raw_material) %></td>
-        <td><%= link_to 'Destroy', raw_material, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Raw Material', new_raw_material_path %>
+          <tbody>
+            <% @raw_materials.each do |raw_material| %>
+              <tr>
+                <td><%= raw_material.name %></td>
+                <td><%= raw_material.description %></td>
+                <td><%= raw_material.qty %></td>
+                <td><%= raw_material.unit %></td>
+                <td>
+									<%= link_to raw_material do %>
+			              <i class="glyphicon glyphicon-list-alt" title="View"></i>
+			            <% end %>
+								</td>
+                <td>
+									<%= link_to edit_raw_material_path(raw_material) do %>
+			              <i class="glyphicon glyphicon glyphicon-edit" title="Edit"></i>
+			            <% end %>
+								</td>
+	              <td>
+									<%= link_to raw_material, method: :delete, data: { confirm: 'Are you sure?' } do %>
+			              <i class="glyphicon glyphicon glyphicon-trash" title="Delete"></i>
+			            <% end %>
+								</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,17 @@
-<h1>New Raw Material</h1>
+<% provide(:title, "Add Raw Material") %>
+<div class="col-md-10">
+	<div class="content-box-large">
+		<div class="panel-heading">
+          <div class="panel-title">Add New Raw Material</div>
 
-<%= render 'form', raw_material: @raw_material %>
-
-<%= link_to 'Back', raw_materials_path %>
+          <div class="panel-options">
+            <%= link_to raw_materials_path do %>
+              <i class="glyphicon glyphicon-list"></i>
+            <% end %>
+          </div>
+      </div>
+		<div class="panel-body">
+      <%= render 'form', raw_material: @raw_material %>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,140 @@
 <div class="col-md-10">
 	<div class="row">
-    <div class="content-box-large">
-      <h4>Welcome to SSM!</h4>
-    </div>
-  </div>
+		<div class="col-lg-3 col-md-6">
+				<div class="panel panel-yellow">
+						<div class="panel-heading">
+								<div class="row">
+										<div class="col-xs-3">
+												<i class="fa fa-shopping-cart fa-5x"></i>
+										</div>
+										<div class="col-xs-9 text-right">
+												<div class="huge"><%= @purchase_count %></div>
+												<div>Purchases!</div>
+										</div>
+								</div>
+						</div>
+						<a href="/purchases">
+								<div class="panel-footer">
+										<span class="pull-left">View Details</span>
+										<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+										<div class="clearfix"></div>
+								</div>
+						</a>
+				</div>
+		</div>
+		<div class="col-lg-3 col-md-6">
+							<div class="panel panel-primary">
+									<div class="panel-heading">
+											<div class="row">
+													<div class="col-xs-3">
+															<i class="fa fa-user-o fa-5x"></i>
+													</div>
+													<div class="col-xs-9 text-right">
+															<div class="huge"><%= @employee_count %></div>
+															<div>Employees!</div>
+													</div>
+											</div>
+									</div>
+									<a href="/employees">
+											<div class="panel-footer">
+													<span class="pull-left">View Details</span>
+													<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+													<div class="clearfix"></div>
+											</div>
+									</a>
+							</div>
+					</div>
+					<div class="col-lg-3 col-md-6">
+							<div class="panel panel-green">
+									<div class="panel-heading">
+											<div class="row">
+													<div class="col-xs-3">
+															<i class="fa fa-leaf fa-5x"></i>
+													</div>
+													<div class="col-xs-9 text-right">
+															<div class="huge"><%= @third_party_count %></div>
+															<div>Third Parties!</div>
+													</div>
+											</div>
+									</div>
+									<a href="/third_parties">
+											<div class="panel-footer">
+													<span class="pull-left">View Details</span>
+													<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+													<div class="clearfix"></div>
+											</div>
+									</a>
+							</div>
+					</div>
+
+					<div class="col-lg-3 col-md-6">
+							<div class="panel panel-red">
+									<div class="panel-heading">
+											<div class="row">
+													<div class="col-xs-3">
+															<i class="fa  fa-tint fa-5x"></i>
+													</div>
+													<div class="col-xs-9 text-right">
+															<div class="huge"><%= @raw_material_count %></div>
+															<div>Raw materials!</div>
+													</div>
+											</div>
+									</div>
+									<a href="/raw_materials">
+											<div class="panel-footer">
+													<span class="pull-left">View Details</span>
+													<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+													<div class="clearfix"></div>
+											</div>
+									</a>
+							</div>
+					</div>
+
 </div>
+<style media="screen">
+.huge {
+font-size: 40px;
+}
+.panel-green {
+border-color: #5cb85c;
+}
+.panel-green > .panel-heading {
+border-color: #5cb85c;
+color: white;
+background-color: #5cb85c;
+}
+.panel-green > a {
+color: #5cb85c;
+}
+.panel-green > a:hover {
+color: #3d8b3d;
+}
+.panel-red {
+border-color: #d9534f;
+}
+.panel-red > .panel-heading {
+border-color: #d9534f;
+color: white;
+background-color: #d9534f;
+}
+.panel-red > a {
+color: #d9534f;
+}
+.panel-red > a:hover {
+color: #b52b27;
+}
+.panel-yellow {
+border-color: #f0ad4e;
+}
+.panel-yellow > .panel-heading {
+border-color: #f0ad4e;
+color: white;
+background-color: #f0ad4e;
+}
+.panel-yellow > a {
+color: #f0ad4e;
+}
+.panel-yellow > a:hover {
+color: #df8a13;
+}
+</style>

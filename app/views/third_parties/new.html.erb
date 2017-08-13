@@ -1,5 +1,17 @@
-<h1>New Third Party</h1>
+<% provide(:title, "Add Third Party") %>
+<div class="col-md-10">
+	<div class="content-box-large">
+		<div class="panel-heading">
+          <div class="panel-title">Add New Third Party</div>
 
-<%= render 'form', third_party: @third_party %>
-
-<%= link_to 'Back', third_parties_path %>
+          <div class="panel-options">
+            <%= link_to third_parties_path do %>
+              <i class="glyphicon glyphicon-list"></i>
+            <% end %>
+          </div>
+      </div>
+		<div class="panel-body">
+      <%= render 'form', third_party: @third_party %>
+    </div>
+  </div>
+</div>

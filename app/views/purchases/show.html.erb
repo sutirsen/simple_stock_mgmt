@@ -1,0 +1,60 @@
+<% provide(:title, "Purchase of raw material : #{@purchase.raw_material.name}") %>
+<div class="col-md-10">
+	<div class="content-box-large">
+		<div class="panel-heading">
+      <div class="panel-title">Purchase of raw material : <%= @purchase.raw_material.name %></div>
+      <div class="panel-options">
+        <%= link_to purchases_path do %>
+          <i class="glyphicon glyphicon-list" title="List all purchases"></i>
+        <% end %>
+      </div>
+    </div>
+    <div class="panel-body">
+      <p>
+        <strong>Raw Material:</strong>
+        <%= @purchase.raw_material.name %>
+      </p>
+
+      <p>
+        <strong>Third Party:</strong>
+        <%= @purchase.third_party.name %>
+      </p>
+
+      <p>
+        <strong>Rate of unit:</strong>
+        <%= @purchase.rate_of_unit %>
+      </p>
+
+      <p>
+        <strong>Quantity:</strong>
+        <%= @purchase.qty %>
+      </p>
+
+      <p>
+        <strong>Batch No:</strong>
+        <%= @purchase.batch_no %>
+      </p>
+
+      <p>
+        <strong>Expiry Date:</strong>
+        <%= @purchase.expiry_date %>
+      </p>
+
+      <p>
+        <strong>Amount:</strong>
+        <%= @purchase.financial_transaction.amount %>
+      </p>
+
+      <p>
+        <strong>Payment Method:</strong>
+        <%= @purchase.financial_transaction.payment_method.capitalize.split("_").join(" ") %>
+      </p>
+
+      <p>
+        <strong>Remarks:</strong>
+        <%= @purchase.remarks %>
+      </p>
+
+    </div>
+  </div>
+</div>

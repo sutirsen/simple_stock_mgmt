@@ -1,2 +1,50 @@
-<h1>Purchases#index</h1>
-<p>Find me in app/views/purchases/index.html.erb</p>
+<% provide(:title, "Purchases") %>
+<div class="col-md-10">
+	<div class="content-box-large">
+		<div class="panel-heading">
+		   <div class="panel-title">Purchases</div>
+	     <div class="panel-options">
+         <%= link_to new_purchase_path do %>
+          <i class="glyphicon glyphicon-shopping-cart" title="Purchase Raw Material"></i>
+         <% end %>
+	     </div>
+	  </div>
+    <div class="panel-body">
+			<div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Raw Material</th>
+              <th>Third Party</th>
+              <th>Rate</th>
+              <th>Qty</th>
+              <th>Amount</th>
+              <th colspan="2"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @purchases.each do |purchase| %>
+              <tr>
+                <td><%= link_to purchase.raw_material.name, raw_material_path(purchase.raw_material) %></td>
+                <td><%= link_to purchase.third_party.name, third_party_path(purchase.third_party) %></td>
+                <td><%= purchase.rate_of_unit %></td>
+                <td><%= purchase.qty %></td>
+                <td><%= purchase.financial_transaction.amount %></td>
+                <td>
+									<%= link_to purchase do %>
+			              <i class="glyphicon glyphicon-list-alt" title="View"></i>
+			            <% end %>
+								</td>
+	              <td>
+									<%= link_to purchase, method: :delete, data: { confirm: 'Are you sure?' } do %>
+			              <i class="glyphicon glyphicon glyphicon-trash" title="Delete"></i>
+			            <% end %>
+								</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

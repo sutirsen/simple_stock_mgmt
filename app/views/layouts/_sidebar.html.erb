@@ -8,6 +8,21 @@
         <% end %>
       </li>
       <li class="current">
+        <%= link_to raw_materials_path do %>
+        <i class="glyphicon glyphicon-tint"></i> Raw Materials
+        <% end %>
+      </li>
+      <li class="current">
+        <%= link_to purchases_path do %>
+        <i class="glyphicon glyphicon-shopping-cart"></i> Purchases
+        <% end %>
+      </li>
+      <li class="current">
+        <%= link_to third_parties_path do %>
+        <i class="glyphicon glyphicon-leaf"></i> Third Parties
+        <% end %>
+      </li>
+      <li class="current">
         <%= link_to companies_path do %>
           <i class="glyphicon glyphicon-briefcase"></i> Companies
         <% end %>
@@ -18,6 +33,7 @@
           <i class="glyphicon glyphicon-user"></i> Employees
         <% end %>
       </li>
+
 
     </ul>
  </div>

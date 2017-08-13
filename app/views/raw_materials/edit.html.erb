@@ -1,6 +1,20 @@
-<h1>Editing Raw Material</h1>
+<% provide(:title, "Edit Raw Material") %>
+<div class="col-md-10">
+	<div class="content-box-large">
+		<div class="panel-heading">
+          <div class="panel-title">Edit Raw Material</div>
+          <div class="panel-options">
+            <%= link_to @raw_material do %>
+              <i class="glyphicon glyphicon-list-alt" title="View this raw material"></i>
+            <% end %>
+            <%= link_to raw_materials_path do %>
+              <i class="glyphicon glyphicon-list" title="List all raw materials"></i>
+            <% end %>
 
-<%= render 'form', raw_material: @raw_material %>
-
-<%= link_to 'Show', @raw_material %> |
-<%= link_to 'Back', raw_materials_path %>
+          </div>
+      </div>
+		<div class="panel-body">
+      <%= render 'form', raw_material: @raw_material %>
+    </div>
+	</div>
+</div>

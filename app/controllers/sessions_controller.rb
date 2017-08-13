@@ -3,6 +3,10 @@ class SessionsController < ApplicationController
     unless logged_in?
       redirect_to '/login'
     end
+    @purchase_count = Purchase.count
+    @employee_count = Employee.count
+    @third_party_count = ThirdParty.count
+    @raw_material_count = RawMaterial.count
   end
 
   def new

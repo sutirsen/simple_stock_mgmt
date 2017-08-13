@@ -1,0 +1,74 @@
+<%= form_for purchase, html: { class: "form-horizontal" } do |f| %>
+    <%= render 'shared/error_messages', object: f.object %>
+
+    <div class="form-group">
+      <%= f.label :raw_material_id, class: "col-sm-2 control-label" %>
+      <div class="col-sm-10">
+        <%= f.select :raw_material_id, options_for_select(RawMaterial.all.map{|rm|[rm.name, rm.id]}), {},{class: "form-control"} %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :third_party_id, class: "col-sm-2 control-label" %>
+      <div class="col-sm-10">
+        <%= f.select :third_party_id, options_for_select(ThirdParty.all.map{|tp|[tp.name, tp.id]}), {},{class: "form-control"} %>
+      </div>
+    </div>
+
+    <div class="form-group">
+        <%= f.label :rate_of_unit, class: "col-sm-2 control-label" %>
+        <div class="col-sm-10">
+          <%= f.text_field :rate_of_unit, id: :purchase_rate_of_unit, class: "form-control" %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <%= f.label :qty, class: "col-sm-2 control-label" %>
+        <div class="col-sm-10">
+          <%= f.text_field :qty, id: :purchase_qty, class: "form-control" %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <%= f.label :batch_no, class: "col-sm-2 control-label" %>
+        <div class="col-sm-10">
+          <%= f.text_field :batch_no, id: :purchase_batch_no, class: "form-control" %>
+        </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :expiry_date, class: "col-sm-2 control-label" %>
+      <div class="col-sm-10">
+        <%= f.date_select :expiry_date, id: :purchase_expiry_date, class: "form-control" %>
+      </div>
+    </div>
+
+    <%= f.fields_for :financial_transaction do |trans| %>
+        <div class="form-group">
+            <%= trans.label :amount, class: "col-sm-2 control-label" %>
+            <div class="col-sm-10">
+              <%= trans.text_field :amount, id: :purchase_transaction_amount, class: "form-control" %>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <%= trans.label :payment_method, class: "col-sm-2 control-label" %>
+            <div class="col-sm-10">
+            <%= trans.select :payment_method, FinancialTransaction.payment_methods.keys, class: "form-control" %>
+            </div>
+        </div>
+    <% end %>
+
+    <div class="form-group">
+        <%= f.label :remarks, class: "col-sm-2 control-label" %>
+        <div class="col-sm-10">
+          <%= f.text_area :remarks, id: :purchase_remarks, class: "form-control" %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <%= f.submit 'Save Purchase', class: 'btn btn-primary' %>
+        </div>
+    </div>
+<% end %>
