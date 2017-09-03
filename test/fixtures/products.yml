@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyText
+  type: 
+  packing: MyString
+  unit: 
+  trading_price: 
+  mrp: 
+
+two:
+  name: MyString
+  description: MyText
+  type: 
+  packing: MyString
+  unit: 
+  trading_price: 
+  mrp: 

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :products
   resources :purchases
   resources :raw_materials
   resources :third_parties
