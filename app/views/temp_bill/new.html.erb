@@ -94,21 +94,27 @@
           <div class="form-group"> 
             <%= label_tag(:rebate_amount, "Rebate Amount", class: "col-sm-2 control-label") %>
             <div class="col-sm-10">
-              <%= text_field(:tmpbill, :rebate, class: "form-control", value: "0.0") %>
+              <%= text_field(:tmpbill, :rebate, class: "form-control", placeholder: "0.0") %>
             </div>
           </div>
 
           <div class="form-group"> 
             <%= label_tag(:cgst, "CGST", class: "col-sm-2 control-label") %>
             <div class="col-sm-10">
-              <%= text_field(:tmpbill, :cgst, class: "form-control", value: "0.0") %>
+              <div class="input-group">
+                <span class="input-group-addon">%</span>
+                <%= text_field(:tmpbill, :cgst, class: "form-control", placeholder: "0.0") %>
+              </div>
             </div>
           </div>
 
           <div class="form-group"> 
             <%= label_tag(:sgst, "SGST", class: "col-sm-2 control-label") %>
             <div class="col-sm-10">
-              <%= text_field(:tmpbill, :sgst, class: "form-control", value: "0.0") %>
+              <div class="input-group">
+                <span class="input-group-addon">%</span>
+                <%= text_field(:tmpbill, :sgst, class: "form-control", placeholder: "0.0") %>
+              </div>
             </div>
           </div>
 
@@ -144,11 +150,11 @@
               <div class="form-group"> 
                 <label class="col-sm-2 control-label" for="item_1_qty">Qty</label>
                 <div class="col-sm-10">
-                  <input class="form-control" type="text" name="tmpbill[items][][qty]" id="item_1_qty" />
+                  <input class="form-control" type="text" name="tmpbill[items][][qty]" id="item_1_qty" onkeyup="calcAmount('1')"/>
                 </div>
               </div>
               <div class="form-group"> 
-                <label class="col-sm-2 control-label" for="item_1_batch">batch</label>
+                <label class="col-sm-2 control-label" for="item_1_batch">Batch</label>
                 <div class="col-sm-10">
                   <input class="form-control" type="text" name="tmpbill[items][][batch]" id="item_1_batch" />
                 </div>
@@ -168,7 +174,7 @@
               <div class="form-group"> 
                 <label class="col-sm-2 control-label" for="item_1_rate">Rate</label>
                 <div class="col-sm-10">
-                  <input class="form-control" type="text" name="tmpbill[items][][rate]" id="item_1_rate" />
+                  <input class="form-control" type="text" name="tmpbill[items][][rate]" id="item_1_rate" onkeyup="calcAmount('1')" />
                 </div>
               </div>
               <div class="form-group"> 
@@ -210,11 +216,11 @@
               <div class="form-group"> 
                 <label class="col-sm-2 control-label" for="item_#ID#_qty">Qty</label>
                 <div class="col-sm-10">
-                  <input class="form-control" type="text" name="tmpbill[items][][qty]" id="item_#ID#_qty" />
+                  <input class="form-control" type="text" name="tmpbill[items][][qty]" id="item_#ID#_qty" onkeyup="calcAmount('#ID#')" />
                 </div>
               </div>
               <div class="form-group"> 
-                <label class="col-sm-2 control-label" for="item_#ID#_batch">batch</label>
+                <label class="col-sm-2 control-label" for="item_#ID#_batch">Batch</label>
                 <div class="col-sm-10">
                   <input class="form-control" type="text" name="tmpbill[items][][batch]" id="item_#ID#_batch" />
                 </div>
@@ -234,7 +240,7 @@
               <div class="form-group"> 
                 <label class="col-sm-2 control-label" for="item_#ID#_rate">Rate</label>
                 <div class="col-sm-10">
-                  <input class="form-control" type="text" name="tmpbill[items][][rate]" id="item_#ID#_rate" />
+                  <input class="form-control" type="text" name="tmpbill[items][][rate]" id="item_#ID#_rate" onkeyup="calcAmount('#ID#')" />
                 </div>
               </div>
               <div class="form-group"> 
@@ -252,6 +258,23 @@
 
   function removeItem() {
     lastItemId = removeItemUtil("itmCls", lastItemId);
+  }
+
+  function calcAmount(id) {
+    let rate = document.getElementById('item_'+id+'_rate').value;
+    let qty = document.getElementById('item_'+id+'_qty').value;
+    if(isNaN(Number(rate))) {
+      rate = 0;
+    } else {
+      rate = Number(rate);
+    }
+    if(isNaN(Number(qty))) {
+      qty = 0;
+    } else {
+      qty = Number(qty);
+    }
+    let totalAmt = qty * rate;
+    document.getElementById('item_'+id+'_amount').value = totalAmt;
   }
 
 
