@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get 'temp_bill/new'
+  post 'temp_bill/create'
+
   resources :products
   resources :purchases
   resources :raw_materials

@@ -1,0 +1,278 @@
+<% provide(:title, "Generate Bill") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+      <div class="panel-title">Bill Generator</div>
+    </div>
+    <div class="panel-body">
+      <%= form_tag("/temp_bill/create.pdf", method: "post", class: "form-horizontal") do %>
+        <div class="form-group">
+          <%= label_tag(:buyer_name, "Buyer Name", class: "col-sm-2 control-label") %>
+          <div class="col-sm-10">
+            <%= text_field(:tmpbill, :buyer_name, class: "form-control") %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= label_tag(:buyer_address, "Buyer Address", class: "col-sm-2 control-label") %>
+          <div class="col-sm-10">
+            <%= text_field(:tmpbill, :buyer_address, class: "form-control") %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= label_tag(:buyer_contact, "Buyer Contact", class: "col-sm-2 control-label") %>
+          <div class="col-sm-10">
+            <%= text_field(:tmpbill, :buyer_contact, class: "form-control") %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= label_tag(:buyer_gst, "Buyer GST", class: "col-sm-2 control-label") %>
+          <div class="col-sm-10">
+            <%= text_field(:tmpbill, :buyer_gst, class: "form-control") %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= label_tag(:buyer_vat, "Buyer VAT", class: "col-sm-2 control-label") %>
+          <div class="col-sm-10">
+            <%= text_field(:tmpbill, :buyer_vat, class: "form-control") %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= label_tag(:buyer_pan, "Buyer PAN", class: "col-sm-2 control-label") %>
+          <div class="col-sm-10">
+            <%= text_field(:tmpbill, :buyer_pan, class: "form-control") %>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= label_tag(:buyer_order_no, "Order No", class: "col-sm-2 control-label") %>
+          <div class="col-sm-10">
+            <%= text_field(:tmpbill, :buyer_order_no, class: "form-control") %>
+          </div>
+        </div>
+        <fieldset>
+          <legend>Transport Details</legend>
+          <div class="form-group"> 
+            <%= label_tag(:transport_name, "Name", class: "col-sm-2 control-label") %>
+            <div class="col-sm-10">
+              <%= text_field(:tmpbill, :transport_name, class: "form-control") %>
+            </div>
+          </div>
+          <div class="form-group"> 
+            <%= label_tag(:transport_document_through, "Document through", class: "col-sm-2 control-label") %>
+            <div class="col-sm-10">
+              <%= text_field(:tmpbill, :transport_document_through, class: "form-control") %>
+            </div>
+          </div>
+          <div class="form-group"> 
+            <%= label_tag(:transport_no_of_cases, "No of cases", class: "col-sm-2 control-label") %>
+            <div class="col-sm-10">
+              <%= text_field(:tmpbill, :transport_no_of_cases, class: "form-control") %>
+            </div>
+          </div>
+          <div class="form-group"> 
+            <%= label_tag(:transport_contact_no, "Contact No", class: "col-sm-2 control-label") %>
+            <div class="col-sm-10">
+              <%= text_field(:tmpbill, :transport_contact_no, class: "form-control") %>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>General Info</legend>
+          <div class="form-group"> 
+            <%= label_tag(:bill_no, "Bill No", class: "col-sm-2 control-label") %>
+            <div class="col-sm-10">
+              <%= text_field(:tmpbill, :bill_no, class: "form-control") %>
+            </div>
+          </div>
+
+          <div class="form-group"> 
+            <%= label_tag(:tr_no, "T/R No", class: "col-sm-2 control-label") %>
+            <div class="col-sm-10">
+              <%= text_field(:tmpbill, :tr_no, class: "form-control") %>
+            </div>
+          </div>
+
+          <div class="form-group"> 
+            <%= label_tag(:rebate_amount, "Rebate Amount", class: "col-sm-2 control-label") %>
+            <div class="col-sm-10">
+              <%= text_field(:tmpbill, :rebate, class: "form-control", value: "0.0") %>
+            </div>
+          </div>
+
+          <div class="form-group"> 
+            <%= label_tag(:cgst, "CGST", class: "col-sm-2 control-label") %>
+            <div class="col-sm-10">
+              <%= text_field(:tmpbill, :cgst, class: "form-control", value: "0.0") %>
+            </div>
+          </div>
+
+          <div class="form-group"> 
+            <%= label_tag(:sgst, "SGST", class: "col-sm-2 control-label") %>
+            <div class="col-sm-10">
+              <%= text_field(:tmpbill, :sgst, class: "form-control", value: "0.0") %>
+            </div>
+          </div>
+
+          <div class="checkbox">
+            <label><input type="checkbox" name="tmpbill[with_tax]" value="1" checked>With Tax</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Items</legend> 
+          <button class="btn btn-primary" type="button" onclick="addItem()">Add Item</button>
+          <button class="btn btn-danger" type="button" onclick="removeItem()">Remove last Item</button>
+          <div id="items">
+            <div id="item_1" class="itmCls">
+              <h4>Item 1</h4>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_1_name">Particulates</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][name]" id="item_1_name" />
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_1_hsn">HSN/SAC</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][hsn]" id="item_1_hsn" />
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_1_packing">Packing</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][packing]" id="item_1_packing" />
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_1_qty">Qty</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][qty]" id="item_1_qty" />
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_1_batch">batch</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][batch]" id="item_1_batch" />
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_1_mfg">Mfg Date</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][mfg]" id="item_1_mfg" />
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_1_use">Use Within</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][use]" id="item_1_use" />
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_1_rate">Rate</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][rate]" id="item_1_rate" />
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_1_amount">Amount</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][amount]" id="item_1_amount" />
+                </div>
+              </div>
+
+            </div>
+            
+          </div>
+        </fieldset>
+        <%= submit_tag("Search") %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  let itmTemplate = `<h4>Item #ID#</h4>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_#ID#_name">Particulates</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][name]" id="item_#ID#_name" />
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_#ID#_hsn">HSN/SAC</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][hsn]" id="item_#ID#_hsn" />
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_#ID#_packing">Packing</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][packing]" id="item_#ID#_packing" />
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_#ID#_qty">Qty</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][qty]" id="item_#ID#_qty" />
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_#ID#_batch">batch</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][batch]" id="item_#ID#_batch" />
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_#ID#_mfg">Mfg Date</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][mfg]" id="item_#ID#_mfg" />
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_#ID#_use">Use Within</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][use]" id="item_#ID#_use" />
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_#ID#_rate">Rate</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][rate]" id="item_#ID#_rate" />
+                </div>
+              </div>
+              <div class="form-group"> 
+                <label class="col-sm-2 control-label" for="item_#ID#_amount">Amount</label>
+                <div class="col-sm-10">
+                  <input class="form-control" type="text" name="tmpbill[items][][amount]" id="item_#ID#_amount" />
+                </div>
+              </div>`;
+  let lastItemId = 1;
+
+
+  function addItem() {
+    lastItemId = addItemUtil(itmTemplate, "#ID#", lastItemId, "items");
+  }
+
+  function removeItem() {
+    lastItemId = removeItemUtil("itmCls", lastItemId);
+  }
+
+
+
+
+  // Utility functions
+  function addItemUtil(itemTemplate, itemIdPlaceHolder, lastItemId, appendTo) {
+    lastItemId++;
+    const currentItemId = lastItemId;
+    itemTemplate = itemTemplate.split(itemIdPlaceHolder).join(currentItemId);
+    let tmpElem = document.createElement('div');
+    tmpElem.id = `item_${currentItemId}`;
+    tmpElem.className = "itmCls";
+    tmpElem.innerHTML = itemTemplate;
+    document.getElementById(appendTo).appendChild(tmpElem);
+    return lastItemId;
+  }
+  function removeItemUtil(itmSelector, lastItemId) {
+    let descendents = document.querySelectorAll(`.${itmSelector}`);
+    lastItem = descendents[descendents.length - 1];
+    lastItem.parentNode.removeChild(lastItem);
+    return lastItemId - 1;
+  }
+</script>

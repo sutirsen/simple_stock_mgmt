@@ -31,6 +31,9 @@ gem 'jquery-rails'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 gem "cocoon"
+gem "humanize"
+gem "wicked_pdf"
+gem "wkhtmltopdf-binary"
 group :development, :test do
   # Use sqlite3 as the database for Active Record
   gem 'sqlite3'
