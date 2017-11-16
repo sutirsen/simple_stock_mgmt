@@ -1,52 +1,58 @@
-<%= form_with(model: product, local: true) do |form| %>
-  <% if product.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(product.errors.count, "error") %> prohibited this product from being saved:</h2>
+<%= form_with(model: product, local: true, class: "form-horizontal", role: "form") do |form| %>
+  <%= render 'shared/error_messages', object: product %>
 
-      <ul>
-      <% product.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+  <div class="form-group">
+    <%= form.label :name , class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :name, id: :product_name, class: "form-control" %>
     </div>
-  <% end %>
-
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name, id: :product_name %>
   </div>
 
-  <div class="field">
-    <%= form.label :description %>
-    <%= form.text_area :description, id: :product_description %>
+  <div class="form-group">
+    <%= form.label :description , class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_area :description, id: :product_description, class: "form-control" %>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :type %>
-    <%= form.text_field :type, id: :product_type %>
+  <div class="form-group">
+    <%= form.label :type , class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :product_type, id: :product_product_type, class: "form-control" %>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :packing %>
-    <%= form.text_field :packing, id: :product_packing %>
+  <div class="form-group">
+    <%= form.label :packing , class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :packing, id: :product_packing, class: "form-control" %>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :unit %>
-    <%= form.text_field :unit, id: :product_unit %>
+  <div class="form-group">
+    <%= form.label :unit , class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :unit, id: :product_unit, class: "form-control" %>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :trading_price %>
-    <%= form.text_field :trading_price, id: :product_trading_price %>
+  <div class="form-group">
+    <%= form.label :trading_price, value: "Trading Price (per unit)", class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :trading_price, id: :product_trading_price, class: "form-control" %>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :mrp %>
-    <%= form.text_field :mrp, id: :product_mrp %>
+  <div class="form-group">
+    <%= form.label :mrp, value: "MRP (per unit)", class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :mrp, id: :product_mrp, class: "form-control" %>
+    </div>
   </div>
 
-  <div class="actions">
-    <%= form.submit %>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <%= form.submit %>
+    </div>
   </div>
 <% end %>

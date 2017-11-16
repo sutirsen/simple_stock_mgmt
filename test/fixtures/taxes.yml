@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: 
+  perc: 9.99
+  is_active: false
+
+two:
+  name: 
+  perc: 9.99
+  is_active: false

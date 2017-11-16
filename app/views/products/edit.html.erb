@@ -1,6 +1,20 @@
-<h1>Editing Product</h1>
+<% provide(:title, "Edit Product") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+          <div class="panel-title">Edit Product</div>
+          <div class="panel-options">
+            <%= link_to @product do %>
+              <i class="glyphicon glyphicon-list-alt" title="View this product"></i>
+            <% end %>
+            <%= link_to products_path do %>
+              <i class="glyphicon glyphicon-list" title="List all products"></i>
+            <% end %>
 
-<%= render 'form', product: @product %>
-
-<%= link_to 'Show', @product %> |
-<%= link_to 'Back', products_path %>
+          </div>
+      </div>
+    <div class="panel-body">
+      <%= render 'form', product: @product %>
+    </div>
+  </div>
+</div>

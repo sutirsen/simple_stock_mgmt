@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :taxes
   get 'temp_bill/new'
   post 'temp_bill/create'
 

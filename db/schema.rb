@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170902072104) do
+ActiveRecord::Schema.define(version: 20171029062854) do
 
   create_table "companies", force: :cascade do |t|
     t.string "company_name"
@@ -88,7 +88,7 @@ ActiveRecord::Schema.define(version: 20170902072104) do
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.string "type"
+    t.string "product_type"
     t.string "packing"
     t.decimal "unit"
     t.decimal "trading_price"
@@ -116,6 +116,14 @@ ActiveRecord::Schema.define(version: 20170902072104) do
     t.text "description"
     t.decimal "qty"
     t.string "unit"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "taxes", force: :cascade do |t|
+    t.string "name"
+    t.decimal "perc"
+    t.boolean "is_active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

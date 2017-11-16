@@ -1,39 +1,61 @@
-<p id="notice"><%= notice %></p>
+<% provide(:title, "Products") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+       <div class="panel-title">Products</div>
+       <div class="panel-options">
+         <%= link_to new_product_path do %>
+           <i class="glyphicon glyphicon-plus" title="Add new product"></i>
+         <% end %>
+       </div>
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Type</th>
+              <th>Packing</th>
+              <th>Unit</th>
+              <th>Trading price (per unit)</th>
+              <th>MRP (per unit)</th>
+              <th colspan="3"></th>
+            </tr>
+          </thead>
 
-<h1>Products</h1>
+          <tbody>
+            <% @products.each do |product| %>
+              <tr>
+                <td><%= product.name %></td>
+                <td><%= product.description %></td>
+                <td><%= product.product_type %></td>
+                <td><%= product.packing %></td>
+                <td><%= product.unit %></td>
+                <td><%= product.trading_price %></td>
+                <td><%= product.mrp %></td>
+                <td>
+                  <%= link_to product do %>
+                    <i class="glyphicon glyphicon-list-alt" title="View"></i>
+                  <% end %>
+                </td>
+                <td>
+                  <%= link_to edit_product_path(product) do %>
+                    <i class="glyphicon glyphicon glyphicon-edit" title="Edit"></i>
+                  <% end %>  
+                </td>
+                <td>
+                  <%= link_to product, method: :delete, data: { confirm: 'Are you sure?' } do %>
+                    <i class="glyphicon glyphicon glyphicon-trash" title="Delete"></i>
+                  <% end %>  
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Type</th>
-      <th>Packing</th>
-      <th>Unit</th>
-      <th>Trading price</th>
-      <th>Mrp</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @products.each do |product| %>
-      <tr>
-        <td><%= product.name %></td>
-        <td><%= product.description %></td>
-        <td><%= product.type %></td>
-        <td><%= product.packing %></td>
-        <td><%= product.unit %></td>
-        <td><%= product.trading_price %></td>
-        <td><%= product.mrp %></td>
-        <td><%= link_to 'Show', product %></td>
-        <td><%= link_to 'Edit', edit_product_path(product) %></td>
-        <td><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Product', new_product_path %>

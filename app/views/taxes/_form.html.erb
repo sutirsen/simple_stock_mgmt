@@ -1,0 +1,32 @@
+<%= form_with(model: tax, local: true) do |form| %>
+  <% if tax.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(tax.errors.count, "error") %> prohibited this tax from being saved:</h2>
+
+      <ul>
+      <% tax.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :tax_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :perc %>
+    <%= form.text_field :perc, id: :tax_perc %>
+  </div>
+
+  <div class="field">
+    <%= form.label :is_active %>
+    <%= form.check_box :is_active, id: :tax_is_active %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
