@@ -1,6 +1,5 @@
 $(document).ready(function(){
 
-
   $(".submenu > a").click(function(e) {
     e.preventDefault();
     var $li = $(this).parent("li");
@@ -16,5 +15,23 @@ $(document).ready(function(){
       $li.addClass("open");
     }
   });
-  
+
+  $('#rawDtTbl').DataTable({
+    "aoColumnDefs": [
+        { 'bSortable': false, 'aTargets': [ -1, -2, -3 ] },
+        { 'bSearchable': false, 'aTargets': [ -1, -2, -3 ] }
+    ]
+  });
+
+  $('#prodDtTbl').DataTable({
+    "aoColumnDefs": [
+        { 'bSortable': false, 'aTargets': [ -1, -2, -3, -4 ] },
+        { 'bSearchable': false, 'aTargets': [ -1, -2, -3, -4 ] }
+    ]
+  });
+
 });
+
+function openAddToCart(){
+  $('#addtocart').modal();
+}

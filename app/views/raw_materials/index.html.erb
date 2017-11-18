@@ -14,14 +14,18 @@
 	  </div>
     <div class="panel-body">
 			<div class="table-responsive">
-        <table class="table">
+        <table class="table" id="rawDtTbl">
           <thead>
             <tr>
               <th>Name</th>
               <th>Description</th>
+              <th>HSN</th>
+              <th>GST Rate</th>
               <th>Qty</th>
               <th>Unit</th>
-              <th colspan="3"></th>
+              <th></th>
+              <th></th>
+              <th></th>
             </tr>
           </thead>
 
@@ -29,7 +33,9 @@
             <% @raw_materials.each do |raw_material| %>
               <tr>
                 <td><%= raw_material.name %></td>
-                <td><%= raw_material.description %></td>
+                <td><%= truncate(raw_material.description, length: 40) %></td>
+                <td><%= raw_material.hsn %></td>
+                <td><%= raw_material.gst_rate %></td>
                 <td><%= raw_material.qty %></td>
                 <td><%= raw_material.unit %></td>
                 <td>

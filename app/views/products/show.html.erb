@@ -34,19 +34,41 @@
       </p>
 
       <p>
+        <strong>HSN/SAC:</strong>
+        <%= @product.hsn %>
+      </p>
+
+      <p>
+        <strong>Batch:</strong>
+        <%= @product.batch %>
+      </p>
+
+      <p>
         <strong>Unit:</strong>
         <%= @product.unit %>
       </p>
 
       <p>
-        <strong>Trading price:</strong>
+        <strong>Trading price (per unit):</strong>
         <%= @product.trading_price %>
       </p>
 
       <p>
-        <strong>Mrp:</strong>
+        <strong>MRP (per unit):</strong>
         <%= @product.mrp %>
       </p>
+
+      <p>
+        <strong>MFG Date:</strong>
+        <%= @product.mfg_date %>
+      </p>
+
+      <p>
+        <strong>Use within:</strong>
+        <%= @product.use_within %>
+      </p>
+
+
     </div>
   </div>
 </div>

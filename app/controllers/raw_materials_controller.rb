@@ -75,6 +75,6 @@ class RawMaterialsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def raw_material_params
-      params.require(:raw_material).permit(:name, :description, :qty, :unit)
+      params.require(:raw_material).permit(:name, :description, :qty, :unit, :hsn, :gst_rate)
     end
 end

@@ -37,22 +37,50 @@
   </div>
 
   <div class="form-group">
-    <%= form.label :trading_price, value: "Trading Price (per unit)", class: "col-sm-2 control-label" %>
+    <%= form.label :trading_price, "Trading Price (per unit)", class: "col-sm-2 control-label" %>
     <div class="col-sm-10">
       <%= form.text_field :trading_price, id: :product_trading_price, class: "form-control" %>
     </div>
   </div>
 
   <div class="form-group">
-    <%= form.label :mrp, value: "MRP (per unit)", class: "col-sm-2 control-label" %>
+    <%= form.label :mrp, "MRP (per unit)", class: "col-sm-2 control-label" %>
     <div class="col-sm-10">
       <%= form.text_field :mrp, id: :product_mrp, class: "form-control" %>
     </div>
   </div>
 
   <div class="form-group">
+    <%= form.label :hsn, "HSN/SAC", class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :hsn, id: :product_hsn, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :batch, "Batch", class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :batch, id: :product_batch, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :mfg_date, "MFG Date", class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :mfg_date, id: :product_mfg_date, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :use_within, "Use within", class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :use_within, id: :product_use_within, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-      <%= form.submit %>
+      <%= form.submit class: 'btn btn-primary' %>
     </div>
   </div>
 <% end %>
