@@ -1,19 +1,32 @@
-<p id="notice"><%= notice %></p>
+<% provide(:title, "Tax : #{@tax.name}") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+      <div class="panel-title">Tax : <%= @tax.name %></div>
+      <div class="panel-options">
+        <%= link_to edit_tax_path(@tax) do %>
+          <i class="glyphicon glyphicon-edit" title="Edit this tax type"></i>
+        <% end %>
+        <%= link_to taxes_path do %>
+          <i class="glyphicon glyphicon-list" title="List all tax types"></i>
+        <% end %>
+      </div>
+    </div>
+    <div class="panel-body">
+      <p>
+        <strong>Name:</strong>
+        <%= @tax.name %>
+      </p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @tax.name %>
-</p>
+      <p>
+        <strong>Perc:</strong>
+        <%= @tax.perc %>%
+      </p>
 
-<p>
-  <strong>Perc:</strong>
-  <%= @tax.perc %>
-</p>
-
-<p>
-  <strong>Is active:</strong>
-  <%= @tax.is_active %>
-</p>
-
-<%= link_to 'Edit', edit_tax_path(@tax) %> |
-<%= link_to 'Back', taxes_path %>
+      <p>
+        <strong>Active:</strong>
+        <%= @tax.is_active ? 'Yes' :  'No' %>
+      </p>
+    </div>
+  </div>
+</div>

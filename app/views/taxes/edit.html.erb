@@ -1,6 +1,20 @@
-<h1>Editing Tax</h1>
+<% provide(:title, "Edit Tax") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+          <div class="panel-title">Edit Tax</div>
+          <div class="panel-options">
+            <%= link_to @tax do %>
+              <i class="glyphicon glyphicon-list-alt" title="View this tax type"></i>
+            <% end %>
+            <%= link_to taxes_path do %>
+              <i class="glyphicon glyphicon-list" title="List all taxes"></i>
+            <% end %>
 
-<%= render 'form', tax: @tax %>
-
-<%= link_to 'Show', @tax %> |
-<%= link_to 'Back', taxes_path %>
+          </div>
+      </div>
+    <div class="panel-body">
+      <%= render 'form', tax: @tax %>
+    </div>
+  </div>
+</div>

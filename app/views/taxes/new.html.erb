@@ -1,5 +1,17 @@
-<h1>New Tax</h1>
+<% provide(:title, "Add Tax") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+          <div class="panel-title">Add Tax Type</div>
 
-<%= render 'form', tax: @tax %>
-
-<%= link_to 'Back', taxes_path %>
+          <div class="panel-options">
+            <%= link_to taxes_path do %>
+              <i class="glyphicon glyphicon-list" title="See all taxes"></i>
+            <% end %>
+          </div>
+      </div>
+    <div class="panel-body">
+      <%= render 'form', tax: @tax %>
+    </div>
+  </div>
+</div>
