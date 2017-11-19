@@ -37,6 +37,13 @@
   </div>
 
   <div class="form-group">
+    <%= form.label :available_units, "Avilable Units (Qty)" , class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :available_units, id: :product_available_units, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
     <%= form.label :trading_price, "Trading Price (per unit)", class: "col-sm-2 control-label" %>
     <div class="col-sm-10">
       <%= form.text_field :trading_price, id: :product_trading_price, class: "form-control" %>

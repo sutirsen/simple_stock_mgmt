@@ -30,8 +30,17 @@ $(document).ready(function(){
     ]
   });
 
+  // $('#addtocart').on('hidden.bs.modal', function (e) {
+  //   $("#slqty").bootstrapSlider('destroy');
+  // });
+
 });
 
-function openAddToCart(){
+function openAddToCart(id, name, qty){
+  $('#pid').html(id);
+  $('#pname').html(name);
+  $('#pqty').html(qty);
+  $("#slqty").bootstrapSlider({max: qty, value: 1});
+  $("#slqty").bootstrapSlider('refresh');
   $('#addtocart').modal();
 }

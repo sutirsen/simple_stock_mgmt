@@ -20,6 +20,7 @@
               <th>HSN</th>
               <th>Batch</th>
               <th>Unit</th>
+              <th>Qty</th>
               <th>Trading price (per unit)</th>
               <th>MRP (per unit)</th>
               <th></th>
@@ -38,9 +39,10 @@
                 <td><%= product.hsn %></td>
                 <td><%= product.batch %></td>
                 <td><%= product.unit %></td>
+                <td><%= product.available_units %></td>
                 <td><%= product.trading_price %></td>
                 <td><%= product.mrp %></td>
-                <td><span onclick="openAddToCart()" style="cursor: pointer;"><strong>Add to Cart</strong></span></td>
+                <td><span onclick="openAddToCart('<%= product.id %>', '<%= product.name %>','<%= product.available_units %>')" style="cursor: pointer;"><strong>Add to Cart</strong></span></td>
                 <td>
                   <%= link_to product do %>
                     <i class="glyphicon glyphicon-list-alt" title="View"></i>
@@ -73,7 +75,11 @@
         <h4 class="modal-title" id="addtocartLabel">Add to Cart</h4>
       </div>
       <div class="modal-body">
-        This feature is under progress
+        <div id="pname"></div>
+        <div id="pqty"></div>
+        <div id="pid"></div>
+        <input id="slqty" type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="1"/>
+        <dir><strong>(Feature under progress, please ignore)</strong></dir>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
