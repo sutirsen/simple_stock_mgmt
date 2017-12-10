@@ -1,0 +1,82 @@
+<% provide(:title, "Cart") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+       <div class="panel-title">Cart</div>
+       <div class="panel-options">
+       </div>
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Product Name</th>
+              <th>Type</th>
+              <th>HSN</th>
+              <th>Unit</th>
+              <th>MRP</th>
+              <th>Added Qty</th>
+              <th>Item Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% totalCost = 0 %>
+            <% @cartDetails.each do |key, cartItm| %>
+              <tr>
+                <td><%= cartItm['product'].name %></td>
+                <td><%= cartItm['product'].product_type %></td>
+                <td><%= cartItm['product'].hsn %></td>
+                <td><%= cartItm['product'].unit %></td>
+                <td><%= cartItm['product'].mrp %></td>
+                <td><%= cartItm['addedQty'] %></td>
+                <td><%= cartItm['addedQty'].to_i * cartItm['product'].mrp %></td>
+                <% totalCost += cartItm['addedQty'].to_i * cartItm['product'].mrp %>
+              </tr>
+            <% end %>
+            <tr>
+              <td colspan="6" align="right"><strong>Total Cost of Product</strong></td>
+              <td><%= totalCost %></td>
+            </tr>
+            <% if @appliedCoupon %>
+              <% 
+                if(@appliedCoupon.type_of_discount == 'perc')
+                  totalCost -= (totalCost * @appliedCoupon.amount)/100
+                elsif (@appliedCoupon.type_of_discount == 'flat')
+                  totalCost -= @appliedCoupon.amount
+                end
+              %>
+              <tr>
+                <td colspan="6" align="right"><strong>Discount Applied for <%= @appliedCoupon.name %> (<%= @appliedCoupon.amount %><%= @appliedCoupon.type_of_discount == 'perc' ? '%' : '/-' %>)</strong></td>
+                <td><%= @appliedCoupon.type_of_discount == 'perc' ? (totalCost * @appliedCoupon.amount)/100 : @appliedCoupon.amount %></td>
+              </tr>
+              <tr>
+                <td colspan="6" align="right"><strong>Cost after discount</strong></td>
+                <td><%= totalCost %></td>
+              </tr>
+            <% end %>
+            <% totalTax = 0 %>
+            <% @taxes.each do |tax| %>
+              <% taxAmt = totalCost * tax.perc/100 %>
+              <% totalTax += taxAmt %>
+              <tr>
+                <td colspan="6" align="right"><strong><%= tax.name + " (" + tax.perc.to_s + ")" %></strong></td>
+                <td><%= taxAmt %></td>
+              </tr>
+            <% end %>
+            <tr>
+              <td colspan="6" align="right"><strong>Payable Amount</strong></td>
+              <td><%= totalCost + totalTax %></td>
+            </tr>
+          </tbody>
+        </table>
+        <% if @appliedCoupon %>
+          <div>Coupon applied <strong><%= @appliedCoupon.name %></strong>! <input type="button" name="" value="Remove" class="btn btn-xs btn-danger" onclick="removeCoupon()"></div>
+        <% else %>
+          Add a coupon : <%= select_tag :coupon_id, options_for_select(Coupon.where(is_active: true).map{|tp|[tp.name, tp.id]}), {:include_blank => '- Select a coupon -'} %> <input type="button" name="" value="Apply" class="btn btn-xs btn-primary" onclick="applyCoupon()"><br/>
+          <div id="coupon_application_status"></div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

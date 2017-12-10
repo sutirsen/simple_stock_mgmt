@@ -1,0 +1,20 @@
+<% provide(:title, "Edit Coupon") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+          <div class="panel-title">Edit Coupon</div>
+          <div class="panel-options">
+            <%= link_to @coupon do %>
+              <i class="glyphicon glyphicon-list-alt" title="View this coupon"></i>
+            <% end %>
+            <%= link_to coupons_path do %>
+              <i class="glyphicon glyphicon-list" title="List all coupons"></i>
+            <% end %>
+
+          </div>
+      </div>
+    <div class="panel-body">
+      <%= render 'form', coupon: @coupon %>
+    </div>
+  </div>
+</div>

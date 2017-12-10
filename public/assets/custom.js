@@ -37,10 +37,96 @@ $(document).ready(function(){
 });
 
 function openAddToCart(id, name, qty){
-  $('#pid').html(id);
-  $('#pname').html(name);
-  $('#pqty').html(qty);
+  $('#productNameForModal').html(name);
+  $('#productQtyForModal').val(qty);
+  $('#productIdForModal').val(id);
   $("#slqty").bootstrapSlider({max: qty, value: 1});
   $("#slqty").bootstrapSlider('refresh');
   $('#addtocart').modal();
+}
+
+function addToCart() {
+  var productId = $('#productIdForModal').val();
+  var qty = $('#slqty').bootstrapSlider('getValue');
+  document.getElementById('status').innerHTML = "Please wait while adding product to cart"; 
+  var token = $("meta[name='csrf-token']").attr('content');
+  fetch('/cart/add', {
+        method: 'post',
+        headers: {
+          "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+          'X-Requested-With': 'XMLHttpRequest',
+          "X-CSRF-Token": $("meta[name='csrf-token']").attr('content')
+        },
+        credentials: 'same-origin',
+        body: 'product_id=' + productId + '&qty=' + qty
+      })
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function (data) {
+        if(data["status"]) {
+          document.getElementById('status').innerHTML = "Product added to cart!"; 
+        }
+      })
+      .catch(function (error) {
+        console.log('Request failed', error);
+      });
+}
+
+function takeToTheCart() {
+  window.location = '/cart';
+}
+
+function applyCoupon() {
+  var couponId = $('#coupon_id').val();
+  if (couponId != '') {
+    fetch('/coupons/apply', {
+          method: 'post',
+          headers: {
+            "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            'X-Requested-With': 'XMLHttpRequest',
+            "X-CSRF-Token": $("meta[name='csrf-token']").attr('content')
+          },
+          credentials: 'same-origin',
+          body: 'coupon_id=' + couponId
+        })
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function (data) {
+          if(data["status"] == 'error') {
+            document.getElementById('coupon_application_status').innerHTML = data['msg']; 
+          } else {
+            document.getElementById('coupon_application_status').innerHTML = data['msg'];
+            window.location = '/cart';
+          }
+        })
+        .catch(function (error) {
+          console.log('Request failed', error);
+        });
+  } else {
+    alert('Please select a coupon!');
+  }
+}
+
+function removeCoupon(){
+  fetch('/coupons/remove', {
+        method: 'post',
+        headers: {
+          "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+          'X-Requested-With': 'XMLHttpRequest',
+          "X-CSRF-Token": $("meta[name='csrf-token']").attr('content')
+        },
+        credentials: 'same-origin',
+        body: ''
+      })
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function (data) {
+        window.location = '/cart';
+      })
+      .catch(function (error) {
+        console.log('Request failed', error);
+      });
 }

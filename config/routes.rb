@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :coupons
   resources :taxes
   get 'temp_bill/new'
   post 'temp_bill/create'
@@ -20,5 +21,13 @@ Rails.application.routes.draw do
 
   get '/employees/:emp_id/leave_transaction', to: redirect { |params| "/employees/#{params[:emp_id]}/employee_leaves" }
   post '/employees/:employee_id/leave_transaction' => 'employee_leaves#addLeave', as: 'leave_transactions'
+
+  # Cart routes
+  post '/cart/add' => 'cart#add_product_to_cart'
+  get '/cart/' => 'cart#index'
+
+  #coupon extra routes
+  post '/coupons/apply' => 'coupons#apply_coupon'
+  post '/coupons/remove' => 'coupons#remove_coupon'
 
 end

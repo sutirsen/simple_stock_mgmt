@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171119060841) do
+ActiveRecord::Schema.define(version: 20171210060105) do
 
   create_table "companies", force: :cascade do |t|
     t.string "company_name"
@@ -25,6 +25,17 @@ ActiveRecord::Schema.define(version: 20171119060841) do
     t.string "registration_number"
     t.string "authorized_sign_img"
     t.string "company_logo_img"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "coupons", force: :cascade do |t|
+    t.string "name"
+    t.string "type_of_discount"
+    t.decimal "amount"
+    t.datetime "valid_from"
+    t.datetime "valid_till"
+    t.boolean "is_active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

@@ -1,0 +1,50 @@
+<%= form_with(model: coupon, local: true, class: "form-horizontal", role: "form") do |form| %>
+  <%= render 'shared/error_messages', object: coupon %>
+
+  <div class="form-group">
+    <%= form.label :name, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :name, id: :coupon_name, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :type_of_discount, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.select :type_of_discount, [['Percentage', 'perc'], ['Flat', 'flat']], {}, id: :coupon_type_of_discount, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :amount, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :amount, id: :coupon_amount, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :valid_from, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.datetime_select :valid_from, id: :coupon_valid_from, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :valid_till, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.datetime_select :valid_till, id: :coupon_valid_till, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="checkbox">
+    <label>
+      <%= form.check_box :is_active, id: :coupon_is_active %> Active?
+    </label>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <%= form.submit class: 'btn btn-primary' %>
+    </div>
+  </div>
+<% end %>

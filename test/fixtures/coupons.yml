@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  type_of_discount: MyString
+  amount: 9.99
+  valid_from: 2017-12-10 11:31:05
+  valid_till: 2017-12-10 11:31:05
+  is_active: false
+
+two:
+  name: MyString
+  type_of_discount: MyString
+  amount: 9.99
+  valid_from: 2017-12-10 11:31:05
+  valid_till: 2017-12-10 11:31:05
+  is_active: false

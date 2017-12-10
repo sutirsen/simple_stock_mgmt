@@ -1,0 +1,58 @@
+<% provide(:title, "Coupons") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+       <div class="panel-title">Coupons</div>
+       <div class="panel-options">
+         <%= link_to new_coupon_path do %>
+           <i class="glyphicon glyphicon-plus" title="Add new coupon"></i>
+         <% end %>
+       </div>
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type of discount</th>
+              <th>Amount</th>
+              <th>Valid from</th>
+              <th>Valid till</th>
+              <th>Is active</th>
+              <th colspan="3"></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @coupons.each do |coupon| %>
+              <tr>
+                <td><%= coupon.name %></td>
+                <td><%= coupon.type_of_discount == 'perc' ? 'Percentage' : 'Flat' %></td>
+                <td><%= coupon.amount %></td>
+                <td><%= coupon.valid_from %></td>
+                <td><%= coupon.valid_till %></td>
+                <td><%= coupon.is_active ? 'Yes' : 'No' %></td>
+                <td>
+                  <%= link_to coupon do %>
+                    <i class="glyphicon glyphicon-list-alt" title="View Coupon"></i>
+                  <% end %>    
+                </td>
+                <td>
+                  <%= link_to edit_coupon_path(coupon) do %>
+                    <i class="glyphicon glyphicon glyphicon-edit" title="Edit Coupon"></i>
+                  <% end %>  
+                </td>
+                <td>
+                  <%= link_to coupon, method: :delete, data: { confirm: 'Are you sure?' }  do %>
+                    <i class="glyphicon glyphicon glyphicon-trash" title="Delete Coupon"></i>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -19,7 +19,12 @@
       </li>
       <li <% if title_match(yield(:title), 'Product') %> class="current" <% end %>>
         <%= link_to products_path do %>
-        <i class="glyphicon glyphicon-tag"></i> Products
+        <i class="glyphicon glyphicon-barcode"></i> Products
+        <% end %>
+      </li>
+      <li <% if title_match(yield(:title), 'Coupon') %> class="current" <% end %>>
+        <%= link_to coupons_path do %>
+        <i class="glyphicon glyphicon-tag"></i> Coupons
         <% end %>
       </li>
       <li <% if title_match(yield(:title), 'Third Part') %> class="current" <% end %>>

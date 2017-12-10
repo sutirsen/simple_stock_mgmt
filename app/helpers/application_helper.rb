@@ -23,4 +23,11 @@ module ApplicationHelper
       return false
     end
   end
+
+  def cart_size 
+    if cookies[:cart] != nil
+      return cookies[:cart].split("|").size
+    end
+    return 0
+  end
 end

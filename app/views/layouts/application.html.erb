@@ -35,6 +35,12 @@
 	              </div>
 	           </div>
 	           <div class="col-md-2 pull-right user_name_header">
+                <% if (cart_size > 0) %>
+                <div style="border: solid black 1px; width: 35%; height: 20px; float: left; margin-right: 10px; background-color: #292929; color: #ffffff; text-align: center; border-radius: 4px; padding-top: 1px; cursor: pointer;" onclick="takeToTheCart()">
+                  Cart
+                  <span style="position: absolute; top: -1px; left: 5px; min-width: 8px; height: 20px; line-height: 20px;  margin-top: -11px; padding: 0 6px; font-weight: normal; color: white; text-align: center; border-radius: 28px; background-color: red; border: solid 1px red;"><%= cart_size %></span>
+                </div>
+                <% end %>
 	              <% if logged_in? %>
                   <%= current_user.name %>
                   <%= link_to "Log out", logout_path, method: :delete %>

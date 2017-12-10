@@ -1,0 +1,47 @@
+<% provide(:title, "Coupon :: #{@coupon.name}") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+      <div class="panel-title"><%= @coupon.name %></div>
+      <div class="panel-options">
+        <%= link_to edit_coupon_path(@coupon) do %>
+          <i class="glyphicon glyphicon-edit"></i>
+        <% end %>
+        <%= link_to coupons_path do %>
+          <i class="glyphicon glyphicon-list"></i>
+        <% end %>
+      </div>
+    </div>
+    <div class="panel-body">
+      <p>
+        <strong>Name:</strong>
+        <%= @coupon.name %>
+      </p>
+
+      <p>
+        <strong>Type of discount:</strong>
+        <%= @coupon.type_of_discount == 'perc' ? 'In Percentage' : 'Flat' %>
+      </p>
+
+      <p>
+        <strong>Amount:</strong>
+        <%= @coupon.amount %>
+      </p>
+
+      <p>
+        <strong>Valid from:</strong>
+        <%= @coupon.valid_from %>
+      </p>
+
+      <p>
+        <strong>Valid till:</strong>
+        <%= @coupon.valid_till %>
+      </p>
+
+      <p>
+        <strong>Active:</strong>
+        <%= @coupon.is_active ? 'Yes' : 'No' %>
+      </p>
+    </div>
+  </div>
+</div>
