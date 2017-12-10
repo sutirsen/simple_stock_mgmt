@@ -9,6 +9,20 @@ class CartController < ApplicationController
     render json: { status: 'ok' }.to_json
   end
 
+  def remove_product_from_cart
+    productId = cart_params[:product_id]
+    cartContent = Hash.new
+    cartContent = convertCartContentToHash cookies[:cart]
+    cartContent.delete productId
+    if cartContent.empty?
+      cookies.delete(:cart)
+      render json: { status: 'ok', cart_empty: true }.to_json
+    else
+      cookies[:cart] = { :value => convertCartHashToStr(cartContent), :expires => 1.year.from_now}
+      render json: { status: 'ok' }.to_json
+    end
+  end
+
   def index
     cartHsh = convertCartContentToHash cookies[:cart]
     @cartDetails = Hash.new

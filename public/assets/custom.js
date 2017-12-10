@@ -131,3 +131,29 @@ function removeCoupon(){
         console.log('Request failed', error);
       });
 }
+
+function removeFromCart(productId) {
+  fetch('/cart/remove', {
+        method: 'post',
+        headers: {
+          "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+          'X-Requested-With': 'XMLHttpRequest',
+          "X-CSRF-Token": $("meta[name='csrf-token']").attr('content')
+        },
+        credentials: 'same-origin',
+        body: 'product_id='+productId
+      })
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function (data) {
+        if(data['cart_empty']) {
+          window.location = '/products';
+        } else {
+          window.location = '/cart';
+        }
+      })
+      .catch(function (error) {
+        console.log('Request failed', error);
+      });
+}

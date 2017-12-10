@@ -47,7 +47,7 @@ class PurchasesController < ApplicationController
     end
 
     def purchase_params
-      params.require(:purchase).permit(:raw_material_id, :third_party_id, :qty, :batch_no, :expiry_date, :rate_of_unit, :remarks)
+      params.require(:purchase).permit(:raw_material_id, :third_party_id, :qty, :batch_no, :expiry_date, :rate_of_unit, :remarks, :amount)
     end
 
     def financial_transaction_params

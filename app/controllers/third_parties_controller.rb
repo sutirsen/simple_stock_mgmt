@@ -10,6 +10,17 @@ class ThirdPartiesController < ApplicationController
   # GET /third_parties/1
   # GET /third_parties/1.json
   def show
+    @purchases = Purchase.where(third_party_id: @third_party.id)
+    @transactions = Array.new
+    @purchases.each do |purchase|
+      tmpHsh = Hash.new
+      tmpHsh['event'] = "Purchase of #{RawMaterial.find(purchase.raw_material_id).name}"
+      tmpHsh['date'] = purchase.created_at
+      tmpHsh['debit'] = purchase.financial_transaction.amount
+      tmpHsh['credit'] = 0
+      @transactions << tmpHsh
+    end
+    @transactions.sort_by { |transaction| transaction['date'] }
   end
 
   # GET /third_parties/new

@@ -2,24 +2,17 @@
     <%= render 'shared/error_messages', object: f.object %>
 
     <div class="form-group">
-      <%= f.label :raw_material_id, class: "col-sm-2 control-label" %>
+      <%= f.label :raw_material_id, "Name of the Material", class: "col-sm-2 control-label" %>
       <div class="col-sm-10">
-        <%= f.select :raw_material_id, options_for_select(RawMaterial.all.map{|rm|[rm.name, rm.id]}), {},{class: "form-control"} %>
+        <%= f.select :raw_material_id, options_for_select(RawMaterial.all.map{|rm|[rm.name + " (" + rm.unit + ")", rm.id]}), {},{class: "form-control"} %>
       </div>
     </div>
 
     <div class="form-group">
-      <%= f.label :third_party_id, class: "col-sm-2 control-label" %>
+      <%= f.label :third_party_id, "Vendor's name", class: "col-sm-2 control-label" %>
       <div class="col-sm-10">
         <%= f.select :third_party_id, options_for_select(ThirdParty.all.map{|tp|[tp.name, tp.id]}), {},{class: "form-control"} %>
       </div>
-    </div>
-
-    <div class="form-group">
-        <%= f.label :rate_of_unit, class: "col-sm-2 control-label" %>
-        <div class="col-sm-10">
-          <%= f.text_field :rate_of_unit, id: :purchase_rate_of_unit, class: "form-control", onkeyup:"calculateAmount()" %>
-        </div>
     </div>
 
     <div class="form-group">
@@ -43,9 +36,23 @@
       </div>
     </div>
 
+    <div class="form-group">
+        <%= f.label :rate_of_unit, class: "col-sm-2 control-label" %>
+        <div class="col-sm-10">
+          <%= f.text_field :rate_of_unit, id: :purchase_rate_of_unit, class: "form-control", onkeyup:"calculateAmount()" %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <%= f.label :amount, "Total Amount", class: "col-sm-2 control-label" %>
+        <div class="col-sm-10">
+          <%= f.text_field :amount, id: :purchase_amount, class: "form-control" %>
+        </div>
+    </div>
+
     <%= f.fields_for :financial_transaction do |trans| %>
         <div class="form-group">
-            <%= trans.label :amount, class: "col-sm-2 control-label" %>
+            <%= trans.label :amount, "Paid Amount", class: "col-sm-2 control-label" %>
             <div class="col-sm-10">
               <%= trans.text_field :amount, id: :purchase_transaction_amount, class: "form-control" %>
             </div>
@@ -80,6 +87,6 @@ function calculateAmount() {
   qty = ((qty == "") || isNaN(Number(qty))) ? 0 : Number(qty);
   document.getElementById("purchase_rate_of_unit").value = rate;
   document.getElementById("purchase_qty").value = qty;
-  document.getElementById("purchase_transaction_amount").value = rate * qty;
+  document.getElementById("purchase_amount").value = rate * qty;
 }
 </script>

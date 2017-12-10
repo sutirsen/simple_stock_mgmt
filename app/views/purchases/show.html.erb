@@ -41,7 +41,12 @@
       </p>
 
       <p>
-        <strong>Amount:</strong>
+        <strong>Total Amount:</strong>
+        <%= @purchase.amount %>
+      </p>
+
+      <p>
+        <strong>Paid Amount:</strong>
         <%= @purchase.financial_transaction.amount %>
       </p>
 

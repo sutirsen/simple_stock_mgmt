@@ -14,11 +14,12 @@
         <table class="table">
           <thead>
             <tr>
-              <th>Raw Material</th>
-              <th>Third Party</th>
+              <th>Material Name</th>
+              <th>Vendor's Name</th>
               <th>Rate</th>
               <th>Qty</th>
-              <th>Amount</th>
+              <th>Total Amount</th>
+              <th>Paid Amount</th>
               <th colspan="2"></th>
             </tr>
           </thead>
@@ -29,6 +30,7 @@
                 <td><%= link_to purchase.third_party.name, third_party_path(purchase.third_party) %></td>
                 <td><%= purchase.rate_of_unit %></td>
                 <td><%= purchase.qty %></td>
+                <td><%= purchase.amount %></td>
                 <td><%= purchase.financial_transaction.amount %></td>
                 <td>
 									<%= link_to purchase do %>

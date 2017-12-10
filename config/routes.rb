@@ -24,6 +24,7 @@ Rails.application.routes.draw do
 
   # Cart routes
   post '/cart/add' => 'cart#add_product_to_cart'
+  post '/cart/remove' => 'cart#remove_product_from_cart'
   get '/cart/' => 'cart#index'
 
   #coupon extra routes
