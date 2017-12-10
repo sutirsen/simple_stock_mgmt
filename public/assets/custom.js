@@ -66,6 +66,7 @@ function addToCart() {
       .then(function (data) {
         if(data["status"]) {
           document.getElementById('status').innerHTML = "Product added to cart!"; 
+          window.location.reload();
         }
       })
       .catch(function (error) {
