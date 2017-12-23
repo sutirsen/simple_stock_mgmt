@@ -30,7 +30,6 @@ gem 'bcrypt', '~> 3.1.11'
 gem 'jquery-rails'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
-gem "cocoon"
 gem "humanize"
 gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
