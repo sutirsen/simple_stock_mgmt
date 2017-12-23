@@ -7,7 +7,14 @@
        </div>
     </div>
     <div class="panel-body">
-      Customer : <%= select_tag :third_party_id, options_for_select(ThirdParty.all.map{|tp|[tp.name, tp.id]}) %>
+      <%= form_for @order, html: { class: "form-horizontal" } do |f| %>
+      <%= render 'shared/error_messages', object: f.object %>
+      <div class="form-group">
+        <%= f.label :third_party_id, "Customer", class: "col-sm-2 control-label" %>
+        <div class="col-sm-10">
+          <%= f.select :third_party_id, options_for_select(ThirdParty.all.map{|tp|[tp.name, tp.id]}), {},{class: "form-control"} %>
+        </div>
+      </div>
       <div class="table-responsive">
         <table class="table">
           <thead>
@@ -41,6 +48,7 @@
               <td colspan="6" align="right"><strong>Total Cost of Product</strong></td>
               <td colspan="2"><%= totalCost %></td>
             </tr>
+            <% totalCostCopy = totalCost %>
             <% discountAmount = 0 %>
             <% if @appliedCoupon %>
               <% 
@@ -82,7 +90,90 @@
           Add a coupon : <%= select_tag :coupon_id, options_for_select(Coupon.where(is_active: true).map{|tp|[tp.name, tp.id]}), {:include_blank => '- Select a coupon -'} %> <input type="button" name="" value="Apply" class="btn btn-xs btn-primary" onclick="applyCoupon()"><br/>
           <div id="coupon_application_status"></div>
         <% end %>
+        <%= f.hidden_field :with_tax, id: :order_with_tax, value: true %>
+        <%= f.hidden_field :total_cost, id: :order_total_cost, value: totalCostCopy %>
+        <%= f.hidden_field :total_tax, id: :order_total_tax , value: totalTax%>
+        <%= f.hidden_field :discounted_amount, id: :order_discounted_amount, value: discountAmount %>
+        <%= f.hidden_field :total_payable, id: :order_total_payable, value: (totalCost + totalTax) %>
+        <% if @appliedCoupon %>
+          <%= f.hidden_field :coupon_id, id: :order_coupon_id, value: @appliedCoupon.id %>
+        <% else %>
+          <%= f.hidden_field :coupon_id, id: :order_coupon_id %>
+        <% end %>
+        <br/>
+        <div class="form-group">
+            <%= f.label :bill_no, "Bill No", class: "col-sm-2 control-label" %>
+            <div class="col-sm-10">
+              <%= f.text_field :bill_no, id: :purchase_bill_no, class: "form-control" %>
+            </div>
+        </div>
+        <div class="form-group">
+            <%= f.label :tr_no, "T/R No", class: "col-sm-2 control-label" %>
+            <div class="col-sm-10">
+              <%= f.text_field :tr_no, id: :purchase_tr_no, class: "form-control" %>
+            </div>
+        </div>
+
+
+        <%= f.fields_for :financial_transaction do |trans| %>
+            <div class="form-group">
+                <%= trans.label :amount, "Paid Amount", class: "col-sm-2 control-label" %>
+                <div class="col-sm-10">
+                  <%= trans.text_field :amount, id: :purchase_transaction_amount, class: "form-control" %>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <%= trans.label :payment_method, class: "col-sm-2 control-label" %>
+                <div class="col-sm-10">
+                <%= trans.select :payment_method, FinancialTransaction.payment_methods.keys, {},{class: "form-control"}  %>
+                </div>
+            </div>
+        <% end %>
+
+        <div class="form-group">
+            <%= f.label :remarks, "Remarks", class: "col-sm-2 control-label" %>
+            <div class="col-sm-10">
+              <%= f.text_area :remarks, id: :purchase_remarks, class: "form-control" %>
+            </div>
+        </div>
+        <fieldset>
+          <legend>Transport Details</legend>
+          <%= f.fields_for :transport do |transprt| %>
+              <div class="form-group">
+                  <%= transprt.label :name, "Name", class: "col-sm-2 control-label" %>
+                  <div class="col-sm-10">
+                    <%= transprt.text_field :name, id: :purchase_transport_name, class: "form-control" %>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <%= transprt.label :documents_through, "Documents Through", class: "col-sm-2 control-label" %>
+                  <div class="col-sm-10">
+                    <%= transprt.text_field :documents_through, id: :purchase_transport_documents_through, class: "form-control" %>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <%= transprt.label :no_of_cases, "No of Cases", class: "col-sm-2 control-label" %>
+                  <div class="col-sm-10">
+                    <%= transprt.text_field :no_of_cases, id: :purchase_transport_no_of_cases, class: "form-control" %>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <%= transprt.label :contact_no, "Contact No", class: "col-sm-2 control-label" %>
+                  <div class="col-sm-10">
+                    <%= transprt.text_field :contact_no, id: :purchase_transport_contact_no, class: "form-control" %>
+                  </div>
+              </div>
+
+          <% end %>
+        </fieldset>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <%= f.submit 'Save Order', class: 'btn btn-primary' %>
+            </div>
+        </div>
       </div>
+      <% end %>
     </div>
   </div>
 </div>

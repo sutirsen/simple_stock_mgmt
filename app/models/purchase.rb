@@ -22,18 +22,18 @@ class Purchase < ApplicationRecord
     def decrease_third_party_due
       third_party = self.third_party
       if self.financial_transaction.payment_method == "no_payment"
-        self.third_party.update_attribute(:due, third_party.due - self.financial_transaction.amount)
+        self.third_party.update_attribute(:due, third_party.due - self.amount)
       elsif self.financial_transaction.amount != self.amount
-        self.third_party.update_attribute(:due, third_party.due - (self.financial_transaction.amount - self.amount))
+        self.third_party.update_attribute(:due, third_party.due - (self.amount - self.financial_transaction.amount))
       end
     end
 
     def increase_third_party_due
       third_party = self.third_party
       if self.financial_transaction.payment_method == "no_payment"
-        self.third_party.update_attribute(:due, third_party.due + self.financial_transaction.amount)
+        self.third_party.update_attribute(:due, third_party.due + self.amount)
       elsif self.financial_transaction.amount != self.amount
-        self.third_party.update_attribute(:due, third_party.due + (self.financial_transaction.amount - self.amount))
+        self.third_party.update_attribute(:due, third_party.due + (self.amount - self.financial_transaction.amount))
       end
     end
 

@@ -37,7 +37,20 @@ class CartController < ApplicationController
       couponFetched = Coupon.find(cookies['coupon_applied'])
       if couponFetched.is_active? and couponFetched.valid_from < Time.now and couponFetched.valid_till > Time.now
         @appliedCoupon = couponFetched
+      else
+        # we might want to remove a stale cookie
       end
+    end
+
+    @order = Order.new
+
+    @order.build_financial_transaction
+    @order.build_transport
+
+    # considering all params as error component
+    errorsStatements = params.except(:action, :controller)
+    errorsStatements.each do |errKey, errVal|
+      @order.errors[errKey.to_sym] << errVal
     end
   end
 

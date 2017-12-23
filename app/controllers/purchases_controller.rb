@@ -23,7 +23,7 @@ class PurchasesController < ApplicationController
 
     if @purchase.save
       finTrans = @purchase.financial_transaction
-      finTrans.type_of_transaction = :credit
+      finTrans.type_of_transaction = :debit
       if finTrans.save
         flash[:success] = "Purchase added!"
         redirect_to purchases_path

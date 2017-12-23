@@ -22,6 +22,13 @@
         <i class="glyphicon glyphicon-barcode"></i> Products
         <% end %>
       </li>
+
+      <li <% if title_match(yield(:title), 'Order') %> class="current" <% end %>>
+        <%= link_to orders_path do %>
+          <i class="glyphicon glyphicon-send"></i> Orders
+        <% end %>
+      </li>
+      
       <li <% if title_match(yield(:title), 'Coupon') %> class="current" <% end %>>
         <%= link_to coupons_path do %>
         <i class="glyphicon glyphicon-tag"></i> Coupons

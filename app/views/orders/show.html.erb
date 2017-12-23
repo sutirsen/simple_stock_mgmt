@@ -1,0 +1,103 @@
+<% provide(:title, "Order from #{@order.third_party.name}") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+      <div class="panel-title"><%= "Order from #{@order.third_party.name}" %></div>
+      <div class="panel-options">
+        <%= link_to orders_path do %>
+          <i class="glyphicon glyphicon-list"></i>
+        <% end %>
+      </div>
+    </div>
+    <div class="panel-body">
+      <p>
+        <strong>Customer:</strong>
+        <%= link_to @order.third_party.name, third_party_path(@order.third_party) %>
+      </p>
+
+      <p>
+        <strong>Cost:</strong>
+        <%= @order.total_cost %>
+      </p>
+
+      <p>
+        <strong>Discount:</strong>
+        <%= @order.discounted_amount %>
+      </p>
+
+      <p>
+        <strong>Tax:</strong>
+        <%= @order.total_tax %>
+      </p>
+
+      <p>
+        <strong>Total Payable:</strong>
+        <%= @order.total_payable %>
+      </p>
+
+      <p>
+        <strong>Paid:</strong>
+        <%= @order.financial_transaction.amount %>
+      </p>
+
+      <p>
+        <strong>Mode of Payment:</strong>
+        <%= @order.financial_transaction.payment_method.split("_").join(" ").capitalize %>
+      </p>
+
+      <% if @order.coupon %>
+        <p>
+          <strong>Coupon:</strong>
+          <%= link_to @order.coupon.name, coupon_path(@order.coupon) %>
+        </p>
+      <% end %>
+
+      <fieldset>
+        <legend>Order Items</legend>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Qty</th>
+              <th>Unit Price</th>
+              <th>Total Price</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @order.order_items.each do |order_item| %>
+              <tr>
+                <td><%= link_to order_item.product.name, product_path(order_item.product) %></td>
+                <td><%= order_item.qty %></td>
+                <td><%= order_item.selling_price %></td>
+                <td><%= order_item.total_item_cost %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </fieldset>
+
+      <fieldset>
+        <legend>Transport Details</legend>
+        <p>
+          <strong>Name:</strong>
+          <%= @order.transport.name %>
+        </p>
+        <p>
+          <strong>Documents through:</strong>
+          <%= @order.transport.documents_through %>
+        </p>
+        <p>
+          <strong>No of Cases:</strong>
+          <%= @order.transport.no_of_cases %>
+        </p>
+        <p>
+          <strong>Contact No:</strong>
+          <%= @order.transport.contact_no %>
+        </p>
+
+      </fieldset>
+
+    </div>
+  </div>
+</div>

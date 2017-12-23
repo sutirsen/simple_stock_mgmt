@@ -1,0 +1,51 @@
+<% provide(:title, "Order") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+       <div class="panel-title">Orders</div>
+       <div class="panel-options">
+       </div>
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Cost</th>
+              <th>Discount</th>
+              <th>Tax</th>
+              <th>Payable</th>
+              <th>Paid Amount</th>
+              <th>Created On</th>
+              <th colspan="2"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @orders.each do |order| %>
+              <tr>
+                <td><%= link_to order.third_party.name, third_party_path(order.third_party) %></td>
+                <td><%= order.total_cost %></td>
+                <td><%= order.discounted_amount %></td>
+                <td><%= order.total_tax %></td>
+                <td><%= order.total_payable %></td>
+                <td><%= order.financial_transaction.amount %></td>
+                <td><%= order.created_at.strftime("%F") %></td>
+                <td>
+                  <%= link_to order do %>
+                    <i class="glyphicon glyphicon-list-alt" title="View"></i>
+                  <% end %>
+                </td>
+                <td>
+                  <%= link_to order, method: :delete, data: { confirm: 'Are you sure?' } do %>
+                    <i class="glyphicon glyphicon glyphicon-trash" title="Delete"></i>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

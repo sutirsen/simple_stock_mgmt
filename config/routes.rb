@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   resources :products
   resources :purchases
+  resources :orders
   resources :raw_materials
   resources :third_parties
   resources :employees do

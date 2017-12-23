@@ -51,4 +51,36 @@ Employee_leave_taken
   description
   no_of_days
 
+Important
+Order
+  id
+  third_party_id
+  total_cost
+  total_tax
+  total_payable
+  coupon_id
+  bill_no
+  tr_no
+  with_tax
+  remarks
+
+Order Items
+  id
+  order_id
+  product_id
+  qty
+  sold_price
+  total_cost_of_item
+
+Transport
+  id
+  order_id
+  name
+  documents_through
+  no_of_cases
+  contact_no
+
+
+
+
   

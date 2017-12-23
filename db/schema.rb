@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171210161839) do
+ActiveRecord::Schema.define(version: 20171222210528) do
 
   create_table "companies", force: :cascade do |t|
     t.string "company_name"
@@ -96,6 +96,35 @@ ActiveRecord::Schema.define(version: 20171210161839) do
     t.index ["employee_leave_id"], name: "index_leave_transactions_on_employee_leave_id"
   end
 
+  create_table "order_items", force: :cascade do |t|
+    t.integer "order_id"
+    t.integer "product_id"
+    t.decimal "qty"
+    t.decimal "selling_price"
+    t.decimal "total_item_cost"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_order_items_on_order_id"
+    t.index ["product_id"], name: "index_order_items_on_product_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.integer "third_party_id"
+    t.decimal "total_cost"
+    t.decimal "total_tax"
+    t.decimal "discounted_amount"
+    t.decimal "total_payable"
+    t.integer "coupon_id"
+    t.string "bill_no"
+    t.string "tr_no"
+    t.boolean "with_tax"
+    t.text "remarks"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["coupon_id"], name: "index_orders_on_coupon_id"
+    t.index ["third_party_id"], name: "index_orders_on_third_party_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -155,6 +184,17 @@ ActiveRecord::Schema.define(version: 20171210161839) do
     t.decimal "due"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "transports", force: :cascade do |t|
+    t.integer "order_id"
+    t.string "name"
+    t.string "documents_through"
+    t.string "no_of_cases"
+    t.string "contact_no"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_transports_on_order_id"
   end
 
   create_table "users", force: :cascade do |t|

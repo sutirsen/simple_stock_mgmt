@@ -1,0 +1,2 @@
+Migrations
+rails generate model Order third_party:references total_cost:decimal total_tax:decimal discounted_amount:decimal total_payable:decimal coupon:references bill_no:string tr_no:string with_tax:boolean remarks:text

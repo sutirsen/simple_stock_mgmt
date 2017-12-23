@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  order: one
+  name: MyString
+  documents_through: MyString
+  no_of_cases: MyString
+  contact_no: MyString
+
+two:
+  order: two
+  name: MyString
+  documents_through: MyString
+  no_of_cases: MyString
+  contact_no: MyString
