@@ -30,8 +30,8 @@ $(document).ready(function(){
     ]
   });
 
-  if(document.getElementById("slqty")) {
-    $("#slqty").bootstrapSlider().on("slide", function(valObj) {
+  if($("#slqty").length) {
+    $("#slqty").bootstrapSlider().on("slideStop", function(valObj) {
       document.getElementById("txtQty").value = valObj.target.value;
     });
   }
