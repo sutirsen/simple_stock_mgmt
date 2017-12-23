@@ -35,7 +35,9 @@
 
       <p>
         <strong>Type:</strong>
-        <%= @third_party.type_of_party.capitalize %>
+        <% if @third_party.type_of_party %>
+          <%= @third_party.type_of_party.capitalize %>
+        <% end %>
       </p>
 
       <p>
