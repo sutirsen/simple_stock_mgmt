@@ -6,7 +6,9 @@ Rails.application.routes.draw do
 
   resources :products
   resources :purchases
-  resources :orders
+  resources :orders do
+    get 'invoice', on: :member
+  end
   resources :raw_materials
   resources :third_parties
   resources :employees do

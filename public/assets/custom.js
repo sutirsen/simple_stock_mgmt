@@ -30,6 +30,12 @@ $(document).ready(function(){
     ]
   });
 
+  if(document.getElementById("slqty")) {
+    $("#slqty").bootstrapSlider().on("slide", function(valObj) {
+      document.getElementById("txtQty").value = valObj.target.value;
+    });
+  }
+
   // $('#addtocart').on('hidden.bs.modal', function (e) {
   //   $("#slqty").bootstrapSlider('destroy');
   // });
@@ -42,7 +48,18 @@ function openAddToCart(id, name, qty){
   $('#productIdForModal').val(id);
   $("#slqty").bootstrapSlider({max: qty, value: 1});
   $("#slqty").bootstrapSlider('refresh');
+  document.getElementById("txtQty").value = 0;
   $('#addtocart').modal();
+}
+
+function updateSlider() {
+  var qty = document.getElementById("txtQty").value;
+  if(!isNaN(qty)) {
+    $("#slqty").bootstrapSlider('setValue', Number(qty));
+  } else {
+    document.getElementById("txtQty").value = 0;
+    $("#slqty").bootstrapSlider('setValue', Number(0));
+  }
 }
 
 function addToCart() {

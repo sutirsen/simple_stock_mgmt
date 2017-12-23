@@ -34,9 +34,9 @@
         <i class="glyphicon glyphicon-tag"></i> Coupons
         <% end %>
       </li>
-      <li <% if title_match(yield(:title), 'Third Part') %> class="current" <% end %>>
+      <li <% if title_match(yield(:title), 'Part') %> class="current" <% end %>>
         <%= link_to third_parties_path do %>
-        <i class="glyphicon glyphicon-leaf"></i> Third Parties
+        <i class="glyphicon glyphicon-leaf"></i> Parties
         <% end %>
       </li>
       <li <% if title_match(yield(:title), 'Compan') %> class="current" <% end %>>

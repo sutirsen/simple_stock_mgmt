@@ -44,7 +44,7 @@
   </div>
 
   <div class="form-group">
-    <%= form.label :trading_price, "Trading Price (per unit)", class: "col-sm-2 control-label" %>
+    <%= form.label :trading_price, "Purchase Price (per unit)", class: "col-sm-2 control-label" %>
     <div class="col-sm-10">
       <%= form.text_field :trading_price, id: :product_trading_price, class: "form-control" %>
     </div>
@@ -70,6 +70,13 @@
       <%= form.text_field :batch, id: :product_batch, class: "form-control" %>
     </div>
   </div>
+
+  <div class="form-group">
+    <%= form.label :manufactured_by, "Manufactured by", class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :manufactured_by, id: :product_manufactured_by, class: "form-control" %>
+    </div>
+  </div>  
 
   <div class="form-group">
     <%= form.label :mfg_date, "MFG Date", class: "col-sm-2 control-label" %>

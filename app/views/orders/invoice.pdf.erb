@@ -1,4 +1,9 @@
 <table style="font-size: 5px;">
+  <% if @invoice_type != "normal" %>
+    <tr>
+      <td colspan="3" align="center" style="font-size: 14px; border: 1px solid black;"><strong><%= @invoice_type.split("_").join(" ").capitalize %></strong></td>
+    </tr>
+  <% end %>
   <tr>
     <td>
       <%= image_tag wicked_pdf_asset_base64 'logo_tulip.jpg' %>
@@ -19,15 +24,15 @@
       <table border="1" cellspacing="0" style="width: 100%; font-size: 14px;">
         <tr>
           <td><strong>Bill No</strong></td>
-          <td><%= @tmpBill['bill_no'] %></td>
+          <td><%= @order.bill_no %></td>
         </tr>
         <tr>
           <td><strong>Date</strong></td>
-          <td><%= Time.now.strftime("%d-%m-%Y") %></td>
+          <td><%= @order.created_at.strftime("%d-%m-%Y") %></td>
         </tr>
         <tr>
           <td><strong>T/R No</strong></td>
-          <td><%= @tmpBill['tr_no'] %></td>
+          <td><%= @order.tr_no %></td>
         </tr>
       </table>
       <div style="height: 10px;"></div>
@@ -56,31 +61,23 @@
         </tr>
         <tr>
           <td><strong>Name</strong></td>
-          <td><%= @tmpBill['buyer_name'] %></td>
+          <td><%= @order.third_party.name %></td>
         </tr>
         <tr>
           <td><strong>Address</strong></td>
-          <td><%= @tmpBill['buyer_address'] %></td>
+          <td><%= @order.third_party.address %></td>
         </tr>
         <tr>
           <td><strong>Contact</strong></td>
-          <td><%= @tmpBill['buyer_contact'] %></td>
+          <td><%= @order.third_party.phn_number %></td>
         </tr>
         <tr>
           <td><strong>GST IN</strong></td>
-          <td><%= @tmpBill['buyer_gst'] %></td>
-        </tr>
-        <tr>
-          <td><strong>VAT</strong></td>
-          <td><%= @tmpBill['buyer_vat'] %></td>
-        </tr>
-        <tr>
-          <td><strong>PAN No.</strong></td>
-          <td><%= @tmpBill['buyer_pan'] %></td>
+          <td><%= @order.third_party.gst_number %></td>
         </tr>
         <tr>
           <td><strong>Order No</strong></td>
-          <td><%= @tmpBill['buyer_order_no'] %></td>
+          <td><%= @order.id %></td>
         </tr>
 
       </table>
@@ -92,19 +89,19 @@
         </tr>
         <tr>
           <td><strong>Transport Name:</strong></td>
-          <td><%= @tmpBill['transport_name'] %></td>
+          <td><%= @order.transport.name %></td>
         </tr>
         <tr>
           <td><strong>Document Through:</strong></td>
-          <td><%= @tmpBill['transport_document_through'] %></td>
+          <td><%= @order.transport.documents_through %></td>
         </tr>
         <tr>
           <td><strong>No of Cases:</strong></td>
-          <td><%= @tmpBill['transport_no_of_cases'] %></td>
+          <td><%= @order.transport.no_of_cases %></td>
         </tr>
         <tr>
           <td><strong>Contact No:</strong></td>
-          <td><%= @tmpBill['transport_contact_no'] %></td>
+          <td><%= @order.transport.contact_no %></td>
         </tr>
 
       </table>
@@ -129,73 +126,54 @@
         </thead>
         <tbody>
           <% slno = 1 %>
-          <% totalAmount = 0 %>
-          <% @tmpBill['items'].each do |itm| %>
+          <% @order.order_items.each do |itm| %>
           <tr>
             <td><%= slno %></td>
-            <td><%= itm['name'] %></td>
-            <td><%= itm['hsn'] %></td>
-            <td><%= itm['packing'] %></td>
-            <td><%= itm['qty'] %></td>
-            <td><%= itm['batch'] %></td>
-            <td><%= itm['mfg'] %></td>
-            <td><%= itm['use'] %></td>
-            <td><%= itm['rate'] %></td>
-            <td><%= itm['amount'] %></td>
+            <td><%= itm.product.name %></td>
+            <td><%= itm.product.hsn %></td>
+            <td><%= itm.product.packing %></td>
+            <td><%= itm.qty %></td>
+            <td><%= itm.product.batch %></td>
+            <td><%= itm.product.mfg_date %></td>
+            <td><%= itm.product.use_within %></td>
+            <td><%= itm.selling_price %></td>
+            <td><%= itm.total_item_cost %></td>
           </tr>
           <% slno += 1 %>
-          <% totalAmount += itm['amount'].to_f %>
           <% end %>
           <tr>
-            <% totalPrevRebateAmount = totalAmount %>
-            <% totalAmount -= @tmpBill['rebate'].to_f %>
-            <% payableTax = (totalAmount*@cgstRate)/100 + (totalAmount*@sgstRate)/100 %>
-            <% finalAmount = totalAmount + payableTax %>
-            <td colspan="5" valign="top">
-              <% if @tmpBill["with_tax"] %>
+              <td colspan="5" valign="top">
                 Amount (in Words)<br/>
-                <i><%= totalPrevRebateAmount.humanize %> rupees only</i><br/><br/>
+                <i><%= @order.total_payable.humanize %> rupees only</i><br/><br/>
                 Tax Amount (in Words)<br/>
-                <i><%= payableTax.humanize %> rupees only</i><br/>
-              <% else %>
-                Rupees (in words):<br/>
-                <i><%= totalAmount.humanize %> rupees only</i><br/>
-              <% end %>
+                <i><%= @order.total_tax.humanize %> rupees only</i><br/>
             </td>
             <td colspan="5">
               <table style="width: 100%; font-size: 14px;" border="1" cellspacing="0">
                 <tr>
                   <td colspan="2">Amount</td>
-                  <td align="right"><%= totalPrevRebateAmount %></td>
+                  <td align="right"><%= @order.total_cost %></td>
                 </tr>
                 <tr>
-                  <td colspan="2">Rebate</td>
-                  <td align="right"><%= @tmpBill['rebate'].to_f %></td>
+                  <td colspan="2">Discount</td>
+                  <td align="right"><%= @order.discounted_amount %></td>
                 </tr>
-                <% if @tmpBill["with_tax"] %>
-                <tr>
-                  <td>CGST</td>
-                  <td>Rate: <%= @cgstRate %>%</td>
-                  <td align="right"><%= (totalAmount*@cgstRate)/100 %></td>
-                </tr>
-                <tr>
-                  <td>SGST</td>
-                  <td>Rate: <%= @sgstRate %>%</td>
-                  <td align="right"><%= (totalAmount*@sgstRate)/100 %></td>
-                </tr>
+                <% @taxes.each do |tax| %>
+                  <% taxAmt = (@order.total_cost - @order.discounted_amount) * tax.perc/100 %>
+                  <tr>
+                    <td><strong><%= tax.name %></strong></td>
+                    <td>Rate: <%= tax.perc.to_s %>%</td>
+                    <td align="right"><%= taxAmt %></td>
+                  </tr>
+                <% end %>                
                 <tr>
                   <td colspan="2">Total Payable Tax</td>
-                  <td align="right"><%= payableTax %></td>
+                  <td align="right"><%= @order.total_tax %></td>
                 </tr>
-                <% end %>
                 <tr>
                   <td colspan="2">Net Payable Amount</td>
                   <td align="right">
-                    <% if @tmpBill["with_tax"] %>
-                    <%= finalAmount %>
-                    <% else %>
-                    <%= totalAmount %>
-                    <% end %>
+                    <%= @order.total_payable %>
                   </td>
                 </tr>
 
@@ -210,7 +188,7 @@
     <td colspan="3"><strong>E. & O. E.</strong></td>
   </tr>
   <tr style="font-size: 14px;">
-    <td colspan="3"><strong>Net Payable Amount (in words)</strong> <%= finalAmount.humanize %> rupees only</td>
+    <td colspan="3"><strong>Net Payable Amount (in words)</strong> <%= @order.total_payable.humanize %> rupees only</td>
   </tr>
   <tr style="font-size: 14px; color: red">
     <td colspan="3" align="center">

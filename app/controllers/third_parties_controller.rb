@@ -41,7 +41,7 @@ class ThirdPartiesController < ApplicationController
     end
     respond_to do |format|
       if @third_party.save
-        format.html { redirect_to @third_party, notice: 'Third party was successfully created.' }
+        format.html { redirect_to @third_party, notice: 'Party was successfully created.' }
         format.json { render :show, status: :created, location: @third_party }
       else
         format.html { render :new }
@@ -55,7 +55,7 @@ class ThirdPartiesController < ApplicationController
   def update
     respond_to do |format|
       if @third_party.update(third_party_params)
-        format.html { redirect_to @third_party, notice: 'Third party was successfully updated.' }
+        format.html { redirect_to @third_party, notice: 'Party was successfully updated.' }
         format.json { render :show, status: :ok, location: @third_party }
       else
         format.html { render :edit }
@@ -69,7 +69,7 @@ class ThirdPartiesController < ApplicationController
   def destroy
     @third_party.destroy
     respond_to do |format|
-      format.html { redirect_to third_parties_url, notice: 'Third party was successfully destroyed.' }
+      format.html { redirect_to third_parties_url, notice: 'Party was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -82,6 +82,6 @@ class ThirdPartiesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def third_party_params
-      params.require(:third_party).permit(:name, :address, :phn_number, :gst_number, :due)
+      params.require(:third_party).permit(:name, :address, :phn_number, :gst_number, :due, :type_of_party)
     end
 end

@@ -1,14 +1,14 @@
-<% provide(:title, @third_party.name) %>
+<% provide(:title, "Party :: " + @third_party.name) %>
 <div class="col-md-10">
 	<div class="content-box-large">
 		<div class="panel-heading">
       <div class="panel-title"><%= @third_party.name %></div>
       <div class="panel-options">
         <%= link_to edit_third_party_path(@third_party) do %>
-          <i class="glyphicon glyphicon-edit" title="Edit this third party"></i>
+          <i class="glyphicon glyphicon-edit" title="Edit this party"></i>
         <% end %>
         <%= link_to third_parties_path do %>
-          <i class="glyphicon glyphicon-list" title="List all third parties"></i>
+          <i class="glyphicon glyphicon-list" title="List all parties"></i>
         <% end %>
       </div>
     </div>
@@ -31,6 +31,11 @@
       <p>
         <strong>Gst number:</strong>
         <%= @third_party.gst_number %>
+      </p>
+
+      <p>
+        <strong>Type:</strong>
+        <%= @third_party.type_of_party.capitalize %>
       </p>
 
       <p>

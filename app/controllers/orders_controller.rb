@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_action :set_order, only: [:show, :edit, :update, :destroy]
+  before_action :set_order, only: [:show, :edit, :update, :destroy, :invoice]
 
   # GET /orders
   # GET /orders.json
@@ -19,6 +19,20 @@ class OrdersController < ApplicationController
 
   # GET /orders/1/edit
   def edit
+  end
+
+  def invoice
+    @invoice_type = "normal"
+    if params['invoice_type']
+      @invoice_type = params['invoice_type']
+    end
+    @taxes = Tax.where(is_active: true)
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render layout: "invoice", pdf: "invoice"   # Excluding ".pdf" extension.
+      end
+    end
   end
 
   # POST /orders
@@ -60,6 +74,9 @@ class OrdersController < ApplicationController
 
       # remove cookie
       cookies.delete :cart
+      if cookies['coupon_applied']
+        cookies.delete :coupon_applied
+      end
       flash[:success] = "Order complete!"
       redirect_to orders_path
     else

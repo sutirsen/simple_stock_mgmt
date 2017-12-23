@@ -18,8 +18,11 @@
               <th>Vendor's Name</th>
               <th>Rate</th>
               <th>Qty</th>
+              <th>Batch</th>
+              <th>Expiry Date</th>
               <th>Total Amount</th>
               <th>Paid Amount</th>
+              <th>Payment Method</th>
               <th colspan="2"></th>
             </tr>
           </thead>
@@ -30,8 +33,11 @@
                 <td><%= link_to purchase.third_party.name, third_party_path(purchase.third_party) %></td>
                 <td><%= purchase.rate_of_unit %></td>
                 <td><%= purchase.qty %></td>
+                <td><%= purchase.batch_no %></td>
+                <td><%= purchase.expiry_date %></td>
                 <td><%= purchase.amount %></td>
                 <td><%= purchase.financial_transaction.amount %></td>
+                <td><%= purchase.financial_transaction.payment_method.split("_").join(" ").capitalize %></td>
                 <td>
 									<%= link_to purchase do %>
 			              <i class="glyphicon glyphicon-list-alt" title="View"></i>

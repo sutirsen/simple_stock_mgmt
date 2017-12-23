@@ -12,12 +12,12 @@
     <div class="panel-body">
       <p>
         <strong>Raw Material:</strong>
-        <%= @purchase.raw_material.name %>
+        <%= link_to @purchase.raw_material.name, raw_material_path(@purchase.raw_material) %>
       </p>
 
       <p>
-        <strong>Third Party:</strong>
-        <%= @purchase.third_party.name %>
+        <strong>Vendor:</strong>
+        <%= link_to @purchase.third_party.name, third_party_path(@purchase.third_party) %>
       </p>
 
       <p>

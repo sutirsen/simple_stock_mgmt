@@ -15,10 +15,10 @@
           <thead>
             <tr>
               <th>Name</th>
-              <th>Description</th>
               <th>Type</th>
               <th>HSN</th>
               <th>Batch</th>
+              <th>Packing</th>
               <th>Unit</th>
               <th>Qty</th>
               <th>Trading price (per unit)</th>
@@ -34,10 +34,10 @@
             <% @products.each do |product| %>
               <tr>
                 <td><%= product.name %></td>
-                <td><%= truncate(product.description, length:20) %></td>
                 <td><%= product.product_type %></td>
                 <td><%= product.hsn %></td>
                 <td><%= product.batch %></td>
+                <td><%= product.packing %></td>
                 <td><%= product.unit %></td>
                 <td><%= product.available_units %></td>
                 <td><%= product.trading_price %></td>
@@ -79,6 +79,8 @@
         <input type="hidden" id="productQtyForModal"/>
         <input type="hidden" id="productIdForModal"/>
         <input id="slqty" type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="1"/>
+        <br/>
+        Qty <input type="text" id="txtQty" onkeyup="updateSlider()" />
         <div><strong>(If to add an item which already exists in the cart it will be replaced)</strong></div>
         <div id="status"></div>
       </div>

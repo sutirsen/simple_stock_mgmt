@@ -29,6 +29,13 @@
   </div>
 
   <div class="form-group">
+    <%= form.label :type_of_party, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.select :type_of_party, ThirdParty.type_of_parties.keys, {}, {id: :third_party_type_of_party, class: "form-control"} %>
+    </div>
+  </div>
+
+  <div class="form-group">
     <%= form.label :due, class: "col-sm-2 control-label" %>
     <div class="col-sm-10">
       <%= form.text_field :due, id: :third_party_due, class: "form-control" %>
@@ -37,7 +44,7 @@
 
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-      <%= form.submit class: 'btn btn-primary' %>
+      <%= form.submit 'Save Party', class: 'btn btn-primary' %>
     </div>
   </div>
 <% end %>
