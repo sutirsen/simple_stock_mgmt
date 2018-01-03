@@ -148,7 +148,13 @@
           <% end %>
           <tr>
             <% totalPrevRebateAmount = totalAmount %>
-            <% totalAmount -= @tmpBill['rebate'].to_f %>
+            <%
+              rebateAmount = @tmpBill['rebate'].to_f
+              if @tmpBill['rebateType'] == 'perc'
+                rebateAmount = (totalAmount * rebateAmount) / 100
+              end 
+              totalAmount -= rebateAmount
+            %>
             <% payableTax = (totalAmount*@cgstRate)/100 + (totalAmount*@sgstRate)/100 %>
             <% finalAmount = totalAmount + payableTax %>
             <td colspan="5" valign="top">
@@ -170,7 +176,7 @@
                 </tr>
                 <tr>
                   <td colspan="2">Rebate</td>
-                  <td align="right"><%= @tmpBill['rebate'].to_f %></td>
+                  <td align="right"><%= @tmpBill['rebate'].to_f %><%= (@tmpBill['rebateType'] == "perc") ? "% (#{rebateAmount})" : '' %></td>
                 </tr>
                 <% if @tmpBill["with_tax"] %>
                 <tr>

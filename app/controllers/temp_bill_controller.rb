@@ -4,6 +4,14 @@ class TempBillController < ApplicationController
 
   def create
     @tmpBill = temp_bill_params
+    rebate = @tmpBill['rebate']
+    rebateType = 'flat'
+    if rebate[-1] == '%'
+      rebate = rebate[0..-2]
+      rebateType = 'perc'
+    end
+    @tmpBill['rebate'] = rebate
+    @tmpBill['rebateType'] = rebateType
     @cgstRate = @tmpBill['cgst'].to_f
     @sgstRate = @tmpBill['sgst'].to_f
     respond_to do |format|

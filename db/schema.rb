@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171223114350) do
+ActiveRecord::Schema.define(version: 20180103042912) do
 
   create_table "companies", force: :cascade do |t|
     t.string "company_name"
@@ -170,6 +170,7 @@ ActiveRecord::Schema.define(version: 20171223114350) do
     t.decimal "net_price"
     t.date "purchased_on"
     t.string "vendor_name"
+    t.decimal "total_price"
   end
 
   create_table "taxes", force: :cascade do |t|

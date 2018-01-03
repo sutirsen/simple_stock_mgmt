@@ -18,7 +18,7 @@
   <div class="form-group">
     <%= form.label :qty, class: "col-sm-2 control-label" %>
     <div class="col-sm-10">
-      <%= form.text_field :qty, id: :raw_material_qty, class: "form-control" %>
+      <%= form.text_field :qty, id: :raw_material_qty, class: "form-control", onblur: "calculateAmount()" %>
     </div>
   </div>
 
@@ -39,14 +39,21 @@
   <div class="form-group">
     <%= form.label :gst_rate, "GST Rate", class: "col-sm-2 control-label" %>
     <div class="col-sm-10">
-      <%= form.text_field :gst_rate, id: :raw_material_gst_rate, class: "form-control" %>
+      <%= form.text_field :gst_rate, id: :raw_material_gst_rate, class: "form-control", onblur: "calculateAmount()" %>
     </div>
   </div>
 
   <div class="form-group">
     <%= form.label :net_price, "Net Price", class: "col-sm-2 control-label" %>
     <div class="col-sm-10">
-      <%= form.text_field :net_price, id: :raw_material_net_price, class: "form-control" %>
+      <%= form.text_field :net_price, id: :raw_material_net_price, class: "form-control", onblur: "calculateAmount()" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :total_price, "Total Price", class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= form.text_field :total_price, id: :raw_material_total_price, class: "form-control" %>
     </div>
   </div>
 
@@ -70,3 +77,20 @@
     </div>
   </div>
 <% end %>
+
+<script>
+function calculateAmount() {
+  let gstRate = document.getElementById("raw_material_gst_rate").value;
+  let netPrice = document.getElementById("raw_material_net_price").value;
+  let qty = document.getElementById("raw_material_qty").value;
+  gstRate = ((gstRate == "") || isNaN(Number(gstRate))) ? 0 : Number(gstRate);
+  netPrice = ((netPrice == "") || isNaN(Number(netPrice))) ? 0 : Number(netPrice);
+  qty = ((qty == "") || isNaN(Number(qty))) ? 0 : Number(qty);
+  document.getElementById("raw_material_gst_rate").value = gstRate;
+  document.getElementById("raw_material_net_price").value = netPrice;
+  document.getElementById("raw_material_qty").value = qty;
+  let totalPrice = netPrice * qty;
+  let totalTax = (totalPrice * gstRate) / 100;
+  document.getElementById("raw_material_total_price").value = totalPrice + totalTax;
+}
+</script>

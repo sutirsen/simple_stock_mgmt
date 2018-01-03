@@ -20,14 +20,16 @@ $(document).ready(function(){
     "aoColumnDefs": [
         { 'bSortable': false, 'aTargets': [ -1, -2, -3 ] },
         { 'bSearchable': false, 'aTargets': [ -1, -2, -3 ] }
-    ]
+    ],
+    "pageLength": 100
   });
 
   $('#prodDtTbl').DataTable({
     "aoColumnDefs": [
         { 'bSortable': false, 'aTargets': [ -1, -2, -3, -4 ] },
         { 'bSearchable': false, 'aTargets': [ -1, -2, -3, -4 ] }
-    ]
+    ],
+    "pageLength": 100
   });
 
   if($("#slqty").length) {

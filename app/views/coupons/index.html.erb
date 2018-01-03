@@ -29,7 +29,7 @@
               <tr>
                 <td><%= coupon.name %></td>
                 <td><%= coupon.type_of_discount == 'perc' ? 'Percentage' : 'Flat' %></td>
-                <td><%= coupon.amount %></td>
+                <td><%= (coupon.type_of_discount == 'perc') ? "#{coupon.amount}%" : coupon.amount %></td>
                 <td><%= coupon.valid_from %></td>
                 <td><%= coupon.valid_till %></td>
                 <td><%= coupon.is_active ? 'Yes' : 'No' %></td>
