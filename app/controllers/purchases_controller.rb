@@ -1,5 +1,6 @@
 class PurchasesController < ApplicationController
   before_action :set_purchase, only: [:show, :destroy]
+  before_action :logged_in_user
   def index
     @purchases = Purchase.all
   end

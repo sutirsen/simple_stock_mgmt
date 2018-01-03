@@ -1,6 +1,6 @@
 class ThirdPartiesController < ApplicationController
   before_action :set_third_party, only: [:show, :edit, :update, :destroy]
-
+  before_action :logged_in_user
   # GET /third_parties
   # GET /third_parties.json
   def index

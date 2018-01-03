@@ -1,6 +1,6 @@
 class RawMaterialsController < ApplicationController
   before_action :set_raw_material, only: [:show, :edit, :update, :destroy]
-
+  before_action :logged_in_user
   # GET /raw_materials
   # GET /raw_materials.json
   def index

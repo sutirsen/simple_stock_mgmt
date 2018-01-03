@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :destroy, :reset]
+  before_action :logged_in_user, only: [:show, :index, :reset, :destroy]
   def index
     @users = User.all
   end

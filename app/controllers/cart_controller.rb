@@ -1,4 +1,5 @@
 class CartController < ApplicationController
+  before_action :logged_in_user
   # protect_from_forgery except: :add_product_to_cart
   def add_product_to_cart
     productToAdd = cart_params

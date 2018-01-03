@@ -1,6 +1,6 @@
 class TaxesController < ApplicationController
   before_action :set_tax, only: [:show, :edit, :update, :destroy]
-
+  before_action :logged_in_user
   # GET /taxes
   # GET /taxes.json
   def index

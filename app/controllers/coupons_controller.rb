@@ -1,6 +1,6 @@
 class CouponsController < ApplicationController
   before_action :set_coupon, only: [:show, :edit, :update, :destroy]
-
+  before_action :logged_in_user
   # GET /coupons
   # GET /coupons.json
   def index
