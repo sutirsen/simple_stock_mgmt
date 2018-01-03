@@ -66,6 +66,12 @@
         </ul>
       </li>
 
+      <li <% if title_match(yield(:title), 'User') %> class="current" <% end %>>
+        <%= link_to users_path do %>
+          <i class="glyphicon glyphicon-eye-open"></i> System Users
+        <% end %>
+      </li>
+
       <li <% if title_match(yield(:title), 'Generate Bill') %> class="current" <% end %>>
         <%= link_to temp_bill_new_path do %>
           <i class="glyphicon glyphicon-list-alt"></i> Bill Generation

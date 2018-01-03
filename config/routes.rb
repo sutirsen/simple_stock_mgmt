@@ -16,7 +16,11 @@ Rails.application.routes.draw do
   end
   resources :companies
   root :to => 'sessions#home'
-  resources :users
+  resources :users do
+    member do
+      post 'reset'
+    end
+  end
   get    '/signup',  to: 'users#new'
   get    '/login',   to: 'sessions#new'
   post   '/login',   to: 'sessions#create'

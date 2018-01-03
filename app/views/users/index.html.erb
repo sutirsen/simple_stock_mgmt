@@ -1,0 +1,43 @@
+<% provide(:title, "Users") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+       <div class="panel-title">Users</div>
+       <div class="panel-options">
+
+       </div>
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Created On</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @users.each do |user| %>
+              <tr>
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
+                <td><%= user.created_at %></td>
+                <td>
+                  <%= link_to reset_user_path(user), method: :post, data: { confirm: 'Are you sure, you want to reset password?' } do %>
+                    <i class="glyphicon glyphicon-refresh" title="Reset password"></i>
+                  <% end %>
+                  <%= link_to user, method: :delete, data: { confirm: 'Are you sure?' } do %>
+                    <i class="glyphicon glyphicon glyphicon-trash" title="Delete"></i>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
