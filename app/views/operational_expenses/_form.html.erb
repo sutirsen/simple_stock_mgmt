@@ -1,0 +1,46 @@
+<%= form_with(model: operational_expense, local: true, class: "form-horizontal", role: "form") do |form| %>
+  <%= render 'shared/error_messages', object: form.object %>
+
+  <div  class="form-group">
+    <%= form.label :name, class: "col-sm-2 control-label"  %>
+    <div class="col-sm-10">
+      <%= form.text_field :name, id: :operational_expense_name, class: "form-control" %>
+    </div>
+  </div>
+
+  <div  class="form-group">
+    <%= form.label :details, class: "col-sm-2 control-label"  %>
+    <div class="col-sm-10">
+      <%= form.text_area :details, id: :operational_expense_details, class: "form-control" %>
+    </div>
+  </div>
+
+  <div  class="form-group">
+    <%= form.label :paid_on, class: "col-sm-2 control-label"  %>
+    <div class="col-sm-10">
+      <%= form.date_select :paid_on, id: :operational_expense_paid_on, class: "form-control" %>
+    </div>
+  </div>
+
+  <%= form.fields_for :financial_transaction do |trans| %>
+    <div class="form-group">
+      <%= trans.label :amount, "Paid Amount", class: "col-sm-2 control-label" %>
+      <div class="col-sm-10">
+        <%= trans.text_field :amount, id: :purchase_transaction_amount, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= trans.label :payment_method, class: "col-sm-2 control-label" %>
+      <div class="col-sm-10">
+      <%= trans.select :payment_method, FinancialTransaction.payment_methods.keys, class: "form-control" %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <%= form.submit 'Save Operational Expense', class: 'btn btn-primary' %>
+      </div>
+  </div>
+<% end %>

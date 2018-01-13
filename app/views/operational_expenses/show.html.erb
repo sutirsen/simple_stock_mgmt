@@ -1,0 +1,40 @@
+<% provide(:title, "Operational Expense") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+      <div class="panel-title">Operational Expense</div>
+      <div class="panel-options">
+        <%= link_to operational_expenses_path do %>
+          <i class="glyphicon glyphicon-list" title="List all operational expenses"></i>
+        <% end %>
+      </div>
+    </div>
+    <div class="panel-body">
+      <p>
+        <strong>Name:</strong>
+        <%= @operational_expense.name %>
+      </p>
+
+      <p>
+        <strong>Details:</strong>
+        <%= @operational_expense.details %>
+      </p>
+
+      <p>
+        <strong>Paid on:</strong>
+        <%= @operational_expense.paid_on %>
+      </p>
+
+      <p>
+        <strong>Amount:</strong>
+        <%= @operational_expense.financial_transaction.amount %>
+      </p>
+
+      <p>
+        <strong>Mode:</strong>
+        <%= @operational_expense.financial_transaction.payment_method.split("_").join(" ").capitalize %>
+      </p>
+
+    </div>
+  </div>
+</div>

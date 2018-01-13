@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :operational_expenses
   resources :coupons
   resources :taxes
   get 'temp_bill/new'

@@ -1,0 +1,17 @@
+<% provide(:title, "Add Operational Expense") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+          <div class="panel-title">Add Operational Expense</div>
+
+          <div class="panel-options">
+            <%= link_to operational_expenses_path do %>
+              <i class="glyphicon glyphicon-list"></i>
+            <% end %>
+          </div>
+      </div>
+    <div class="panel-body">
+      <%= render 'form', operational_expense: @operational_expense %>
+    </div>
+  </div>
+</div>
