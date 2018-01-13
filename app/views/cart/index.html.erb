@@ -15,6 +15,7 @@
           <%= f.select :third_party_id, options_for_select(ThirdParty.all.map{|tp|[tp.name, tp.id]}), {},{class: "form-control"} %>
         </div>
       </div>
+      <%= f.check_box :with_tax, id: :order_with_tax, value: @taxEnabled, checked: @taxEnabled %> With Tax
       <div class="table-responsive">
         <table class="table">
           <thead>
@@ -70,13 +71,15 @@
               </tr>
             <% end %>
             <% totalTax = 0 %>
-            <% @taxes.each do |tax| %>
-              <% taxAmt = totalCost * tax.perc/100 %>
-              <% totalTax += taxAmt %>
-              <tr>
-                <td colspan="6" align="right"><strong><%= tax.name + " (" + tax.perc.to_s + ")" %></strong></td>
-                <td colspan="2"><%= taxAmt %></td>
-              </tr>
+            <% if @taxEnabled %>
+              <% @taxes.each do |tax| %>
+                <% taxAmt = totalCost * tax.perc/100 %>
+                <% totalTax += taxAmt %>
+                <tr>
+                  <td colspan="6" align="right"><strong><%= tax.name + " (" + tax.perc.to_s + ")" %></strong></td>
+                  <td colspan="2"><%= taxAmt %></td>
+                </tr>
+              <% end %>
             <% end %>
             <tr>
               <td colspan="6" align="right"><strong>Payable Amount</strong></td>
@@ -90,7 +93,6 @@
           Add a coupon : <%= select_tag :coupon_id, options_for_select(Coupon.where(is_active: true).map{|tp|[tp.name, tp.id]}), {:include_blank => '- Select a coupon -'} %> <input type="button" name="" value="Apply" class="btn btn-xs btn-primary" onclick="applyCoupon()"><br/>
           <div id="coupon_application_status"></div>
         <% end %>
-        <%= f.hidden_field :with_tax, id: :order_with_tax, value: true %>
         <%= f.hidden_field :total_cost, id: :order_total_cost, value: totalCostCopy %>
         <%= f.hidden_field :total_tax, id: :order_total_tax , value: totalTax%>
         <%= f.hidden_field :discounted_amount, id: :order_discounted_amount, value: discountAmount %>
@@ -177,3 +179,14 @@
     </div>
   </div>
 </div>
+<script>
+  (function() {
+    document.getElementById("order_with_tax").addEventListener("click", function(evnt){
+      if(evnt.target.checked === true) {
+        window.location = location.protocol + '//' + location.host + location.pathname;
+      } else {
+        window.location = location.protocol + '//' + location.host + location.pathname + "?no_tax=true";
+      }
+    });
+  })();
+</script>

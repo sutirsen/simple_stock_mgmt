@@ -30,7 +30,11 @@ class OrdersController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf do
-        render layout: "invoice", pdf: "invoice"   # Excluding ".pdf" extension.
+        if @invoice_type == "voucher"
+          render layout: "invoice", template: "orders/voucher", pdf: "voucher"   # Excluding ".pdf" extension.
+        else 
+          render layout: "invoice", pdf: "invoice"   # Excluding ".pdf" extension.
+        end
       end
     end
   end

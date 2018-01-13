@@ -145,8 +145,10 @@
               <td colspan="5" valign="top">
                 Amount (in Words)<br/>
                 <i><%= @order.total_payable.humanize %> rupees only</i><br/><br/>
-                Tax Amount (in Words)<br/>
-                <i><%= @order.total_tax.humanize %> rupees only</i><br/>
+                <% if @order.with_tax %>
+                  Tax Amount (in Words)<br/>
+                  <i><%= @order.total_tax.humanize %> rupees only</i><br/>
+                <% end %>
             </td>
             <td colspan="5">
               <table style="width: 100%; font-size: 14px;" border="1" cellspacing="0">
@@ -158,6 +160,7 @@
                   <td colspan="2">Discount</td>
                   <td align="right"><%= @order.discounted_amount %></td>
                 </tr>
+                <% if @order.with_tax %>
                 <% @taxes.each do |tax| %>
                   <% taxAmt = (@order.total_cost - @order.discounted_amount) * tax.perc/100 %>
                   <tr>
@@ -170,6 +173,7 @@
                   <td colspan="2">Total Payable Tax</td>
                   <td align="right"><%= @order.total_tax %></td>
                 </tr>
+                <% end %>
                 <tr>
                   <td colspan="2">Net Payable Amount</td>
                   <td align="right">

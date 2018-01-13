@@ -25,6 +25,10 @@ class CartController < ApplicationController
   end
 
   def index
+    @taxEnabled = true
+    if(params[:no_tax])
+      @taxEnabled = false
+    end
     cartHsh = convertCartContentToHash cookies[:cart]
     @cartDetails = Hash.new
     cartHsh.each do |productId, qty|
@@ -49,7 +53,7 @@ class CartController < ApplicationController
     @order.build_transport
 
     # considering all params as error component
-    errorsStatements = params.except(:action, :controller)
+    errorsStatements = params.except(:action, :controller, :no_tax)
     errorsStatements.each do |errKey, errVal|
       @order.errors[errKey.to_sym] << errVal
     end
