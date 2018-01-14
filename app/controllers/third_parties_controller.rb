@@ -11,6 +11,9 @@ class ThirdPartiesController < ApplicationController
   # GET /third_parties/1.json
   def show
     @purchases = Purchase.where(third_party_id: @third_party.id)
+    @orders = Order.where(third_party_id: @third_party.id)
+    @collections = Collection.where(third_party_id: @third_party.id)
+
     @transactions = Array.new
     @purchases.each do |purchase|
       tmpHsh = Hash.new
@@ -20,6 +23,26 @@ class ThirdPartiesController < ApplicationController
       tmpHsh['credit'] = 0
       @transactions << tmpHsh
     end
+
+    @orders.each do |order|
+      tmpHsh = Hash.new
+      tmpHsh['event'] = "Order"
+      tmpHsh['date'] = order.created_at
+      tmpHsh['debit'] = 0
+      tmpHsh['credit'] = order.financial_transaction.amount
+      @transactions << tmpHsh
+    end
+
+    @collections.each do |collection|
+      tmpHsh = Hash.new
+      tmpHsh['event'] = "Paid as collection"
+      tmpHsh['date'] = collection.created_at
+      tmpHsh['debit'] = 0
+      tmpHsh['credit'] = collection.financial_transaction.amount
+      @transactions << tmpHsh
+    end
+
+
     @transactions.sort_by { |transaction| transaction['date'] }
   end
 
