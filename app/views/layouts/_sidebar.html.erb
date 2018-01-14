@@ -51,6 +51,24 @@
         <% end %>
       </li>
 
+      <li <% if title_match(yield(:title), 'Operational Expense') %> class="current" <% end %>>
+        <%= link_to operational_expenses_path do %>
+          <i class="glyphicon glyphicon-random"></i> Operations
+        <% end %>
+      </li>
+
+      <li <% if title_match(yield(:title), 'Collection') %> class="current" <% end %>>
+        <%= link_to collections_path do %>
+          <i class="glyphicon glyphicon-log-in"></i> Collections
+        <% end %>
+      </li>
+
+      <li <% if title_match(yield(:title), 'Report') %> class="current" <% end %>>
+        <%= link_to reports_index_path do %>
+          <i class="glyphicon glyphicon-signal"></i> Report
+        <% end %>
+      </li>
+
       <li class="submenu <% if title_match(yield(:title), ['Tax']) %> current open <% end %>">
         <a href="#">
           <i class="glyphicon glyphicon-cog"></i> Settings
@@ -64,12 +82,6 @@
             <% end %>
           </li>
         </ul>
-      </li>
-
-      <li <% if title_match(yield(:title), 'Operational Expense') %> class="current" <% end %>>
-        <%= link_to operational_expenses_path do %>
-          <i class="glyphicon glyphicon-random"></i> Operations
-        <% end %>
       </li>
 
       <li <% if title_match(yield(:title), 'User') %> class="current" <% end %>>

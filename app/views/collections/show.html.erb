@@ -1,0 +1,44 @@
+<% provide(:title, "Collection") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+      <div class="panel-title">Collection</div>
+      <div class="panel-options">
+        <%= link_to collections_path do %>
+          <i class="glyphicon glyphicon-list" title="List all collections"></i>
+        <% end %>
+      </div>
+    </div>
+    <div class="panel-body">
+      <p>
+        <strong>Third party:</strong>
+        <%= link_to @collection.third_party.name, third_party_path(@collection.third_party) %>
+      </p>
+
+      <p>
+        <strong>Collection date:</strong>
+        <%= @collection.collection_date %>
+      </p>
+
+      <p>
+        <strong>Details:</strong>
+        <%= @collection.details %>
+      </p>
+
+      <p>
+        <strong>Bill number:</strong>
+        <%= @collection.bill_number %>
+      </p>
+
+      <p>
+        <strong>Amount:</strong>
+        <%= @collection.financial_transaction.amount %>
+      </p>
+
+      <p>
+        <strong>Mode:</strong>
+        <%= @collection.financial_transaction.payment_method.split("_").join(" ").capitalize %>
+      </p>
+    </div>
+  </div>
+</div>

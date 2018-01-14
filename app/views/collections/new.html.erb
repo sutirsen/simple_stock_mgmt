@@ -1,0 +1,17 @@
+<% provide(:title, "Add Collection") %>
+<div class="col-md-10">
+  <div class="content-box-large">
+    <div class="panel-heading">
+      <div class="panel-title">Add Collection</div>
+
+      <div class="panel-options">
+        <%= link_to collections_path do %>
+          <i class="glyphicon glyphicon-list"></i>
+        <% end %>
+      </div>
+    </div>
+    <div class="panel-body">
+      <%= render 'form', collection: @collection %>
+    </div>
+  </div>
+</div>

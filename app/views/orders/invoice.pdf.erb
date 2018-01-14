@@ -3,6 +3,10 @@
     <tr>
       <td colspan="3" align="center" style="font-size: 14px; border: 1px solid black;"><strong><%= @invoice_type.split("_").join(" ").capitalize %></strong></td>
     </tr>
+  <% else %>
+    <tr>
+      <td colspan="3" align="center" style="font-size: 14px; border: 1px solid black;"><strong>Invoice</strong></td>
+    </tr>
   <% end %>
   <tr>
     <td>

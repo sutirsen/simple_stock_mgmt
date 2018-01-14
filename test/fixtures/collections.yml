@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  third_party: one
+  collection_date: 2018-01-14
+  details: MyText
+  bill_number: MyString
+
+two:
+  third_party: two
+  collection_date: 2018-01-14
+  details: MyText
+  bill_number: MyString

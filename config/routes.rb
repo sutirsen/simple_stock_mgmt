@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  get 'reports/index'
+
+  resources :collections do
+    get 'invoice', on: :member
+  end
   resources :operational_expenses
   resources :coupons
   resources :taxes

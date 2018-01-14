@@ -22,9 +22,9 @@
     </td>
   </tr>
   <tr>
-    <td>No: <%= @order.id %></td>
+    <td>No: <%= @collection.id %></td>
     <td></td>
-    <td>Date : <%= @order.created_at.strftime("%d-%m-%Y") %></td>
+    <td>Date : <%= @collection.collection_date.strftime("%d-%m-%Y") %></td>
   </tr>
   <tr>
     <td colspan="3" align="center">
@@ -34,17 +34,17 @@
           <td style="width: 25%;">Amount</td>
         </tr>
         <tr style="height: 200px;" valign="top">
-          <td><strong>Account</strong><br><%= @order.third_party.name %></td>
-          <td><%= @order.financial_transaction.amount %>/-</td>
+          <td><strong>Account</strong><br><%= @collection.third_party.name %><br><br><strong>Details</strong><br><%= @collection.details %></td>
+          <td><%= @collection.financial_transaction.amount %>/-</td>
         </tr>
         <tr valign="top">
           <td>
             <strong>Through :</strong><br/>
-            <%= @order.financial_transaction.payment_method %><br/>
+            <%= @collection.financial_transaction.payment_method %><br/>
             <strong>Amount (in words) :</strong>
-            <i><%= @order.financial_transaction.amount.humanize %> rupees only</i>
+            <i><%= @collection.financial_transaction.amount.humanize %> rupees only</i>
           </td>
-          <td><strong><%= @order.financial_transaction.amount %>/-</strong></td>
+          <td><strong><%= @collection.financial_transaction.amount %>/-</strong></td>
         </tr>
       </table>
     </td>

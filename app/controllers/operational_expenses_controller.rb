@@ -74,10 +74,10 @@ class OperationalExpensesController < ApplicationController
       params.require(:operational_expense).permit(:financial_transaction => [:amount, :payment_method])
     end
 
-    def validate_transaction_details(purchaseObj)
+    def validate_transaction_details(oeObj)
       noError = true
       if financial_transaction_params[:financial_transaction][:amount].blank?
-        purchaseObj.errors[:financial_transaction] << "Amount can not be empty"
+        oeObj.errors[:financial_transaction] << "Amount can not be empty"
         noError = false
       end
       return noError

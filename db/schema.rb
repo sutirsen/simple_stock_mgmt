@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180113133522) do
+ActiveRecord::Schema.define(version: 20180114060921) do
+
+  create_table "collections", force: :cascade do |t|
+    t.integer "third_party_id"
+    t.date "collection_date"
+    t.text "details"
+    t.string "bill_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["third_party_id"], name: "index_collections_on_third_party_id"
+  end
 
   create_table "companies", force: :cascade do |t|
     t.string "company_name"
