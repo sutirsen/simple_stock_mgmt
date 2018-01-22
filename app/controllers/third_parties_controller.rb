@@ -43,7 +43,8 @@ class ThirdPartiesController < ApplicationController
     end
 
 
-    @transactions.sort_by { |transaction| transaction['date'] }
+    @transactions = @transactions.sort_by { |transaction| transaction['date'] }
+    @transactions.reverse!
   end
 
   # GET /third_parties/new

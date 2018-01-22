@@ -32,6 +32,24 @@ $(document).ready(function(){
     "pageLength": 100
   });
 
+  $('#thirdPartyLedger').DataTable({
+    "order": [[ 1, "desc" ]],
+    "dom": 'Bfrtip',
+    "buttons": [
+      'csv', 'excel', 'pdf', 'print'
+    ],
+    "pageLength": 100
+  });
+
+  $('#reportTable').DataTable({
+    "order": [[ 2, "desc" ]],
+    "dom": 'Bfrtip',
+    "buttons": [
+      'csv', 'excel', 'pdf', 'print'
+    ],
+    "pageLength": 100
+  });
+
   if($("#slqty").length) {
     $("#slqty").bootstrapSlider().on("slideStop", function(valObj) {
       document.getElementById("txtQty").value = valObj.target.value;

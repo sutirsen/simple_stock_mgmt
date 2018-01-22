@@ -1,5 +1,5 @@
 class OperationalExpensesController < ApplicationController
-  before_action :set_operational_expense, only: [:show, :edit, :update, :destroy]
+  before_action :set_operational_expense, only: [:show, :edit, :update, :destroy, :invoice]
   before_action :logged_in_user
   # GET /operational_expenses
   # GET /operational_expenses.json
@@ -56,6 +56,15 @@ class OperationalExpensesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to operational_expenses_url, notice: 'Operational expense was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def invoice
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render layout: "invoice", template: "operational_expenses/voucher", pdf: "voucher"   # Excluding ".pdf" extension.
+      end
     end
   end
 

@@ -1,10 +1,14 @@
 module ApplicationHelper
   def full_title(page_title = '')
-    base_title = "Sample Stock Management"
+    base_title = ""
     if page_title.empty?
       base_title
     else
-      page_title + " | " + base_title
+      if base_title.empty?
+        page_title
+      else 
+        page_title + " | " + base_title
+      end
     end
   end
 

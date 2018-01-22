@@ -37,6 +37,11 @@
                   <% end %>
                 </td>
                 <td>
+                  <%= link_to invoice_operational_expense_path(operational_expense, invoice_type: :voucher, format: :pdf) do %>
+                    <i class="glyphicon glyphicon-folder-open" title="Download Voucher"></i>
+                  <% end %>
+                </td>
+                <td>
                   <%= link_to operational_expense, method: :delete, data: { confirm: 'Are you sure?' } do %>
                     <i class="glyphicon glyphicon glyphicon-trash" title="Delete"></i>
                   <% end %>
