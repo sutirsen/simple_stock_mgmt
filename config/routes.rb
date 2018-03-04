@@ -46,4 +46,7 @@ Rails.application.routes.draw do
   post '/coupons/apply' => 'coupons#apply_coupon'
   post '/coupons/remove' => 'coupons#remove_coupon'
 
+  #Freight less deduction
+  post '/orders/apply_freight_less' => 'orders#apply_freight_less'
+
 end

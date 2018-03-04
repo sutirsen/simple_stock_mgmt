@@ -25,6 +25,7 @@ class CartController < ApplicationController
   end
 
   def index
+    @returningAfterFreightLess = (params[:fl] == 't') ? true : false
     @taxEnabled = true
     if(params[:no_tax])
       @taxEnabled = false
@@ -47,13 +48,18 @@ class CartController < ApplicationController
       end
     end
 
+    @freight_less = 0
+    if cookies['freight_less']
+      @freight_less = cookies['freight_less'].to_f
+    end
+
     @order = Order.new
 
     @order.build_financial_transaction
     @order.build_transport
 
     # considering all params as error component
-    errorsStatements = params.except(:action, :controller, :no_tax)
+    errorsStatements = params.except(:action, :controller, :no_tax, :fl)
     errorsStatements.each do |errKey, errVal|
       @order.errors[errKey.to_sym] << errVal
     end

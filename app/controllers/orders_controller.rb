@@ -104,6 +104,12 @@ class OrdersController < ApplicationController
     end
   end
 
+  def apply_freight_less
+    freightLessDeduction = params.permit(:freight_less)['freight_less']
+    cookies['freight_less'] = { :value => freightLessDeduction, :expires => 1.year.from_now}
+    render json: { status: 'ok', msg: 'Freight less deduction was successfully applied!' }.to_json
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_order
@@ -120,7 +126,7 @@ class OrdersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_params
-      params.require(:order).permit(:third_party_id, :total_cost, :total_tax, :discounted_amount, :total_payable, :coupon_id, :bill_no, :tr_no, :with_tax, :remarks)
+      params.require(:order).permit(:third_party_id, :freight_less, :total_cost, :total_tax, :discounted_amount, :total_payable, :coupon_id, :bill_no, :tr_no, :with_tax, :remarks)
     end
 
     def validate_transaction_details(orderObj)

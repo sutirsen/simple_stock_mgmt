@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180114060921) do
+ActiveRecord::Schema.define(version: 20180304111812) do
 
   create_table "collections", force: :cascade do |t|
     t.integer "third_party_id"
@@ -139,6 +139,8 @@ ActiveRecord::Schema.define(version: 20180114060921) do
     t.text "remarks"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "frieght_less"
+    t.decimal "freight_less"
     t.index ["coupon_id"], name: "index_orders_on_coupon_id"
     t.index ["third_party_id"], name: "index_orders_on_third_party_id"
   end
@@ -208,6 +210,7 @@ ActiveRecord::Schema.define(version: 20180114060921) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "type_of_party"
+    t.string "pan"
   end
 
   create_table "transports", force: :cascade do |t|

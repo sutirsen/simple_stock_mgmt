@@ -50,6 +50,13 @@
               <td colspan="2"><%= totalCost %></td>
             </tr>
             <% totalCostCopy = totalCost %>
+            <% totalCost = totalCost - @freight_less %>
+            <% if @freight_less != nil and @freight_less != 0 %>
+            <tr>
+              <td colspan="6" align="right"><strong>After Freight less (<%= @freight_less %>)</strong></td>
+              <td colspan="2"><%= totalCost %></td>
+            </tr>
+            <% end %>
             <% discountAmount = 0 %>
             <% if @appliedCoupon %>
               <% 
@@ -103,6 +110,16 @@
           <%= f.hidden_field :coupon_id, id: :order_coupon_id %>
         <% end %>
         <br/>
+        <div class="form-group">
+            <%= f.label :freight_less, "Freight less", class: "col-sm-2 control-label" %>
+            <div class="col-sm-10">
+              <% if @freight_less %>
+                <%= f.text_field :freight_less, id: :order_freight_less, class: "form-control", value: @freight_less, onblur:"applyFreightLessDeduction()" %>
+              <% else %>
+                <%= f.text_field :freight_less, id: :order_freight_less, class: "form-control", onblur:"applyFreightLessDeduction()" %>
+              <% end %>
+            </div>
+        </div>
         <div class="form-group">
             <%= f.label :bill_no, "Bill No", class: "col-sm-2 control-label" %>
             <div class="col-sm-10">
@@ -188,5 +205,8 @@
         window.location = location.protocol + '//' + location.host + location.pathname + "?no_tax=true";
       }
     });
+    <% if @returningAfterFreightLess %>
+    document.getElementById("purchase_bill_no").focus();
+    <% end %>
   })();
 </script>

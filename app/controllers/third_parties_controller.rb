@@ -106,6 +106,6 @@ class ThirdPartiesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def third_party_params
-      params.require(:third_party).permit(:name, :address, :phn_number, :gst_number, :due, :type_of_party)
+      params.require(:third_party).permit(:name, :address, :phn_number, :gst_number, :pan, :due, :type_of_party)
     end
 end

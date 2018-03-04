@@ -169,6 +169,28 @@ function removeCoupon(){
       });
 }
 
+function applyFreightLessDeduction() {
+  fetch('/orders/apply_freight_less', {
+        method: 'post',
+        headers: {
+          "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+          'X-Requested-With': 'XMLHttpRequest',
+          "X-CSRF-Token": $("meta[name='csrf-token']").attr('content')
+        },
+        credentials: 'same-origin',
+        body: 'freight_less=' + document.getElementById('order_freight_less').value
+      })
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function (data) {
+        window.location = '/cart?fl=t';
+      })
+      .catch(function (error) {
+        console.log('Request failed', error);
+      });
+}
+
 function removeFromCart(productId) {
   fetch('/cart/remove', {
         method: 'post',
