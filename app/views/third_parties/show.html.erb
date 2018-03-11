@@ -63,7 +63,15 @@
         <tbody>
           <% @transactions.each do |transaction| %>
             <tr>
-              <td><%= transaction['event'] %></td>
+              <td>
+                <% if transaction['eventObj'].is_a?(Order) %>
+                  <%= link_to transaction['event'], order_path(transaction['eventObj']) %>
+                <% elsif transaction['eventObj'].is_a?(Collection) %>
+                  <%= link_to transaction['event'], collection_path(transaction['eventObj']) %>
+                <% else %>
+                  <%= link_to transaction['event'], purchase_path(transaction['eventObj']) %>
+                <% end %>
+              </td>
               <td><%= transaction['date'] %></td>
               <td><%= transaction['debit'] %></td>
               <td><%= transaction['credit'] %></td>

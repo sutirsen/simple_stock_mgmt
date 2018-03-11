@@ -50,6 +50,11 @@
         <%= @order.financial_transaction.payment_method.split("_").join(" ").capitalize %>
       </p>
 
+      <p>
+        <strong>Order date:</strong>
+        <%= @order.bill_date %>
+      </p>
+
       <% if @order.coupon %>
         <p>
           <strong>Coupon:</strong>

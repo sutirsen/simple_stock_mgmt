@@ -21,6 +21,7 @@ class ThirdPartiesController < ApplicationController
       tmpHsh['date'] = purchase.created_at
       tmpHsh['debit'] = purchase.financial_transaction.amount
       tmpHsh['credit'] = 0
+      tmpHsh['eventObj'] = purchase
       @transactions << tmpHsh
     end
 
@@ -30,6 +31,7 @@ class ThirdPartiesController < ApplicationController
       tmpHsh['date'] = order.created_at
       tmpHsh['debit'] = 0
       tmpHsh['credit'] = order.financial_transaction.amount
+      tmpHsh['eventObj'] = order
       @transactions << tmpHsh
     end
 
@@ -39,6 +41,7 @@ class ThirdPartiesController < ApplicationController
       tmpHsh['date'] = collection.created_at
       tmpHsh['debit'] = 0
       tmpHsh['credit'] = collection.financial_transaction.amount
+      tmpHsh['eventObj'] = collection
       @transactions << tmpHsh
     end
 

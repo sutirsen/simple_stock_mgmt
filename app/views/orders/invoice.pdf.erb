@@ -14,13 +14,13 @@
     </td>
     <td style="padding-left: 10px;">
       <table style="font-size: 12px;">
-        <tr><td align="center"><strong>Tulip Meditex</strong></td></tr>
-        <tr><td align="center"><strong>Agrovet Division<strong></td></tr>
-        <tr><td align="center"><strong>Manufacturer of Poultry, Dairy and Aquatic Feed Supplements<strong></td></tr>
-        <tr><td align="center"><strong>Reg. Office: B-25, Jayasree Park, Kolkata - 700034<strong></td></tr>
+        <tr><td align="center">Tulip Meditex</td></tr>
+        <tr><td align="center">Agrovet Division</td></tr>
+        <tr><td align="center">Manufacturer of Poultry, Dairy and Aquatic Feed Supplements</td></tr>
+        <tr><td align="center">Reg. Office: B-25, Jayasree Park, Kolkata - 700034</td></tr>
         <tr><td align="center">Mob: +91-9674908589, Off: +9133-2406-8912</td></tr>
         <tr><td align="center">e-mail id: tulip_meditex@yahoo.in</td></tr>
-        <tr><td align="center"><strong>Branch: Etwari Bar, Contai, East Midnapore, WB - 721401</strong></td></tr>
+        <tr><td align="center">Branch: Etwari Bar, Contai, East Midnapore, WB - 721401</td></tr>
         <tr><td align="center">Mob: +91-9933531374, +91-9733581544</td></tr>
       </table>
     </td>
@@ -32,7 +32,13 @@
         </tr>
         <tr>
           <td><strong>Date</strong></td>
-          <td><%= @order.created_at.strftime("%d-%m-%Y") %></td>
+          <td>
+            <% if @order.bill_date and @order.bill_date != '' %>
+              <%= @order.bill_date.strftime("%d-%m-%Y") %>
+            <% else %>
+              <%= @order.created_at.strftime("%d-%m-%Y") %>
+            <% end %>
+          </td>
         </tr>
         <tr>
           <td><strong>T/R No</strong></td>
@@ -40,7 +46,7 @@
         </tr>
       </table>
       <div style="height: 10px;"></div>
-      <table cellspacing="0" style="width: 100%; font-size: 12px;">
+      <table cellspacing="0" style="width: 100%; font-size: 11px;">
         <tr>
           <td align="right"><strong>PAN No:</strong></td>
           <td>AEDPT8130K</td>
@@ -170,10 +176,12 @@
                   <td colspan="2">Amount</td>
                   <td align="right"><%= @order.total_cost %></td>
                 </tr>
+                <% if @order.freight_less and @order.freight_less != 0 %>
                 <tr>
                   <td colspan="2">Freight less</td>
                   <td align="right"><%= @order.freight_less %></td>
                 </tr>
+                <% end %>
                 <tr>
                   <td colspan="2">Discount</td>
                   <td align="right"><%= @order.discounted_amount %></td>
