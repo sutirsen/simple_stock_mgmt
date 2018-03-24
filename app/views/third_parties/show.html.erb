@@ -73,8 +73,18 @@
                 <% end %>
               </td>
               <td><%= transaction['date'] %></td>
-              <td><%= transaction['debit'] %></td>
-              <td><%= transaction['credit'] %></td>
+              <td>
+                <%= transaction['debit'] %>
+                <% if transaction['eventObj'].is_a?(Purchase) %>
+                 (Bill amount <%= transaction['eventObj'].amount %>)
+                <% end %>     
+              </td>
+              <td>
+                <%= transaction['credit'] %>
+                <% if transaction['eventObj'].is_a?(Order) %>
+                 (Bill amount <%= transaction['eventObj'].total_payable %>)
+                <% end %>    
+              </td>
             </tr>
           <% end %>
         </tbody>
