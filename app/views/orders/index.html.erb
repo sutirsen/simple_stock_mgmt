@@ -30,7 +30,7 @@
                 <td><%= order.total_tax %></td>
                 <td><%= order.total_payable %></td>
                 <td><%= order.financial_transaction.amount %></td>
-                <td><%= order.created_at.strftime("%F") %></td>
+                <td><%= order.bill_date ? order.bill_date : order.created_at.strftime("%F") %></td>
                 <td>
                   <%= link_to order do %>
                     <i class="glyphicon glyphicon-list-alt" title="View"></i>

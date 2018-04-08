@@ -39,8 +39,8 @@ class ThirdPartiesController < ApplicationController
       tmpHsh = Hash.new
       tmpHsh['event'] = "Paid as collection"
       tmpHsh['date'] = collection.created_at
-      tmpHsh['debit'] = 0
-      tmpHsh['credit'] = collection.financial_transaction.amount
+      tmpHsh['debit'] = collection.financial_transaction.amount
+      tmpHsh['credit'] = 0
       tmpHsh['eventObj'] = collection
       @transactions << tmpHsh
     end
