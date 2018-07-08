@@ -28,7 +28,7 @@ class ThirdPartiesController < ApplicationController
     @orders.each do |order|
       tmpHsh = Hash.new
       tmpHsh['event'] = "Order"
-      tmpHsh['date'] = order.created_at
+      tmpHsh['date'] = order.bill_date == nil ? order.created_at : order.bill_date
       tmpHsh['debit'] = 0
       tmpHsh['credit'] = order.financial_transaction.amount
       tmpHsh['eventObj'] = order
@@ -38,7 +38,7 @@ class ThirdPartiesController < ApplicationController
     @collections.each do |collection|
       tmpHsh = Hash.new
       tmpHsh['event'] = "Paid as collection"
-      tmpHsh['date'] = collection.created_at
+      tmpHsh['date'] = collection.collection_date == nil ? collection.created_at : collection.collection_date
       tmpHsh['debit'] = collection.financial_transaction.amount
       tmpHsh['credit'] = 0
       tmpHsh['eventObj'] = collection

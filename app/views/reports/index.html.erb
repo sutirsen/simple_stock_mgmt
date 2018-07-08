@@ -36,7 +36,7 @@
               <tr>
                 <td><%= transaction['party'] %></td>
                 <td><%= transaction['event'] %></td>
-                <td><%= transaction['date'] %></td>
+                <td><%= transaction['date'] != "" ? transaction['date'].strftime("%F") : "" %></td>
                 <td><%= transaction['debit'] %></td>
                 <td><%= transaction['credit'] %></td>
               </tr>

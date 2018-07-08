@@ -41,6 +41,15 @@ $(document).ready(function(){
     "pageLength": 100
   });
 
+  $('#ordersList').DataTable({
+    "order": [[ 6, "desc" ]],
+    "aoColumnDefs": [
+        { 'bSortable': false, 'aTargets': [ -1, -2, -3, -4, -5 ] },
+        { 'bSearchable': false, 'aTargets': [ -1, -2, -3, -4, -5 ] }
+    ],
+    "pageLength": 100
+  });
+
   $('#reportTable').DataTable({
     "order": [[ 2, "desc" ]],
     "dom": 'Bfrtip',

@@ -55,7 +55,7 @@
         <thead>
           <tr>
             <th>Description</th>
-            <th>Date</th>
+            <th>Date (Y-m-d)</th>
             <th>Debit</th>
             <th>Credit</th>
           </tr>
@@ -72,7 +72,7 @@
                   <%= link_to transaction['event'], purchase_path(transaction['eventObj']) %>
                 <% end %>
               </td>
-              <td><%= transaction['date'] %></td>
+              <td><%= transaction['date'].strftime("%F") %></td>
               <td>
                 <%= transaction['debit'] %>
                 <% if transaction['eventObj'].is_a?(Purchase) %>
