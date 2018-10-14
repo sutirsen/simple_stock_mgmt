@@ -133,6 +133,7 @@
             <th>Batch No</th>
             <th>Mfg Date</th>
             <th>Use Within</th>
+            <th>Qty</th>
             <th>MRP</th>
             <th>Rate</th>
             <th>Amount</th>
@@ -149,6 +150,7 @@
             <td><%= itm.product.batch %></td>
             <td><%= itm.product.mfg_date %></td>
             <td><%= itm.product.use_within %></td>
+            <td><%= itm.qty.to_i %></td>
             <td><%= itm.product.mrp %></td>
             <td><%= itm.selling_price %></td>
             <td><%= itm.total_item_cost %></td>
@@ -156,7 +158,7 @@
           <% slno += 1 %>
           <% end %>
           <tr>
-              <td colspan="4" valign="top">
+              <td colspan="5" valign="top">
                 Amount (in Words)<br/>
                 <i><%= @order.total_payable.humanize %> rupees only</i><br/><br/>
                 <% if @order.with_tax %>
