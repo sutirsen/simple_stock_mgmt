@@ -181,10 +181,25 @@
                 <% end %>
                 <% if @order.with_tax %>
                 <% @taxes.each do |tax| %>
-                  <% taxAmt = (@order.total_cost - @order.discounted_amount) * tax.tax_val/100 %>
+                    <%
+                      tax_val = 0
+                      tax_name = ""
+                      if tax.respond_to? :tax_val
+                        tax_val = tax.tax_val
+                      else
+                        tax_val = tax.perc
+                      end
+
+                      if tax.respond_to? :tax
+                        tax_name = tax.tax.name
+                      else
+                        tax_name = tax.name
+                      end
+                    %>
+                  <% taxAmt = (@order.total_cost - @order.discounted_amount) * tax_val/100 %>
                   <tr>
-                    <td><strong><%= tax.tax.name %></strong></td>
-                    <td>Rate: <%= tax.tax_val.to_s %>%</td>
+                    <td><strong><%= tax_name %></strong></td>
+                    <td>Rate: <%= tax_val.to_s %>%</td>
                     <td align="right"><%= taxAmt %></td>
                   </tr>
                 <% end %>                

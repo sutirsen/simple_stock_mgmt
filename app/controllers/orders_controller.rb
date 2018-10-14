@@ -28,6 +28,7 @@ class OrdersController < ApplicationController
       @invoice_type = params['invoice_type']
     end
     @taxes = OrderTax.where(order_id: @order.id)
+    @taxes = Tax.where(is_active: true) if @taxes.count.zero?
     respond_to do |format|
       format.html
       format.pdf do
