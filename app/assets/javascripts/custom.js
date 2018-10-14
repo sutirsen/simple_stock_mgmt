@@ -18,3 +18,5 @@ $(document).ready(function(){
   });
   
 });
+
+// Don't use this, use public/assets/custom.js

@@ -42,6 +42,9 @@ Rails.application.routes.draw do
   post '/cart/remove' => 'cart#remove_product_from_cart'
   get '/cart/' => 'cart#index'
 
+  # Tax routes
+  post '/cart/taxes/modify' => 'cart#modify_tax_perc'
+
   #coupon extra routes
   post '/coupons/apply' => 'coupons#apply_coupon'
   post '/coupons/remove' => 'coupons#remove_coupon'

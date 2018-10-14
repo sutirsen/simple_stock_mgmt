@@ -1,3 +1,4 @@
+require 'json'
 class OrdersController < ApplicationController
   before_action :set_order, only: [:show, :edit, :update, :destroy, :invoice]
   before_action :logged_in_user
@@ -26,7 +27,7 @@ class OrdersController < ApplicationController
     if params['invoice_type']
       @invoice_type = params['invoice_type']
     end
-    @taxes = Tax.where(is_active: true)
+    @taxes = OrderTax.where(order_id: @order.id)
     respond_to do |format|
       format.html
       format.pdf do
@@ -71,13 +72,32 @@ class OrdersController < ApplicationController
         orderItm.order = @order
         orderItm.product = productObj
         orderItm.qty = qty
-        orderItm.selling_price = productObj.mrp
-        orderItm.total_item_cost = qty.to_i * productObj.mrp.to_f
+        if productObj.trading_price && productObj.trading_price != 0
+          orderItm.selling_price = productObj.trading_price
+        else
+          orderItm.selling_price = productObj.mrp
+        end
+        orderItm.total_item_cost = qty.to_i * orderItm.selling_price.to_f
         orderItm.save
       end
 
       # remove cookie
       cookies.delete :cart
+
+      # Now we collect taxes
+      taxes_hash = JSON.parse(cookies['cartTaxes'])
+      taxes_hash.each do |tax_id, tax|
+        tax_obj = Tax.find(tax_id)
+        order_tax_item = OrderTax.new
+        order_tax_item.tax = tax_obj
+        order_tax_item.order = @order
+        order_tax_item.tax_val = tax['taxPerc']
+        order_tax_item.save
+      end
+
+      # remove tax cookie
+      cookies.delete 'cartTaxes'
+
       if cookies['coupon_applied']
         cookies.delete :coupon_applied
       end

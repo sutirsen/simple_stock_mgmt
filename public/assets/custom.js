@@ -225,3 +225,52 @@ function removeFromCart(productId) {
         console.log('Request failed', error);
       });
 }
+
+function modifyTax(taxId) {
+    let taxValue = $("#tax_val_" + taxId).val();
+    let taxOperation = 'MODIFY_PERC';
+
+    _manipulateTax(taxOperation, taxId, taxValue);
+}
+
+function removeTax(taxId) {
+    let taxOperation = 'REMOVE_TAX';
+    _manipulateTax(taxOperation, taxId);
+}
+
+function resetTax() {
+    let taxOperation = 'RESET_TAX';
+    _manipulateTax(taxOperation);
+}
+
+function _manipulateTax(operation, taxId, taxValue) {
+    let request = "tax_operation=" + operation;
+
+    if(taxId !== undefined && taxId !== null && !isNaN(Number(taxId))) {
+        request += "&tax_id=" + taxId;
+    }
+
+    if(taxValue !== undefined && taxValue !== null && !isNaN(Number(taxValue))) {
+        request += "&tax_val=" + taxValue;
+    }
+
+    fetch('/cart/taxes/modify', {
+        method: 'post',
+        headers: {
+            "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            'X-Requested-With': 'XMLHttpRequest',
+            "X-CSRF-Token": $("meta[name='csrf-token']").attr('content')
+        },
+        credentials: 'same-origin',
+        body: request
+    })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            window.location = '/cart';
+        })
+        .catch(function (error) {
+            console.log('Request failed', error);
+        });
+}

@@ -13,7 +13,7 @@
       <%= image_tag wicked_pdf_asset_base64 'logo_tulip.jpg' %>
     </td>
     <td style="padding-left: 10px;">
-      <table style="font-size: 12px;">
+      <table style="font-size: 10px;">
         <tr><td align="center"><strong>Tulip Meditex</strong></td></tr>
         <tr><td align="center"><strong>Agrovet Division</strong></td></tr>
         <tr><td align="center" style="font-size: 10px;">Manufacturer of Poultry, Dairy and Aquatic Feed Supplements</td></tr>
@@ -25,7 +25,7 @@
       </table>
     </td>
     <td style="padding-left: 10px;">
-      <table cellspacing="0" style="width: 100%; font-size: 12px;">
+      <table cellspacing="0" style="width: 100%; font-size: 10px;">
         <tr>
           <td><strong>Bill No</strong></td>
           <td><%= @order.bill_no %></td>
@@ -46,7 +46,7 @@
         </tr>
       </table>
       <div style="height: 10px;"></div>
-      <table cellspacing="0" style="width: 100%; font-size: 11px;">
+      <table cellspacing="0" style="width: 100%; font-size: 10px;">
         <tr>
           <td><strong>PAN No:</strong></td>
           <td>AEDPT8130K</td>
@@ -65,7 +65,7 @@
   </tr>
   <tr>
     <td colspan="2">
-      <table style="width: 100%; font-size: 12px;">
+      <table style="width: 100%; font-size: 10px;">
         <tr>
           <td colspan="2"><strong>Buyer's Details</strong></td>
         </tr>
@@ -97,7 +97,7 @@
       </table>
     </td>
     <td valign="top">
-      <table style="width: 100%; font-size: 12px;">
+      <table style="width: 100%; font-size: 10px;">
         <tr>
           <td colspan="2"><strong>Transport Details</strong></td>
         </tr>
@@ -123,15 +123,13 @@
   </tr>
   <tr>
     <td colspan="3">
-      <table cellpadding="2" style="width: 100%; font-size: 12px;" border="1" cellspacing="0">
+      <table cellpadding="2" style="width: 100%; font-size: 10px;" border="1" cellspacing="0">
         <thead>
           <tr>
             <th>Sl No</th>
             <th>Particulates</th>
             <th>HSN/SAC</th>
             <th>Packing</th>
-            <th>Unit</th>
-            <th>Qty</th>
             <th>Batch No</th>
             <th>Mfg Date</th>
             <th>Use Within</th>
@@ -148,8 +146,6 @@
             <td><%= itm.product.name %></td>
             <td><%= itm.product.hsn %></td>
             <td><%= itm.product.packing %></td>
-            <td><%= itm.product.unit %></td>
-            <td><%= itm.qty.to_i %></td>
             <td><%= itm.product.batch %></td>
             <td><%= itm.product.mfg_date %></td>
             <td><%= itm.product.use_within %></td>
@@ -160,7 +156,7 @@
           <% slno += 1 %>
           <% end %>
           <tr>
-              <td colspan="5" valign="top">
+              <td colspan="4" valign="top">
                 Amount (in Words)<br/>
                 <i><%= @order.total_payable.humanize %> rupees only</i><br/><br/>
                 <% if @order.with_tax %>
@@ -171,33 +167,36 @@
                 <%= @order.remarks %>
             </td>
             <td colspan="7">
-              <table style="width: 100%; font-size: 12px;" border="1" cellspacing="0">
+              <table style="width: 100%; font-size: 10px;" cellspacing="0">
                 <tr>
                   <td colspan="2">Amount</td>
                   <td align="right"><%= @order.total_cost %></td>
                 </tr>
-                <% if @order.freight_less and @order.freight_less != 0 %>
+                <% if @order.coupon %>
                 <tr>
-                  <td colspan="2">Freight less</td>
-                  <td align="right"><%= @order.freight_less %></td>
-                </tr>
-                <% end %>
-                <tr>
-                  <td colspan="2">Discount</td>
+                  <% disc_sign = @order.coupon.type_of_discount == 'perc' ? '%' : '/-' %>
+                  <td colspan="2">Rebate <%= '(' + @order.coupon.amount.to_s + disc_sign + ')' %></td>
                   <td align="right"><%= @order.discounted_amount %></td>
                 </tr>
+                <% end %>
                 <% if @order.with_tax %>
                 <% @taxes.each do |tax| %>
-                  <% taxAmt = (@order.total_cost - @order.discounted_amount) * tax.perc/100 %>
+                  <% taxAmt = (@order.total_cost - @order.discounted_amount) * tax.tax_val/100 %>
                   <tr>
-                    <td><strong><%= tax.name %></strong></td>
-                    <td>Rate: <%= tax.perc.to_s %>%</td>
+                    <td><strong><%= tax.tax.name %></strong></td>
+                    <td>Rate: <%= tax.tax_val.to_s %>%</td>
                     <td align="right"><%= taxAmt %></td>
                   </tr>
                 <% end %>                
                 <tr>
                   <td colspan="2">Total Payable Tax</td>
                   <td align="right"><%= @order.total_tax %></td>
+                </tr>
+                <% end %>
+                <% if @order.freight_less and @order.freight_less != 0 %>
+                <tr>
+                  <td colspan="2">Freight less</td>
+                  <td align="right"><%= @order.freight_less %></td>
                 </tr>
                 <% end %>
                 <tr>
@@ -214,19 +213,19 @@
       </table>
     </td>
   </tr>
-  <tr style="font-size: 12px;">
+  <tr style="font-size: 10px;">
     <td colspan="3"><strong>E. & O. E.</strong></td>
   </tr>
-  <tr style="font-size: 12px;">
+  <tr style="font-size: 10px;">
     <td colspan="3"><strong>Net Payable Amount (in words)</strong> <%= @order.total_payable.humanize %> rupees only</td>
   </tr>
-  <tr style="font-size: 12px; color: red">
+  <tr style="font-size: 10px; color: red">
     <td colspan="3" align="center">
       <strong><u><i>Declaration</i></u><br/>
       <i>Aquatic, Poultry and Cattle Feed supplements are GST Exempted Goods. HSN/SAC Code 2309 9010</i></strong>
     </td>
   </tr>
-  <tr style="font-size: 12px;">
+  <tr style="font-size: 10px;">
     <td colspan="2">
       <strong><u>Terms and Conditions:</u></strong><br/>
       Please pay us by A/c payee cheque/NEFT/RTGS/ draft payable at Kolkata only.<br/>

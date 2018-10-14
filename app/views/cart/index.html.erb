@@ -24,7 +24,7 @@
               <th>Type</th>
               <th>HSN</th>
               <th>Unit</th>
-              <th>MRP</th>
+              <th>Price</th>
               <th>Added Qty</th>
               <th>Item Cost</th>
               <th>Actions</th>
@@ -33,16 +33,23 @@
           <tbody>
             <% totalCost = 0 %>
             <% @cartDetails.each do |key, cartItm| %>
+
+            <% price = 0 %>
+            <% if cartItm['product'] && cartItm['product'].trading_price && cartItm['product'].trading_price != 0 %>
+              <% price = cartItm['product'].trading_price %>
+            <% else %>
+              <% price = cartItm['product'].mrp %>
+            <% end %>
               <tr>
                 <td><%= cartItm['product'].name %></td>
                 <td><%= cartItm['product'].product_type %></td>
                 <td><%= cartItm['product'].hsn %></td>
                 <td><%= cartItm['product'].unit %></td>
-                <td><%= cartItm['product'].mrp %></td>
+                <td><%= price %></td>
                 <td><%= cartItm['addedQty'] %></td>
-                <td><%= cartItm['addedQty'].to_i * cartItm['product'].mrp %></td>
+                <td><%= cartItm['addedQty'].to_i * price %></td>
                 <td><span style="color: red; cursor: pointer;" onclick="removeFromCart('<%= cartItm['product'].id %>')">Remove</span></td>
-                <% totalCost += cartItm['addedQty'].to_i * cartItm['product'].mrp %>
+                <% totalCost += cartItm['addedQty'].to_i * price %>
               </tr>
             <% end %>
             <tr>
@@ -50,13 +57,6 @@
               <td colspan="2"><%= totalCost %></td>
             </tr>
             <% totalCostCopy = totalCost %>
-            <% totalCost = totalCost - @freight_less %>
-            <% if @freight_less != nil and @freight_less != 0 %>
-            <tr>
-              <td colspan="6" align="right"><strong>After Freight less (<%= @freight_less %>)</strong></td>
-              <td colspan="2"><%= totalCost %></td>
-            </tr>
-            <% end %>
             <% discountAmount = 0 %>
             <% if @appliedCoupon %>
               <% 
@@ -77,20 +77,40 @@
                 <td colspan="2"><%= totalCost %></td>
               </tr>
             <% end %>
+            <tr>
+              <td colspan="8" align="left"><input type="button" onclick="resetTax()" value="Reset Taxes" class="btn btn-xs btn-info"></td>
+            </tr>
             <% totalTax = 0 %>
             <% if @taxEnabled %>
-              <% @taxes.each do |tax| %>
-                <% taxAmt = totalCost * tax.perc/100 %>
+              <% @taxes.each do |taxId, tax| %>
+                <% taxAmt = totalCost * tax['taxPerc'].to_i/100 %>
                 <% totalTax += taxAmt %>
                 <tr>
-                  <td colspan="6" align="right"><strong><%= tax.name + " (" + tax.perc.to_s + ")" %></strong></td>
+                  <td><%= tax['taxName'] %></td>
+                  <td colspan="3">
+                    <input type="text" class="input-sm col-xs-2 form-control" style="width: 10%; margin-right: 5px;" id="tax_val_<%= tax['taxId'] %>" value="<%= tax['taxPerc'] %>" />
+                    <input type="button" class="btn btn-primary btn-sm" value="Change" onclick="modifyTax(<%= tax['taxId'] %>)"/>
+                  </td>
+                  <td><input type="button" class="btn btn-sm btn-danger" value="Remove" onclick="removeTax(<%= tax['taxId'] %>)"></td>
+                  <td align="right"><strong><%= tax['taxName'] + " (" + tax['taxPerc'].to_s + "%)" %></strong></td>
                   <td colspan="2"><%= taxAmt %></td>
                 </tr>
               <% end %>
             <% end %>
             <tr>
-              <td colspan="6" align="right"><strong>Payable Amount</strong></td>
-              <td colspan="2"><%= totalCost + totalTax %></td>
+              <td colspan="6" align="right">Total Amount</td>
+              <td colspan="2"><%= totalCost = totalCost + totalTax %></td>
+            </tr>
+            <% totalCost = totalCost - @freight_less %>
+            <% if @freight_less != nil and @freight_less != 0 %>
+            <tr>
+              <td colspan="6" align="right"><strong>After Freight less (<%= @freight_less %>)</strong></td>
+              <td colspan="2"><%= totalCost %></td>
+            </tr>
+            <% end %>
+            <tr>
+              <td colspan="6" align="right"><strong>Net Payable</strong></td>
+              <td colspan="2"><%= totalCost %></td>
             </tr>
           </tbody>
         </table>
@@ -103,7 +123,7 @@
         <%= f.hidden_field :total_cost, id: :order_total_cost, value: totalCostCopy %>
         <%= f.hidden_field :total_tax, id: :order_total_tax , value: totalTax%>
         <%= f.hidden_field :discounted_amount, id: :order_discounted_amount, value: discountAmount %>
-        <%= f.hidden_field :total_payable, id: :order_total_payable, value: (totalCost + totalTax) %>
+        <%= f.hidden_field :total_payable, id: :order_total_payable, value: totalCost %>
         <% if @appliedCoupon %>
           <%= f.hidden_field :coupon_id, id: :order_coupon_id, value: @appliedCoupon.id %>
         <% else %>

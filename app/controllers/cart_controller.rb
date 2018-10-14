@@ -1,3 +1,4 @@
+require 'json'
 class CartController < ApplicationController
   before_action :logged_in_user
   # protect_from_forgery except: :add_product_to_cart
@@ -24,6 +25,28 @@ class CartController < ApplicationController
     end
   end
 
+  def modify_tax_perc
+    tax_id = tax_params[:tax_id]
+    tax_operation = tax_params[:tax_operation]
+    tax_value = tax_params[:tax_val] if tax_params[:tax_val]
+    tax_data = JSON.parse(cookies['cartTaxes'])
+    if tax_operation == 'MODIFY_PERC'
+      if tax_data[tax_id]
+        tax_detail = tax_data[tax_id]
+        tax_detail['taxPerc'] = tax_value
+        tax_data[tax_id] = tax_detail
+      end
+    elsif tax_operation == 'REMOVE_TAX'
+      tax_data = tax_data.except(tax_id) if tax_data[tax_id]
+    elsif tax_operation == 'RESET_TAX'
+      fetched_taxes = Tax.where(is_active: true)
+      tax_data = convert_tax_dbobj_to_hash fetched_taxes
+    end
+    cookies['cartTaxes'] = { value: tax_data.to_json,
+                             expires: 1.year.from_now }
+    render json: { status: 'ok' }.to_json
+  end
+
   def index
     @returningAfterFreightLess = (params[:fl] == 't') ? true : false
     @taxEnabled = true
@@ -37,7 +60,18 @@ class CartController < ApplicationController
       @cartDetails[productId]['product'] = Product.find(productId)
       @cartDetails[productId]['addedQty'] = qty
     end
-    @taxes = Tax.where(is_active: true)
+
+    @taxes = {}
+    if cookies['cartTaxes']
+      @taxes = JSON.parse(cookies['cartTaxes'])
+    else
+      fetched_taxes = Tax.where(is_active: true)
+      @taxes = convert_tax_dbobj_to_hash fetched_taxes
+    end
+
+    cookies['cartTaxes'] = { value: @taxes.to_json,
+                             expires: 1.year.from_now }
+
     @appliedCoupon = nil
     if cookies['coupon_applied']
       couponFetched = Coupon.find(cookies['coupon_applied'])
@@ -66,28 +100,45 @@ class CartController < ApplicationController
   end
 
   private
-    def cart_params
-      params.permit(:product_id, :qty)
-    end
 
-    def convertCartContentToHash(cartStr)
-      tmpHsh = Hash.new
-      if(cartStr and cartStr != "")
-        allItems = cartStr.split('|')
-        allItems.each do |itm|
-          itm = itm.split(',')
-          tmpHsh[itm[0]] = itm[1]
-        end
-      end
-      return tmpHsh
-    end
+  def cart_params
+    params.permit(:product_id, :qty)
+  end
 
-    def convertCartHashToStr(cartHsh)
-      cartStr = ''
-      cartHsh.each do |prodId, qty|
-        cartStr += '|' if cartStr != ''
-        cartStr += prodId + ',' + qty
-      end
-      return cartStr
+  def tax_params
+    params.permit(:tax_id, :tax_val, :tax_operation)
+  end
+
+  def convert_tax_dbobj_to_hash(tax_db_obj)
+    tax_hash = {}
+    tax_db_obj.each do |fetched_tax|
+      tax_item = {}
+      tax_item['taxId'] = fetched_tax.id
+      tax_item['taxName'] = fetched_tax.name
+      tax_item['taxPerc'] = fetched_tax.perc
+      tax_hash[fetched_tax.id] = tax_item
     end
+    tax_hash
+  end
+
+  def convertCartContentToHash(cartStr)
+    tmpHsh = Hash.new
+    if(cartStr and cartStr != "")
+      allItems = cartStr.split('|')
+      allItems.each do |itm|
+        itm = itm.split(',')
+        tmpHsh[itm[0]] = itm[1]
+      end
+    end
+    return tmpHsh
+  end
+
+  def convertCartHashToStr(cartHsh)
+    cartStr = ''
+    cartHsh.each do |prodId, qty|
+      cartStr += '|' if cartStr != ''
+      cartStr += prodId + ',' + qty
+    end
+    return cartStr
+  end
 end

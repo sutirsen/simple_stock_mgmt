@@ -2,6 +2,7 @@ class Order < ApplicationRecord
   belongs_to :third_party
   belongs_to :coupon, :optional => true
   has_many :order_items, :dependent => :destroy
+  has_many :order_taxes, :dependent => :destroy
   has_one :financial_transaction, :as => :monitory, :dependent => :destroy
   has_one :transport, :dependent => :destroy
   after_save :increase_third_party_due

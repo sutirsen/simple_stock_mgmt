@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180311072337) do
+ActiveRecord::Schema.define(version: 20181014134421) do
 
   create_table "collections", force: :cascade do |t|
     t.integer "third_party_id"
@@ -124,6 +124,16 @@ ActiveRecord::Schema.define(version: 20180311072337) do
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_order_items_on_order_id"
     t.index ["product_id"], name: "index_order_items_on_product_id"
+  end
+
+  create_table "order_taxes", force: :cascade do |t|
+    t.integer "tax_id"
+    t.decimal "tax_val"
+    t.integer "order_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_order_taxes_on_order_id"
+    t.index ["tax_id"], name: "index_order_taxes_on_tax_id"
   end
 
   create_table "orders", force: :cascade do |t|
