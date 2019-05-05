@@ -222,7 +222,8 @@
                     <%= @order.total_payable %>
                   </td>
                 </tr>
-                <% if (@order.total_payable.round - @order.total_payable).abs != 0.5 %>
+                <% adjustment_value = (@order.total_payable.round - @order.total_payable).abs %>
+                <% if adjustment_value != 0.5 && adjustment_value != 0.0 %>
                 <tr>
                   <td colspan="2">Adjustment</td>
                   <td align="right">
@@ -230,16 +231,14 @@
                   </td>
                 </tr>
                 <% end %>
+                <% if adjustment_value != 0.5 && adjustment_value != 0.0 %>
                 <tr>
                   <td colspan="2">Total</td>
                   <td align="right">
-                    <% if (@order.total_payable.round - @order.total_payable).abs != 0.5 %>
-                      <%= @order.total_payable.round %>
-                    <% else %>
-                      <%= @order.total_payable %>
-                    <% end %>
+                    <%= @order.total_payable.round %>
                   </td>
-                </tr>                  
+                </tr> 
+                <% end %>                 
               </table>
             </td>
           </tr>
