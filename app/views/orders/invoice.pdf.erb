@@ -158,15 +158,15 @@
           <% slno += 1 %>
           <% end %>
           <tr>
-              <td colspan="5" valign="top">
-                Amount (in Words)<br/>
-                <i><%= @order.total_payable.humanize %> rupees only</i><br/><br/>
-                <% if @order.with_tax %>
-                  Tax Amount (in Words)<br/>
-                  <i><%= @order.total_tax.humanize %> rupees only</i><br/>
-                <% end %><br/>
-                Remarks:<br/>
-                <%= @order.remarks %>
+            <td colspan="5" valign="top">
+              Amount (in Words)<br/>
+              <i><%= @order.total_payable.humanize %> rupees only</i><br/><br/>
+              <% if @order.with_tax %>
+                Tax Amount (in Words)<br/>
+                <i><%= @order.total_tax.humanize %> rupees only</i><br/>
+              <% end %><br/>
+              Remarks:<br/>
+              <%= @order.remarks %>
             </td>
             <td colspan="7">
               <table style="width: 100%; font-size: 10px;" cellspacing="0">
@@ -222,7 +222,24 @@
                     <%= @order.total_payable %>
                   </td>
                 </tr>
-
+                <% if (@order.total_payable.round - @order.total_payable).abs != 0.5 %>
+                <tr>
+                  <td colspan="2">Adjustment</td>
+                  <td align="right">
+                    <%= (@order.total_payable.round - @order.total_payable).abs %>
+                  </td>
+                </tr>
+                <% end %>
+                <tr>
+                  <td colspan="2">Total</td>
+                  <td align="right">
+                    <% if (@order.total_payable.round - @order.total_payable).abs != 0.5 %>
+                      <%= @order.total_payable.round %>
+                    <% else %>
+                      <%= @order.total_payable %>
+                    <% end %>
+                  </td>
+                </tr>                  
               </table>
             </td>
           </tr>
@@ -248,15 +265,15 @@
       <ol>
         <li>
           Union Bank <br/>
-          Account Number: 596101010050164
-          Branch: Behala
-          IFSC Code: UBIN0559610
+          Account Number: 596101010050164<br/>
+          Branch: Behala<br/>
+          IFSC Code: UBIN0559610<br/>
         </li>
         <li>
           United Bank of India <br/>
-          Account Number: 0360050010195
-          Branch: Sarsuna
-          IFSC Code: UTBI0SAR168
+          Account Number: 0360050010195<br/>
+          Branch: Sarsuna<br/>
+          IFSC Code: UTBI0SAR168<br/>
         </li>
       </ol><br/><br/>
       <strong><u>Terms and Conditions:</u></strong><br/>
