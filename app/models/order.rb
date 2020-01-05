@@ -5,7 +5,7 @@ class Order < ApplicationRecord
   has_many :order_taxes, :dependent => :destroy
   has_one :financial_transaction, :as => :monitory, :dependent => :destroy
   has_one :transport, :dependent => :destroy
-  after_save :increase_third_party_due
+  after_create :increase_third_party_due
   after_destroy :decrease_third_party_due
   # accepts_nested_attributes_for :financial_transaction
   private

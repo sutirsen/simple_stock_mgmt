@@ -1,0 +1,35 @@
+<%= form_with(model: order, local: true, class: "form-horizontal", role: "form") do |form| %>
+  <%= render 'shared/error_messages', object: order %>
+
+  <div class="form-group">
+      <%= form.label :bill_no, "Bill No", class: "col-sm-2 control-label" %>
+      <div class="col-sm-10">
+        <%= form.text_field :bill_no, id: :purchase_bill_no, class: "form-control" %>
+      </div>
+  </div>
+  <div class="form-group">
+      <%= form.label :bill_date, "Bill Date", class: "col-sm-2 control-label" %>
+      <div class="col-sm-10">
+        <%= form.date_select :bill_date, id: :order_bill_date, class: "form-control" %>
+      </div>
+  </div>
+  <div class="form-group">
+      <%= form.label :tr_no, "T/R No (Challan No)", class: "col-sm-2 control-label" %>
+      <div class="col-sm-10">
+        <%= form.text_field :tr_no, id: :purchase_tr_no, class: "form-control" %>
+      </div>
+  </div>
+  <div class="form-group">
+      <%= form.label :place_of_delivery, "Place of Delivery", class: "col-sm-2 control-label" %>
+      <div class="col-sm-10">
+        <%= form.text_field :place_of_delivery, id: :purchase_place_of_delivery, class: "form-control" %>
+      </div>
+  </div>
+
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <%= form.submit 'Save Order', class: 'btn btn-primary' %>
+    </div>
+  </div>
+<% end %>

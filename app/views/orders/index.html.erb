@@ -23,6 +23,7 @@
               <th></th>
               <th></th>
               <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -55,7 +56,11 @@
                     <i class="glyphicon glyphicon-folder-open" title="Download Voucher"></i>
                   <% end %>
                 </td>
-
+                <td>
+                  <%= link_to edit_order_path(order) do %>
+                    <i class="glyphicon glyphicon glyphicon-edit" title="Edit"></i>
+                  <% end %>  
+                </td>
                 <td>
                   <%= link_to order, method: :delete, data: { confirm: 'Are you sure?' } do %>
                     <i class="glyphicon glyphicon glyphicon-trash" title="Delete"></i>

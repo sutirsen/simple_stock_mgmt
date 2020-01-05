@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181014134421) do
+ActiveRecord::Schema.define(version: 20200105094246) do
 
   create_table "collections", force: :cascade do |t|
     t.integer "third_party_id"
@@ -152,6 +152,7 @@ ActiveRecord::Schema.define(version: 20181014134421) do
     t.decimal "frieght_less"
     t.decimal "freight_less"
     t.date "bill_date"
+    t.string "place_of_delivery", default: ""
     t.index ["coupon_id"], name: "index_orders_on_coupon_id"
     t.index ["third_party_id"], name: "index_orders_on_third_party_id"
   end

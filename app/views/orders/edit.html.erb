@@ -1,0 +1,20 @@
+<% provide(:title, "Edit Order Details") %>
+<div class="col-md-10">
+	<div class="content-box-large">
+		<div class="panel-heading">
+          <div class="panel-title">Edit Order</div>
+          <div class="panel-options">
+            <%= link_to @order do %>
+              <i class="glyphicon glyphicon-list-alt"></i>
+            <% end %>
+            <%= link_to orders_path do %>
+              <i class="glyphicon glyphicon-list"></i>
+            <% end %>
+
+          </div>
+      </div>
+		<div class="panel-body">
+			<%= render 'form', order: @order %>
+		</div>
+	</div>
+</div>
